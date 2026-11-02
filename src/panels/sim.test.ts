@@ -423,6 +423,13 @@ describe('the strip', () => {
       expect(meter(lowering).value).not.toMatch(/[-−]/);
     }
   });
+  it('pads the French labels so that the neighbours stay put when the sign flips (measured in the browser: within 0.5 px)', () => {
+    setLang('fr');
+    expect(st('stripMeter').trim()).toBe('Compteur');
+    expect(st('stripMeter')).toMatch(/\u00a0{12}$/);
+    expect(st('stripMeterPays')).toMatch(/\u00a0{3}$/);
+    expect(st('stripMeterGets')).toBe('Compteur reçoit');
+  });
   it('keeps the bare word when nothing flows through the meter', () => {
     const sim = new GravitySim();
     sim.applyPreset('nant');

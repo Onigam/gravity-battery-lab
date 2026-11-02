@@ -3,6 +3,8 @@ import { getLang, registerStrings, tx } from '@onigam/lab-kit/i18n';
 // The texts of the simulation: panel, status lines, alarms. Kept apart from src/i18n/ui.ts, which belongs to the data role; both go to the
 // kit's one registry. `key: [fr, en]`, both written together. A number in a text comes from docs/research.md (strings.test.ts lists them).
 
+const NBSP = '\u00a0';
+
 export const SIM_STRINGS = {
   simIntro: [
     'Lever une masse garde son énergie, et la physique est honnête. Choisissez une machine et regardez ce qui reste à chaque étage. Tout ce qui n’est pas publié est une estimation de ce lab, marquée d’une étoile.',
@@ -172,9 +174,11 @@ export const SIM_STRINGS = {
   alarmCrash: ['Chute', 'Fall'],
 
   stripHook: ['Crochet', 'Hook'],
-  stripMeter: ['Compteur', 'Meter'],
-  stripMeterPays: ['Compteur paie', 'Meter pays'],
-  stripMeterGets: ['Compteur reçoit', 'Meter receives'],
+  // the neighbours stay put when the sign flips: the French labels are padded with no-break spaces to the width of the longest (2.7 px each in the
+  // strip's font, within 0.5 px, measured); the English ones fit the kit's minimum width as they are
+  stripMeter: [`Compteur${NBSP.repeat(12)}`, 'Meter'],
+  stripMeterPays: [`Compteur paie${NBSP.repeat(3)}`, 'Meter pays'],
+  stripMeterGets: ['Compteur reçoit', 'Meter gets'],
   stripHeight: ['Hauteur', 'Height'],
   stripStored: ['Stocké', 'Stored'],
 
