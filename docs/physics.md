@@ -20,8 +20,7 @@ inverter, with the kit's `ocv`), `day.ts` (sun and house), `ladder.ts` (real mac
 dated facts), `diy.ts` (the courtyard machine), `sensitivity.ts` (both ends of what the model can say), `mech.ts` (from Mill Lab, see
 `docs/kit-requests.md`), `presets.ts`, `types.ts`. Tests next to the code; `src/panels/model.ts` holds what the panel plots, as plain functions.
 
-**Where the dimensions live.** `src/three/dims.ts` does not exist yet, this wave comes first. `machine.ts` exports the dimensions the physics needs (stroke,
-blocks, stack, rope, drum, tower height) and `dims.ts` is to import them, as Mill Lab's does from its `src/sim`. Nothing is to be retyped.
+**Where the dimensions live.** `machine.ts` exports the dimensions the physics needs (stroke, blocks, stack, rope, drum, tower height) and `src/three/dims.ts` imports them, as Mill Lab's does from its `src/sim`. Nothing is retyped.
 
 ## 1. The model
 
@@ -160,14 +159,14 @@ One file, `machine.ts`, with the status in a comment by each. Those that move an
 | Same, speed                    | 0.82 m/min | **0.58 m/min** | 0.38 m/min | 0.37 m/min                |
 | Comes down alone from          | 645 kg     | **374 kg**     | 219 kg     | no estimate               |
 
+**An open choice: the drum's pitch diameter.** The maker's page reads the rope force 517 mm from the frame's front and the drum's axis 695 mm from it (S9 p. 1/55): 178 mm of radius, **0.356 m** (`HOIST.drawnPitchRadius` in `dims.ts`, the 3D role's reading of the drawing). `machine.ts` takes **0.33 m**, the research's middle (0.30 to 0.36 m, §3). It changes no energy (§1.3, tested), only the shafts: at 0.356 m the drum turns at 14.3 instead of 15.4 tr/min, and the ratio is 203:1 instead of 188:1, still inside the research's 170 to 205. No sheet contradicts 0.33: PL-G03 and PL-G06 print Ø330\* as our estimate, and neither prints the 517 or the 695. The value stays until someone chooses; moving it means `FARM_DRUM_DIAMETER`, the teeth of `GEARS`, and the sheets' speeds.
+
 ## 4. What the 3D and the data roles read
 
 `GravitySim.state`, every field documented with its unit in `types.ts`. **The 3D needs:** `zFraction` (use it rather than `z`: a preset may have another stroke than the tower drawn), `fallLength` (one fall of rope, m), `blocks` and `halves` (how many of the stack to show), `drumAngle`,
 `sheaveAngle`, `motorAngle` (already capped for the eye and scaled by the clock and the slow motion), `motorBlur` (the real speed is past what the eye reads: show the blur disc), `brakeReleased`, `safetyGearSet`, `mode`, `flowDirection` (1 towards the machine, −1 back, for the power room's flows), `chopperPower`,
 `dcVolts`, `soc`, `pv`, `load`, `hour` (the site's light and its windows), `ghostTonnes`, `ghostTowers`, `ghostBlocks`, `ghostVolume` (the ghost stack: 0 when the load is too light ever to pay back, show none), `wind`, `gateOpen` and `grid` in `params`. `GravitySim.spec.kind` says whether it is a machine at all: `'energy'` presets (lamp, Rudong, Nant de Drance) do
 not move, and `state.zFraction` stays at 1 for them.
-
-**`state.angle` and the `DemoState` alias of `engine.ts` are only there so that the template's `src/three/device.ts` still builds**: the 3D role removes them with that file.
 
 **`shaftsAt(spec, mass)` in `chain.ts`** gives the speed and the torque at each shaft (hook force, rope, drum, each gear stage, motor) for the drive-train sheet, and the torque labels of the `hoist` world. `reeving.ts` gives the tension at each fall for the reeving sheet (`staticTension`, `reevingSumUp`). `comparator.ts` and `ladder.ts` give the
 lessons their figures and dated facts; `RUNGS[i].note` is bilingual.
@@ -271,7 +270,7 @@ These are the machine's own books; the module's are not free either (20 W of idl
 
 ## 9. Assumptions the owner may wish to confirm
 
-Standing 40 W asleep, 284 W ready (no source; drive sleeping by default) · inverter and supply at 0.97 each (K47's assumption) · 0.98 per sheave and per gear mesh · 1 % of the weight in the guides · 15 s to wake · a bursting rule of 30 to 90 % on one module at 50 A · a 3 kWh night by default · the day's "wait for enough sun" by default (it is the kindest: crawling costs more).
+The drum at 0.33 m against the 0.356 m the maker's drawing implies (§3) · standing 40 W asleep, 284 W ready (no source; drive sleeping by default) · inverter and supply at 0.97 each (K47's assumption) · 0.98 per sheave and per gear mesh · 1 % of the weight in the guides · 15 s to wake · a bursting rule of 30 to 90 % on one module at 50 A · a 3 kWh night by default · the day's "wait for enough sun" by default (it is the kindest: crawling costs more).
 
 ## 10. Sources read for the physics
 
