@@ -5,7 +5,8 @@ import { DECK_TOP, MOTOR_CABLE_M, PAD_BOTTOM, PAD_TOP, PV_WATTS, SHED, SITE, TOW
 import { boxOf, drawStats, finiteTree, stateWith, view } from '../test-utils';
 import { createSiteScene } from './scene';
 import { terrainHeight, trackDistance } from './terrain';
-import { planVegetation } from './vegetation';
+import { OAK_SPRAYS, POPLAR_SPRAYS, planVegetation } from './vegetation';
+import { sceneryTextures } from './materials';
 
 const sim = new GravitySim();
 const params = { ...sim.params };
@@ -157,6 +158,77 @@ describe('the state drives the picture', () => {
     const none = { ...s, ghostTonnes: 0, ghostBlocks: 0, ghostTowers: 0, ghostVolume: 0 };
     for (let i = 0; i < 40; i++) m.update(none, 0.1, view());
     expect(m.ghost.blocks.visible).toBe(false);
+  });
+});
+
+describe('D9, D10. Trees that are trees, gravel that is gravel', () => {
+  const sprayMesh = (name: string) => mod.scene.getObjectByName(name) as THREE.InstancedMesh;
+
+  it.each([
+    ['oak-sprays', OAK_SPRAYS, 18],
+    ['poplar-sprays', POPLAR_SPRAYS, 26],
+  ])('%s: many sprays, each small, with leaves cut out of them', (name, count, tallest) => {
+    const m = sprayMesh(name);
+    expect(m).toBeDefined();
+    const mat = m.material as THREE.MeshStandardMaterial;
+    expect(mat.alphaTest).toBeGreaterThan(0);
+    expect(mat.map?.name).toBe('sprays');
+    const g = m.geometry;
+    expect(g.index!.count / 3).toBe(2 * count);
+    // a card's diagonal, at the height of the tallest tree of the species, in metres: the leaves on it are a fifteenth of that
+    const p = g.attributes.position;
+    let largest = 0;
+    for (let i = 0; i < p.count; i += 4) {
+      const a = new THREE.Vector3().fromBufferAttribute(p, i);
+      const c = new THREE.Vector3().fromBufferAttribute(p, i + 2);
+      largest = Math.max(largest, a.distanceTo(c));
+    }
+    expect(largest * tallest).toBeLessThan(3.5);
+  });
+
+  it('the sprite has leaves and gaps, thickest in the middle: its small mipmaps stay a round blob', () => {
+    const t = sceneryTextures().sprays;
+    const { data, width: N } = t.image as { data: Uint8Array; width: number };
+    let inner = 0;
+    let innerN = 0;
+    let corner = 0;
+    let cornerN = 0;
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const r = Math.hypot((i + 0.5) / N - 0.5, (j + 0.5) / N - 0.5);
+        const a = data[(j * N + i) * 4 + 3] / 255;
+        if (r < 0.3) {
+          inner += a;
+          innerN++;
+        } else if (r > 0.52) {
+          corner += a;
+          cornerN++;
+        }
+      }
+    expect(inner / innerN).toBeGreaterThan(0.65);
+    expect(corner / cornerN).toBeLessThan(0.05);
+  });
+
+  it('the gravel is small stones with no pattern of spots: its mean stays neutral, its bright runs short', () => {
+    const t = sceneryTextures().ground;
+    const { data, width: N } = t.image as { data: Uint8Array; width: number };
+    let sum = 0;
+    for (let i = 0; i < N * N; i++) sum += data[i * 4 + 1] / 255;
+    const mean = sum / (N * N);
+    expect(Math.abs(mean - 0.5)).toBeLessThan(0.02);
+    // the length of a run of light texels along a row, in metres (the tile is 2.2 m): a stone, not a paving slab
+    let runs = 0;
+    let total = 0;
+    for (let j = 0; j < N; j += 7) {
+      let inRun = false;
+      for (let i = 0; i < N; i++) {
+        const light = data[(j * N + i) * 4 + 1] / 255 > mean;
+        if (light) total++;
+        if (light && !inRun) runs++;
+        inRun = light;
+      }
+    }
+    expect(((total / runs) * 2.2) / N).toBeLessThan(0.07);
   });
 });
 

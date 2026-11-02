@@ -3,6 +3,7 @@ import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { rng } from '@onigam/lab-kit/three';
 import { smoothstep as ss } from '../common';
 import { fbm, patchWind, sceneryTextures, vnoise } from './materials';
+import { SITE } from '../dims';
 import { FOOTPRINTS, insideFence, onFarmland, terrainHeight, trackDistance } from './terrain';
 
 // The plants of the farm, all instanced: a row of Lombardy poplars along the west track, oaks with a real trunk and a crown of lobes round the yard, apple trees by the house, hedges along
@@ -88,6 +89,13 @@ function ico(detail: number): THREE.BufferGeometry {
 
 const C = (hex: number): THREE.Color => new THREE.Color(hex);
 
+/** Sprays of leaves of a crown, each a card about a metre across with leaves cut out of it, over a dark heart of a few solid masses (lab-quality §3: not stacked boulders). */
+export const OAK_SPRAYS = 1500;
+export const POPLAR_SPRAYS = 760;
+export const APPLE_SPRAYS = 440;
+export const HEDGE_SPRAYS = 70;
+export const SHRUB_SPRAYS = 110;
+
 /** A tapered tube along a polyline (a trunk or a limb): rings of `sides` points, bark UVs, little sway. */
 function tube(
   m: Mesher,
@@ -96,7 +104,7 @@ function tube(
   sides: number,
   ca: THREE.Color,
   cb: THREE.Color,
-  uvk = 12,
+  uvk = 5,
 ): void {
   const rings: number[][] = [];
   const t = new THREE.Vector3();
@@ -144,8 +152,9 @@ function tube(
     }
 }
 /**
- * A crown: many small clusters of leaves in a volume, lit as one volume (each vertex's normal leans towards the crown's own outward direction, so that the mass has a light side and
- * a dark side), darker low and inside. A tree is not a few big blobs: it is this.
+ * A crown: a great many small clusters of leaves in a volume, lit as one volume (each vertex's normal leans towards the crown's own outward direction, so that the mass has a light
+ * side and a dark side), each cluster darker on the side that looks inwards, the whole darker low and inside. A tree is not a few big blobs: it is this. The leaves' map is laid on
+ * each cluster from the crown's outside, so that it never stretches where the eye sees it.
  */
 function crown(
   m: Mesher,
@@ -161,6 +170,10 @@ function crown(
     yMin: number;
     yMax: number;
     uvk?: number;
+    /** How much darker a cluster is on its inner side, 0..1. */
+    inner?: number;
+    /** How much each vertex of a cluster strays from the sphere, as a share of its radius: what breaks a small icosahedron's straight edges. */
+    rough?: number;
   },
 ): void {
   const g = ico(o.detail ?? 0);
@@ -171,40 +184,55 @@ function crown(
   const q = new THREE.Vector3();
   const c = new THREE.Vector3();
   const nr = new THREE.Vector3();
+  const out = new THREE.Vector3();
+  const t1 = new THREE.Vector3();
+  const t2 = new THREE.Vector3();
+  const unit = new THREE.Vector3();
   const blend = o.blend ?? 0.72;
+  const inner = o.inner ?? 0;
+  const rough = o.rough ?? 0.3;
+  const u = o.uvk ?? 8;
   for (let k = 0; k < n; k++) {
     const sp = spot(k, r);
     const base = m.n;
     const tone = 0.82 + 0.34 * r();
+    // the cluster's own frame, seen from outside the crown
+    q.set(sp.x, sp.y, sp.z);
+    centre(q, c);
+    out.subVectors(q, c);
+    if (out.lengthSq() < 1e-8) out.set(0, 1, 0);
+    out.normalize();
+    t1.set(Math.abs(out.y) > 0.8 ? 1 : 0, Math.abs(out.y) > 0.8 ? 0 : 1, 0)
+      .cross(out)
+      .normalize();
+    t2.crossVectors(out, t1);
+    const ou = r() * 7;
+    const ov = r() * 7;
     for (let i = 0; i < p.count; i++) {
       const ux = p.getX(i);
       const uy = p.getY(i);
       const uz = p.getZ(i);
-      const f = 1 + 0.3 * (vnoise(ux * 2.1 + k * 0.7, uy * 2.1 + uz * 1.7 + k) - 0.5);
+      const f = 1 + rough * (vnoise(ux * 2.1 + k * 0.7, uy * 2.1 + uz * 1.7 + k) - 0.5);
       q.set(sp.x + ux * sp.rx * f, sp.y + uy * sp.ry * f, sp.z + uz * sp.rz * f);
       centre(q, c);
       nr.set(q.x - c.x, q.y - c.y, q.z - c.z).normalize();
+      unit.set(ux, uy, uz).normalize();
       nr.multiplyScalar(blend)
-        .add(
-          c
-            .set(ux, uy, uz)
-            .normalize()
-            .multiplyScalar(1 - blend),
-        )
+        .addScaledVector(unit, 1 - blend)
         .normalize();
       const h = ss(o.yMin, o.yMax, q.y);
+      const facing = 0.5 + 0.5 * unit.dot(out);
       tmp
         .copy(o.lo)
         .lerp(o.hi, h * 0.85 + 0.15 * r())
-        .multiplyScalar(tone);
-      const u = o.uvk ?? 8;
+        .multiplyScalar(tone * (1 - inner + inner * facing));
       m.vert(
         q.x,
         q.y,
         q.z,
         tmp,
-        (q.x + 0.5 * q.z) * u,
-        (q.y + 0.3 * q.z) * u,
+        (q.dot(t1) - (sp.x * t1.x + sp.y * t1.y + sp.z * t1.z)) * u + ou,
+        (q.dot(t2) - (sp.x * t2.x + sp.y * t2.y + sp.z * t2.z)) * u + ov,
         Math.min(1, Math.max(0, q.y)) ** 2,
         nr.x,
         nr.y,
@@ -215,8 +243,85 @@ function crown(
   }
 }
 
+/**
+ * The leaves of a crown: `n` cards with a spray of leaves cut out of them (`sceneryTextures().sprays`), turned every way around the crown's outward direction and lit as one volume, as
+ * the masses are. Far away a card is a soft blob over the dark heart, close up it is leaves against the sky.
+ */
+function sprays(
+  m: Mesher,
+  n: number,
+  spot: (i: number, r: () => number) => { x: number; y: number; z: number; w: number; h: number; shade?: number },
+  centre: (p: THREE.Vector3, out: THREE.Vector3) => THREE.Vector3,
+  o: {
+    lo: THREE.Color;
+    hi: THREE.Color;
+    seed: number;
+    yMin: number;
+    yMax: number;
+    /** Keep the long side of a card near the vertical (a poplar's rising branches). */
+    upright?: boolean;
+    blend?: number;
+  },
+): void {
+  const r = rng(o.seed);
+  const tmp = new THREE.Color();
+  const q = new THREE.Vector3();
+  const c = new THREE.Vector3();
+  const face = new THREE.Vector3();
+  const out = new THREE.Vector3();
+  const t1 = new THREE.Vector3();
+  const t2 = new THREE.Vector3();
+  const nr = new THREE.Vector3();
+  const blend = o.blend ?? 0.8;
+  const corners = [
+    [-1, -1],
+    [1, -1],
+    [1, 1],
+    [-1, 1],
+  ];
+  for (let k = 0; k < n; k++) {
+    const sp = spot(k, r);
+    q.set(sp.x, sp.y, sp.z);
+    centre(q, c);
+    out.subVectors(q, c);
+    if (out.lengthSq() < 1e-8) out.set(0, 1, 0);
+    out.normalize();
+    // the card looks outwards, more or less
+    face.set(out.x + 0.9 * (r() - 0.5), out.y + 0.9 * (r() - 0.5), out.z + 0.9 * (r() - 0.5)).normalize();
+    t2.set(
+      o.upright ? 0.35 * (r() - 0.5) : r() - 0.5,
+      o.upright ? 1 : r() - 0.5,
+      o.upright ? 0.35 * (r() - 0.5) : r() - 0.5,
+    );
+    t2.addScaledVector(face, -t2.dot(face)).normalize();
+    t1.crossVectors(t2, face);
+    const tone = (0.8 + 0.38 * r()) * (sp.shade ?? 1);
+    const base = m.n;
+    const pick = 0.15 * r();
+    for (const [cx, cy] of corners) {
+      const px = sp.x + (t1.x * cx * sp.w + t2.x * cy * sp.h) / 2;
+      const py = sp.y + (t1.y * cx * sp.w + t2.y * cy * sp.h) / 2;
+      const pz = sp.z + (t1.z * cx * sp.w + t2.z * cy * sp.h) / 2;
+      q.set(px, py, pz);
+      centre(q, c);
+      nr.set(px - c.x, py - c.y, pz - c.z)
+        .normalize()
+        .multiplyScalar(blend)
+        .addScaledVector(face, 1 - blend)
+        .normalize();
+      tmp
+        .copy(o.lo)
+        .lerp(o.hi, ss(o.yMin, o.yMax, py) * 0.85 + pick)
+        .multiplyScalar(tone);
+      m.vert(px, py, pz, tmp, (cx + 1) / 2, (cy + 1) / 2, Math.min(1, Math.max(0, py)) ** 2, nr.x, nr.y, nr.z);
+    }
+    m.tri(base, base + 1, base + 2);
+    m.tri(base, base + 2, base + 3);
+  }
+}
+
 /** A Lombardy poplar: a straight trunk that goes on through the crown, and a tall narrow flame of leaves, its branches all rising. */
-function poplarGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry } {
+function poplarGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry; cards: THREE.BufferGeometry } {
   const wood = new Mesher();
   tube(
     wood,
@@ -234,35 +339,47 @@ function poplarGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeo
   const lv = new Mesher();
   const profile = (t: number) =>
     0.022 + 0.098 * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.02)), 0.72) * (1 - 0.25 * t);
+  // the dark heart first, so that the sky does not show through the middle of the flame
   crown(
     lv,
-    30,
+    9,
+    (i) => {
+      const t = i / 8;
+      const w = profile(t) * 0.72;
+      return { x: 0, y: 0.17 + t * 0.74, z: 0, rx: w, ry: 0.085, rz: w };
+    },
+    (p, c) => c.set(0, p.y, 0),
+    { lo: C(0x2c421a), hi: C(0x4a6428), seed: 12, yMin: 0.1, yMax: 1, uvk: 30, blend: 0.9, detail: 1 },
+  );
+  const cards = new Mesher();
+  sprays(
+    cards,
+    POPLAR_SPRAYS,
     (_, r) => {
       const t = Math.pow(r(), 0.85);
-      const y = 0.13 + 0.86 * t;
       const rad = profile(t);
       const a = r() * Math.PI * 2;
-      const d = rad * Math.sqrt(0.2 + 0.6 * r());
+      const shell = 0.6 + 0.5 * Math.sqrt(r());
       return {
-        x: Math.cos(a) * d,
-        y,
-        z: Math.sin(a) * d,
-        rx: 0.05 + 0.02 * r(),
-        ry: 0.085 + 0.04 * r(),
-        rz: 0.05 + 0.02 * r(),
+        x: Math.cos(a) * rad * shell,
+        y: 0.13 + 0.86 * t,
+        z: Math.sin(a) * rad * shell,
+        w: 0.05 + 0.02 * r(),
+        h: 0.075 + 0.035 * r(),
+        shade: 0.72 + 0.34 * shell,
       };
     },
     (p, c) => c.set(0, p.y, 0),
-    { lo: C(0x4a6a28), hi: C(0x93ad45), seed: 11, yMin: 0.1, yMax: 1, uvk: 14, detail: 1 },
+    { lo: C(0x4f7030), hi: C(0xa3bd55), seed: 11, yMin: 0.1, yMax: 1, upright: true },
   );
-  return { wood: wood.build(), leaves: lv.build('given') };
+  return { wood: wood.build(), leaves: lv.build('given'), cards: cards.build('given') };
 }
 
 /** An oak: a short thick trunk, big limbs that spread low, and a broad domed crown wider than it is tall, in clumps. */
-function oakGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry } {
+function oakGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry; cards: THREE.BufferGeometry } {
   const wood = new Mesher();
-  const ca = C(0x45392d);
-  const cb = C(0x665745);
+  const ca = C(0x8a7a66);
+  const cb = C(0xa39480);
   tube(
     wood,
     [
@@ -312,43 +429,58 @@ function oakGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeomet
     [0.12, 0.48, 0.42, 0.17],
     [-0.1, 0.5, -0.42, 0.17],
   ];
+  // the nearest clump, for the dappled light of a crown in lumps
+  const nearestClump = (p: THREE.Vector3, c: THREE.Vector3) => {
+    let best = clumps[0];
+    let bd = Infinity;
+    for (const k of clumps) {
+      const d = (p.x - k[0]) ** 2 + (p.y - k[1]) ** 2 + (p.z - k[2]) ** 2;
+      if (d < bd) {
+        bd = d;
+        best = k;
+      }
+    }
+    return c.set(best[0] * 0.8, best[1] * 0.9, best[2] * 0.8);
+  };
+  // the dark heart of each clump: the sky does not show through a crown
   crown(
     lv,
-    52,
+    clumps.length,
+    (i) => {
+      const cl = clumps[i];
+      return { x: cl[0], y: cl[1], z: cl[2], rx: cl[3] * 0.62, ry: cl[3] * 0.48, rz: cl[3] * 0.62 };
+    },
+    nearestClump,
+    { lo: C(0x233a16), hi: C(0x3f5c24), seed: 22, yMin: 0.34, yMax: 0.98, uvk: 30, blend: 0.9, detail: 1 },
+  );
+  const cards = new Mesher();
+  sprays(
+    cards,
+    OAK_SPRAYS,
     (i, r) => {
       const cl = clumps[i % clumps.length];
       const a = r() * Math.PI * 2;
-      const e = Math.acos(1 - 1.5 * r());
-      const d = cl[3] * (0.65 + 0.35 * r());
+      const e = Math.acos(1 - 1.6 * r());
+      const shell = 0.6 + 0.52 * r();
+      const d = cl[3] * shell;
+      const size = 0.075 + 0.045 * r();
       return {
         x: cl[0] + Math.cos(a) * Math.sin(e) * d,
         y: cl[1] + Math.cos(e) * d * 0.8,
         z: cl[2] + Math.sin(a) * Math.sin(e) * d,
-        rx: 0.085 + 0.045 * r(),
-        ry: 0.07 + 0.035 * r(),
-        rz: 0.085 + 0.045 * r(),
+        w: size,
+        h: size,
+        shade: 0.62 + 0.42 * shell,
       };
     },
-    (p, c) => {
-      // the nearest clump, for the dappled light of a crown in lumps
-      let best = clumps[0];
-      let bd = Infinity;
-      for (const k of clumps) {
-        const d = (p.x - k[0]) ** 2 + (p.y - k[1]) ** 2 + (p.z - k[2]) ** 2;
-        if (d < bd) {
-          bd = d;
-          best = k;
-        }
-      }
-      return c.set(best[0] * 0.8, best[1] * 0.9, best[2] * 0.8);
-    },
-    { lo: C(0x365421), hi: C(0x7ca03f), seed: 21, yMin: 0.34, yMax: 0.98, uvk: 9, detail: 1 },
+    nearestClump,
+    { lo: C(0x3f6026), hi: C(0x8aae48), seed: 21, yMin: 0.34, yMax: 0.98 },
   );
-  return { wood: wood.build(), leaves: lv.build('given') };
+  return { wood: wood.build(), leaves: lv.build('given'), cards: cards.build('given') };
 }
 
-/** A shrub, a hedge's piece, a tree of the far belts: a low mass in small clusters. */
-function shrubGeometry(n = 6, detail = 1): THREE.BufferGeometry {
+/** A shrub, a hedge's piece, a tree of the far belts: a low mass in small clusters. `lobe`: a cluster's radius, relative to the plant. */
+function shrubGeometry(n = 6, detail = 1, lobe = 0.24): THREE.BufferGeometry {
   const m = new Mesher();
   crown(
     m,
@@ -361,13 +493,50 @@ function shrubGeometry(n = 6, detail = 1): THREE.BufferGeometry {
         x: Math.cos(a) * Math.sin(e) * d,
         y: 0.34 + Math.cos(e) * d * 0.9,
         z: Math.sin(a) * Math.sin(e) * d,
-        rx: 0.24,
-        ry: 0.21,
-        rz: 0.24,
+        rx: lobe,
+        ry: lobe * 0.875,
+        rz: lobe,
       };
     },
     (p, c) => c.set(0, 0.3, 0).setY(0.3 + 0 * p.y),
-    { lo: C(0x3f5d26), hi: C(0x8ca94c), seed: 50, yMin: 0.05, yMax: 0.95, uvk: 3, detail },
+    {
+      lo: C(0x3f5d26),
+      hi: C(0x8ca94c),
+      seed: 50,
+      yMin: 0.05,
+      yMax: 0.95,
+      uvk: detail ? 3 : 7,
+      detail,
+      inner: 0.3,
+      blend: 0.82,
+      rough: 0.45,
+    },
+  );
+  return m.build('given');
+}
+
+/** The leaves of a shrub or of a hedge close to the farm: sprays over `shrubGeometry`'s few masses. */
+function shrubSprays(n: number, seed: number): THREE.BufferGeometry {
+  const m = new Mesher();
+  sprays(
+    m,
+    n,
+    (_, r) => {
+      const a = r() * Math.PI * 2;
+      const e = Math.acos(1 - 1.5 * r());
+      const shell = 0.75 + 0.35 * r();
+      const size = 0.26 + 0.14 * r();
+      return {
+        x: Math.cos(a) * Math.sin(e) * 0.46 * shell,
+        y: 0.34 + Math.cos(e) * 0.42 * shell,
+        z: Math.sin(a) * Math.sin(e) * 0.46 * shell,
+        w: size,
+        h: size,
+        shade: 0.7 + 0.3 * shell,
+      };
+    },
+    (_, c) => c.set(0, 0.3, 0),
+    { lo: C(0x466629), hi: C(0x9ab758), seed, yMin: 0.05, yMax: 0.95 },
   );
   return m.build('given');
 }
@@ -426,6 +595,10 @@ const sightDistance = (x: number, z: number): number => {
   const t = Math.max(0, Math.min(1.4, (x * dx + z * dz) / (dx * dx + dz * dz)));
   return Math.hypot(dx * t - x, dz * t - z);
 };
+
+/** Nothing grows on the block yard's hard standing. */
+const onYard = (x: number, z: number): boolean =>
+  Math.abs(x - SITE.yard.x) < SITE.yard.w / 2 + 0.5 && Math.abs(z - SITE.yard.z) < SITE.yard.d / 2 + 0.5;
 
 function spotOk(x: number, z: number, r: number): boolean {
   if (insideFence(x, z, r + 1.6)) return false;
@@ -540,7 +713,7 @@ export function planVegetation(): VegetationPlan {
     if (trackDistance(x, z).d < 2.4) continue;
     if (Math.max(Math.abs(x), Math.abs(z)) < 10) continue;
     if (fbm(x * 0.08 + 1, z * 0.08, 2) < 0.42 && r() > 0.3) continue;
-    let bad = false;
+    let bad = onYard(x, z);
     for (const f of FOOTPRINTS) if (x > f.x0 && x < f.x1 && z > f.z0 && z < f.z1) bad = true;
     if (bad || (x > -76 && x < -28 && z > -28 && z < 8)) continue;
     plan.tufts.push(inst(x, z, 0.45 + 0.5 * r(), 1, r));
@@ -551,7 +724,7 @@ export function planVegetation(): VegetationPlan {
     if (trackDistance(x, z).d < 2.4 || Math.max(Math.abs(x), Math.abs(z)) < 10) continue;
     const patch = fbm(x * 0.07 + 11, z * 0.07 - 4, 3);
     if (patch < 0.58 || (x > -76 && x < -28 && z > -28 && z < 8)) continue;
-    let bad = false;
+    let bad = onYard(x, z);
     for (const f of FOOTPRINTS) if (x > f.x0 && x < f.x1 && z > f.z0 && z < f.z1) bad = true;
     if (bad) continue;
     const f = inst(x, z, 0.32 + 0.3 * r(), 1, r);
@@ -587,10 +760,10 @@ function keepNormalUp(mat: THREE.MeshStandardMaterial): THREE.MeshStandardMateri
 }
 
 /** An apple tree: a short forked trunk, a low round crown as wide as tall, open under the branches. */
-function appleGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry } {
+function appleGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeometry; cards: THREE.BufferGeometry } {
   const wood = new Mesher();
-  const ca = C(0x4e4032);
-  const cb = C(0x6d5c48);
+  const ca = C(0x8d7b64);
+  const cb = C(0xa8947c);
   tube(
     wood,
     [
@@ -640,26 +813,47 @@ function appleGeometry(): { wood: THREE.BufferGeometry; leaves: THREE.BufferGeom
     cb,
   );
   const lv = new Mesher();
+  // open under the branches, dark at heart
   crown(
     lv,
-    22,
+    6,
+    (i) => {
+      const a = (i / 6) * Math.PI * 2;
+      return {
+        x: 0.13 * Math.cos(a),
+        y: 0.68 + (i % 2 ? 0.08 : -0.02),
+        z: 0.13 * Math.sin(a),
+        rx: 0.125,
+        ry: 0.1,
+        rz: 0.125,
+      };
+    },
+    (_, c) => c.set(0, 0.56, 0),
+    { lo: C(0x2c421b), hi: C(0x48682a), seed: 91, yMin: 0.32, yMax: 1, uvk: 14, blend: 0.9, detail: 1 },
+  );
+  const cards = new Mesher();
+  sprays(
+    cards,
+    APPLE_SPRAYS,
     (_, r) => {
       const a = r() * Math.PI * 2;
       const e = Math.acos(1 - 1.65 * r());
-      const d = 0.2 + 0.2 * r();
+      const shell = 0.56 + 0.52 * r();
+      const d = 0.4 * shell;
+      const size = 0.1 + 0.055 * r();
       return {
         x: Math.cos(a) * Math.sin(e) * d,
-        y: 0.62 + Math.cos(e) * d * 0.82,
+        y: 0.64 + Math.cos(e) * d * 0.82,
         z: Math.sin(a) * Math.sin(e) * d,
-        rx: 0.15,
-        ry: 0.12,
-        rz: 0.15,
+        w: size,
+        h: size,
+        shade: 0.62 + 0.42 * shell,
       };
     },
-    (p, c) => c.set(0, 0.56, 0).setY(0.56 + 0 * p.y),
-    { lo: C(0x466a2b), hi: C(0x93b24c), seed: 90, yMin: 0.32, yMax: 1, uvk: 7, detail: 1 },
+    (_, c) => c.set(0, 0.56, 0),
+    { lo: C(0x4f7330), hi: C(0xa2c055), seed: 90, yMin: 0.32, yMax: 1 },
   );
-  return { wood: wood.build(), leaves: lv.build('given') };
+  return { wood: wood.build(), leaves: lv.build('given'), cards: cards.build('given') };
 }
 
 export function buildVegetation(plan: VegetationPlan): Vegetation {
@@ -686,6 +880,20 @@ export function buildVegetation(plan: VegetationPlan): Vegetation {
         side: THREE.DoubleSide,
       }),
       { amp, flutter, speed: 1.1 },
+    );
+  const sprayMat = (flutter = 0.004, amp = 0.014) =>
+    keepNormalUp(
+      patchWind(
+        new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          map: tex.sprays,
+          vertexColors: true,
+          alphaTest: 0.38,
+          side: THREE.DoubleSide,
+          roughness: 0.95,
+        }),
+        { amp, flutter, speed: 1.1 },
+      ),
     );
   const make = (
     name: string,
@@ -727,9 +935,15 @@ export function buildVegetation(plan: VegetationPlan): Vegetation {
     size: treeSize,
     tint: leafTint,
   });
+  make('poplar-sprays', poplar.cards, sprayMat(0.004, 0.012), plan.poplars, {
+    shadow: true,
+    size: treeSize,
+    tint: leafTint,
+  });
   const oak = oakGeometry();
   make('oak-wood', oak.wood, barkMat, plan.oaks, { shadow: true, size: treeSize, tint: woodTint });
   make('oak-leaves', oak.leaves, leafMat(), plan.oaks, { shadow: true, size: treeSize, tint: leafTint });
+  make('oak-sprays', oak.cards, sprayMat(), plan.oaks, { shadow: true, size: treeSize, tint: leafTint });
   const apple = appleGeometry();
   make('apple-wood', apple.wood, barkMat, plan.apples, { shadow: true, size: treeSize, tint: woodTint });
   make('apple-leaves', apple.leaves, leafMat(0.004, 0.012), plan.apples, {
@@ -737,8 +951,13 @@ export function buildVegetation(plan: VegetationPlan): Vegetation {
     size: treeSize,
     tint: leafTint,
   });
+  make('apple-sprays', apple.cards, sprayMat(0.004, 0.012), plan.apples, {
+    shadow: true,
+    size: treeSize,
+    tint: leafTint,
+  });
   // far belts and hedges: the same mass as a shrub, cheap, no shadow
-  const shrub = shrubGeometry(5);
+  const heart = shrubGeometry(3, 0, 0.27);
   // the far masses set the budget of the world (under 400,000 triangles): three lobes for a tree half a kilometre away and more, four for a low hedge in the fields
   make('belts', shrubGeometry(3, 0), leafMat(0, 0.006), plan.belts, {
     size: treeSize,
@@ -748,13 +967,18 @@ export function buildVegetation(plan: VegetationPlan): Vegetation {
     size: treeSize,
     tint: (it) => colour.setHSL(0.27 + 0.03 * it.tint, 0.28, 0.72 + 0.18 * it.tint),
   });
-  make('hedges-near', shrubGeometry(3, 1), leafMat(0.003, 0.012), plan.hedgesNear, {
+  const hedgeTint = (it: Inst) => colour.setHSL(0.27 + 0.03 * it.tint, 0.28, 0.72 + 0.18 * it.tint);
+  make('hedges-near', heart, leafMat(0.003, 0.012), plan.hedgesNear, { size: treeSize, tint: hedgeTint });
+  make('hedges-near-sprays', shrubSprays(HEDGE_SPRAYS, 51), sprayMat(0.003, 0.012), plan.hedgesNear, {
     size: treeSize,
-    tint: (it) => colour.setHSL(0.27 + 0.03 * it.tint, 0.28, 0.72 + 0.18 * it.tint),
+    tint: hedgeTint,
   });
-  make('shrubs', shrub, leafMat(0.003, 0.02), plan.shrubs, {
+  const shrubTint = (it: Inst) =>
+    colour.copy(tints[Math.floor(it.tint * tints.length) % tints.length]).multiplyScalar(0.9);
+  make('shrubs', heart, leafMat(0.003, 0.02), plan.shrubs, { size: treeSize, tint: shrubTint });
+  make('shrubs-sprays', shrubSprays(SHRUB_SPRAYS, 52), sprayMat(0.003, 0.02), plan.shrubs, {
     size: treeSize,
-    tint: (it) => colour.copy(tints[Math.floor(it.tint * tints.length) % tints.length]).multiplyScalar(0.9),
+    tint: shrubTint,
   });
   const card = (map: THREE.Texture) =>
     keepNormalUp(

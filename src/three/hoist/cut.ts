@@ -9,6 +9,8 @@ import type { CutRect } from '../rig/hoist';
 // included) and flat caps close what is cut, from the rectangles each part gives. The exploded view moves the parts along X and Z only, so the plane stays right for all of them.
 
 const PLANE_Y = DECK_TOP + HOIST.axisY;
+/** What a cap's colour is multiplied by, linear. */
+const CAP_DIM = 0.42;
 
 export class HoistCut {
   readonly plane = new THREE.Plane(new THREE.Vector3(0, -1, 0), PLANE_Y);
@@ -25,10 +27,10 @@ export class HoistCut {
       if (!this.materials.has(mat)) this.materials.set(mat, mat.side);
     });
     const byColour = new Map<number, THREE.BufferGeometry[]>();
-    for (const [x0, x1, z0, z1, colour] of rects) {
+    for (const [x0, x1, z0, z1, colour, lift = 0] of rects) {
       const g = new THREE.PlaneGeometry(Math.abs(x1 - x0), Math.abs(z1 - z0));
       g.rotateX(-Math.PI / 2);
-      g.translate((x0 + x1) / 2, HOIST.axisY + 0.0005, (z0 + z1) / 2);
+      g.translate((x0 + x1) / 2, HOIST.axisY + 0.0005 + lift, (z0 + z1) / 2);
       const list = byColour.get(colour) ?? [];
       list.push(g);
       byColour.set(colour, list);
@@ -39,9 +41,10 @@ export class HoistCut {
       const m = new THREE.Mesh(
         geo,
         new THREE.MeshStandardMaterial({
-          color: new THREE.Color(colour).multiplyScalar(0.62),
-          roughness: 0.6,
-          metalness: 0.15,
+          // this world is lit hard from above, and a cut face looks straight at it: the colour is kept low so that it stays a colour
+          color: new THREE.Color(colour).multiplyScalar(CAP_DIM),
+          roughness: 0.75,
+          metalness: 0.05,
           polygonOffset: true,
           polygonOffsetFactor: -2,
           polygonOffsetUnits: -2,

@@ -147,34 +147,36 @@ function bleed(data: Uint8Array, hex: number): void {
     }
 }
 
-/** Mean of each of the three detail channels is 0.5: the shader multiplies by 4 · a · b so that the mean is neutral. */
+/**
+ * Mean of each of the three detail channels is 0.5: the shader multiplies by 4 · a · b so that the mean is neutral. The tile is 2.2 m (terrain). The gravel is packed crushed stone, not
+ * spots: cells of a jittered grid of 40 × 40, 5 to 6 cm each, each stone with its own tone and size, the gaps dark; a coarser, softer patch of the same keeps it from reading as a grid.
+ */
 function groundDetail(): THREE.DataTexture {
-  const N = 192;
+  const N = 384;
   const data = new Uint8Array(N * N * 4);
-  // pebbles: jittered points on a 12 x 12 grid
-  const G = 12;
+  const G = 40;
   const px = new Float32Array(G * G);
   const py = new Float32Array(G * G);
   const tone = new Float32Array(G * G);
   const r = rng(31);
   for (let i = 0; i < G * G; i++) {
-    px[i] = 0.2 + 0.6 * r();
-    py[i] = 0.2 + 0.6 * r();
+    px[i] = 0.08 + 0.84 * r();
+    py[i] = 0.08 + 0.84 * r();
     tone[i] = r();
   }
+  const gravels = new Float32Array(N * N);
+  let gravelSum = 0;
   for (let j = 0; j < N; j++) {
     for (let i = 0; i < N; i++) {
       const u = i / N;
       const v = j / N;
-      // grass: fine isotropic grain with short vertical blade streaks
-      const blade = tn(u * 120, v * 40, 120, 40);
-      const grass = 0.5 + 0.5 * ((tf(u, v, 28, 2) - 0.5) * 0.8 + (blade - 0.5) * 0.36 + (hash1(i, j) - 0.5) * 0.12);
-      // gravel: distance to the nearest of the jittered points
       const gx = u * G;
       const gy = v * G;
       const cx = Math.floor(gx);
       const cy = Math.floor(gy);
-      let best = 9;
+      // the nearest two points: the gap between two stones is where they are as near as each other
+      let f1 = 9;
+      let f2 = 9;
       let id = 0;
       for (let dy = -1; dy <= 1; dy++)
         for (let dx = -1; dx <= 1; dx++) {
@@ -184,18 +186,35 @@ function groundDetail(): THREE.DataTexture {
           const ex = cx + dx + px[k] - gx;
           const ey = cy + dy + py[k] - gy;
           const d = ex * ex + ey * ey;
-          if (d < best) {
-            best = d;
+          if (d < f1) {
+            f2 = f1;
+            f1 = d;
             id = k;
-          }
+          } else if (d < f2) f2 = d;
         }
-      const peb = 1 - smoothstep(0.16, 0.46, Math.sqrt(best));
-      const gravel = 0.34 + 0.44 * peb * (0.72 + 0.28 * tone[id]) + 0.06 * (hash1(i * 3, j) - 0.5);
+      const gapDist = Math.sqrt(f2) - Math.sqrt(f1);
+      const stone = smoothstep(0.02, 0.14, gapDist);
+      const patch = tf(u, v, 5, 3);
+      const gravel =
+        (0.34 + stone * (0.06 + 0.42 * tone[id] * tone[id] + 0.1 * tone[id])) * (0.82 + 0.36 * patch) +
+        0.05 * (hash1(i * 3, j) - 0.5);
+      gravels[j * N + i] = gravel;
+      gravelSum += gravel;
+    }
+  }
+  const gravelShift = 0.5 - gravelSum / (N * N);
+  for (let j = 0; j < N; j++) {
+    for (let i = 0; i < N; i++) {
+      const u = i / N;
+      const v = j / N;
+      // grass: fine isotropic grain with short vertical blade streaks
+      const blade = tn(u * 120, v * 40, 120, 40);
+      const grass = 0.5 + 0.5 * ((tf(u, v, 28, 2) - 0.5) * 0.8 + (blade - 0.5) * 0.36 + (hash1(i, j) - 0.5) * 0.12);
       // soil: clods and a little grain
       const soil = 0.5 + 0.62 * (tf(u, v, 9, 4) - 0.5) + 0.12 * (hash1(i, j * 7) - 0.5);
       const o = (j * N + i) * 4;
       data[o] = b8(Math.min(0.95, grass));
-      data[o + 1] = b8(Math.min(0.95, gravel));
+      data[o + 1] = b8(Math.min(0.95, gravels[j * N + i] + gravelShift));
       data[o + 2] = b8(Math.min(0.95, soil));
       data[o + 3] = 255;
     }
@@ -529,6 +548,52 @@ function leaves(): THREE.DataTexture {
   return dataTexture('leaves', N, N, data, true);
 }
 
+/**
+ * A spray of leaves on a white ground, for the instance and vertex colours to paint: RGBA 192 x 192, alpha cut out in the material. Small leaves, every way round, thick in the middle and
+ * thinning to the edge of a circle, so that its small mipmaps are a soft round blob: the card does not vanish, nor show its square, far away.
+ */
+function spraySprite(): THREE.DataTexture {
+  const N = 192;
+  const data = new Uint8Array(N * N * 4);
+  const r = rng(808);
+  const LEAVES = 230;
+  for (let k = 0; k < LEAVES; k++) {
+    // from the middle outwards, the outer ones last so that they lie over the others
+    const rad = 0.47 * Math.sqrt((k + 0.5) / LEAVES);
+    const at = r() * Math.PI * 2;
+    const cx = (0.5 + rad * Math.cos(at)) * N;
+    const cy = (0.5 + rad * Math.sin(at)) * N;
+    const len = N * (0.04 + 0.026 * r());
+    const wid = len * (0.42 + 0.14 * r());
+    const dir = at + (r() - 0.5) * 2.2;
+    const ca = Math.cos(dir);
+    const sa = Math.sin(dir);
+    const tone = 0.66 + 0.42 * r();
+    const span = Math.ceil(len) + 2;
+    for (let j = Math.max(0, Math.floor(cy - span)); j < Math.min(N, cy + span); j++)
+      for (let i = Math.max(0, Math.floor(cx - span)); i < Math.min(N, cx + span); i++) {
+        const dx = i + 0.5 - cx;
+        const dy = j + 0.5 - cy;
+        const a = (dx * ca + dy * sa) / len;
+        const b = (dy * ca - dx * sa) / wid;
+        if (Math.abs(a) > 1) continue;
+        // a leaf's outline: pointed at both ends
+        const half = (1 - a * a) * (1 - 0.25 * a);
+        if (Math.abs(b) > half) continue;
+        const rib = 1 - 0.22 * (1 - Math.min(1, Math.abs(b) * 7));
+        const side = 0.88 + 0.12 * Math.sign(b);
+        const t = Math.min(1, tone * rib * side);
+        const o = (j * N + i) * 4;
+        data[o] = b8(t * 0.96);
+        data[o + 1] = b8(t);
+        data[o + 2] = b8(t * 0.9);
+        data[o + 3] = 255;
+      }
+  }
+  bleed(data, 0xa8b090);
+  return dataTexture('sprays', N, N, data, true, false);
+}
+
 function paintBlade(
   data: Uint8Array,
   W: number,
@@ -654,6 +719,7 @@ export interface SceneryTextures {
   planks: { albedo: THREE.DataTexture; height: THREE.DataTexture };
   bark: THREE.DataTexture;
   leaves: THREE.DataTexture;
+  sprays: THREE.DataTexture;
   reeds: THREE.DataTexture;
   tuft: THREE.DataTexture;
   flowers: THREE.DataTexture;
@@ -668,7 +734,7 @@ const timed = <T>(name: string, fn: () => T): T => {
   return r;
 };
 
-/** The textures of the scenery, made once (about 35 ms on a laptop). */
+/** The textures of the scenery, made once (about 110 ms on a laptop). */
 export function sceneryTextures(): SceneryTextures {
   if (cache) return cache;
   const t0 = performance.now();
@@ -723,6 +789,7 @@ export function sceneryTextures(): SceneryTextures {
     planks: timed('planks', planks),
     bark: timed('bark', bark),
     leaves: timed('leaves', leaves),
+    sprays: timed('sprays', spraySprite),
     reeds: timed('reeds', reedSprite),
     tuft: timed('tuft', tuftSprite),
     flowers: timed('flowers', flowerSprite),

@@ -21,10 +21,11 @@ export const createPowerroomScene = (): SceneModule<GravityState> =>
 /** What `src/lab.ts` needs to know of each world, as `SceneDef` fields. */
 export const WORLD = {
   site: {
-    /** A landscape to the kit (authored home pose, far plane 4000 m). No section here. */
+    /** A landscape to the kit (authored home pose, far plane 4000 m). No section here, and a farm does not come apart: a guide's parts still drop in. */
     cutaway: false,
+    explode: false,
     xrayNeedsSelection: true,
-    partPadding: 2.6,
+    partPadding: 1.3,
     stepFrame: { padding: 1.6, minRadius: 2 },
     xrayShell: (id: string): boolean => id === 'barn-solar-roof' || id === 'farmhouse' || id === 'power-shed',
   },
@@ -43,14 +44,14 @@ export const WORLD = {
   hoist: {
     /** The section through the axes of the drum and the motor is the hero view here. */
     cutaway: true,
-    partPadding: 2.2,
+    partPadding: 1.4,
     stepFrame: { padding: 1.5, minRadius: 0.2 },
     xrayShell: (id: string): boolean => id === 'hoist-gearbox' || id === 'hoist-motor' || id === 'service-brake',
   },
   'power-room': {
     /** The room is open already: no section (lab-quality §2). */
     cutaway: false,
-    partPadding: 2,
+    partPadding: 1.8,
     stepFrame: { padding: 1.5, minRadius: 0.25 },
     xrayShell: (id: string): boolean => id === 'motor-inverter' || id === 'dc-link' || id === 'regen-supply',
   },

@@ -110,6 +110,28 @@ export function paperFloor(radius = 12, tile = 8, y = 0): THREE.Mesh {
   return floor;
 }
 
+/**
+ * Fade a floor into the scene's fog colour by its own radius, from `from` to `to`, m: wherever the camera stands, the paper ends softly. Close to the machine, a fog that starts behind the
+ * machine would otherwise cut the floor in a hard line across the view.
+ */
+export function fadeFloor(floor: THREE.Mesh, from: number, to: number): THREE.Mesh {
+  const mat = floor.material as THREE.MeshStandardMaterial;
+  mat.customProgramCacheKey = () => `floor-fade:${from}:${to}`;
+  mat.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec2 vFloorP;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvFloorP = position.xy;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying vec2 vFloorP;')
+      .replace(
+        '#include <fog_fragment>',
+        `#include <fog_fragment>
+        gl_FragColor.rgb = mix( gl_FragColor.rgb, fogColor, smoothstep( ${from.toFixed(2)}, ${to.toFixed(2)}, length( vFloorP ) ) );`,
+      );
+  };
+  return floor;
+}
+
 /** Soft round sprite (white, alpha falling to the edge) for dots; a DataTexture, so no canvas is needed. */
 export function softDotTexture(size = 32): THREE.DataTexture {
   const data = new Uint8Array(size * size * 4);

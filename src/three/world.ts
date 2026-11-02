@@ -51,6 +51,13 @@ export function workshopScene(o: WorkshopOptions): THREE.Scene {
   return scene;
 }
 
+/** A direction to look at a part from, as the camera sees it: its elevation over the horizon and its bearing from +Z towards +X, in degrees. */
+export function viewFrom(elevation: number, bearing: number): THREE.Vector3 {
+  const e = (elevation * Math.PI) / 180;
+  const b = (bearing * Math.PI) / 180;
+  return new THREE.Vector3(Math.sin(b) * Math.cos(e), Math.sin(e), Math.cos(b) * Math.cos(e));
+}
+
 export interface HotspotDef {
   id: string;
   fr: string;

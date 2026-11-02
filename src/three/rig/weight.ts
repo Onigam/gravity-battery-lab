@@ -518,8 +518,7 @@ export function buildSheaveX(look: MachineLook, pitchR: number, w: number): THRE
   g.add(mesh(rim, look.drum));
   g.add(mesh(webX(R - 0.025, -0.012, 0.012, 5, R * 0.2, R * 0.56), look.steel));
   g.add(mesh(new THREE.CylinderGeometry(0.055, 0.055, w, 18).rotateZ(Math.PI / 2), look.steel));
-  // a dab of yellow on the web: the eye reads the turn
-  box(g, look.yellow, 0.026, R * 0.16, 0.05, 0, R - 0.06, 0);
+  // the eye reads the turn from the web's five windows: no tag on it, it would need explaining
   return g;
 }
 

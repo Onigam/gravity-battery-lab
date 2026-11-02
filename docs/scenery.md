@@ -15,7 +15,9 @@ Written by the lead from `src/three/site`, for the reviewer and the film. A flat
 ## What is on the land
 
 - **The farm, in place.** Barn at (−58, −38), farmhouse at (47, −38), shed at (−35, 2), block yard at (8, 15), wind mast at (19, −10), the supply's pole at `SITE.pole`, the tower at the origin. The fence has a radius equal to the tower's height, 28 m, an `assumption`: no rule was found (research §7). Everything but the fence, the gate, the mast, the yard and the trench stands outside it (tested).
-- **Plants.** Lombardy poplars along the west track, oaks round the yard, apple trees east of the house, hedges along the meadow's edge and the far parcels, tree belts on the far horizon, shrubs in the corners, tufts of grass and wild flowers. None is planted in the fence, on a track or on a building (tested), and the plan keeps them out of the home view's line to the tower.
+- **Plants.** Lombardy poplars along the west track, oaks round the yard, apple trees east of the house, hedges along the meadow's edge and the far parcels, tree belts on the far horizon, shrubs in the corners, tufts of grass and wild flowers. None is planted in the fence, on a track or on a building (tested), and the plan keeps them out of the home view's line to the tower. Grass keeps off the yard's hard standing (tested).
+- **Crowns.** A crown is hundreds of sprays of leaves, each a card with leaves cut out of one procedural sprite (`spraySprite`), turned around the crown's outward direction and lit as one volume, over a few dark masses that stop the sky showing through: 1,500 on an oak, 760 on a poplar, 440 on an apple tree, fewer on near hedges and shrubs. Far away the sprite's small mipmaps are a soft round blob, so the mass stays. The far hedges and tree belts keep their few lobes: they are never close.
+- **Gravel.** The ground's detail map holds packed crushed stone, a stone of 5 to 6 cm in a 2.2 m tile, each with its own tone, the gaps dark, under a softer patch of a coarser scale: no spots, and no grid from afar (tested on the map).
 - **Land.** Parcels of wheat, pasture and plough out to the horizon, tracks and yards painted in the vertices of the one mesh, so nothing can fight it for depth.
 - **Wires.** The supply comes over the plain on poles to the horizon, drops to a box on the shed's west wall; the roof's cable goes by a pole to the shed; the house's line goes by two poles north of the fence. Every wire ends on an insulator or on its box.
 
@@ -25,7 +27,7 @@ Only these: the sun and the sky with `hour`, the house's windows and light with 
 
 ## Weak points
 
-The broccoli crowns, close up: see `docs/3d.md`. To the reviewer: « what is this? » at three distances, for the trees, the telehandler, the bales and the trough, has not yet been asked by someone who did not build them.
+Asked by the review, and answered since: the trees at three distances, the gravel, the telehandler (rounded tyres, rims, a sloping hood, its boom over it on a post, a ram). Not asked again by someone who did not build them.
 
 ## Tests
 

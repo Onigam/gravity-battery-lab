@@ -22,7 +22,7 @@ import {
 import type { MachineLook } from './look';
 import { patchGroove } from './look';
 import { buildSheaveX } from './weight';
-import { TAU, box, boxFromTo, cyl, extrudeAlongX, gearX, latheX, ringX, sweep, webX } from './shapes';
+import { TAU, box, boxFromTo, cyl, extrudeAlongX, gearX, latheX, ringX, rounded, sweep, webX } from './shapes';
 
 // The hoist, one part at a time, in force order, on the maker's dimensions (S9 p. 1/55, `dims.HOIST`): on the feet the frame; on the frame the drum, and at its far end the disc of
 // the drum brake; the gearbox at the other end; the motor running back along the drum beside it, with its brake, its fan and its encoder. In front of the drum the rope's
@@ -37,8 +37,23 @@ const dyn = <T extends THREE.Object3D>(o: T): T => {
   return o;
 };
 
-/** A rectangle of the section plane, in the frame of the deck: x0..x1, z0..z1, and a colour. */
-export type CutRect = [number, number, number, number, number];
+/** A rectangle of the section plane, in the frame of the deck: x0..x1, z0..z1, a colour, and how far above the plane it lies (a shaft over the wheel it goes through). */
+export type CutRect = [number, number, number, number, number, number?];
+
+/** Lifts of the section's caps, m: what lies on what, never in the same plane. */
+export const CAP_LIFT = { hub: 0.0004, shaft: 0.0008 } as const;
+/** The tone of a cut shaft: a darker steel than the wheels it goes through. */
+export const SHAFT_CAP = 0x5d636a;
+/** One tone per stage of the gear train, from the motor to the drum: the two wheels that mesh share it, so a stage reads as a pair. */
+export const STAGE_CAP = [0xe0a92c, 0xc9661d, 0x96381c] as const;
+/** How wide the band of the teeth is drawn in section, m: a few millimetres in truth, it must read from a metre away. */
+const TEETH_BAND = 0.008;
+
+/** A colour made darker, each channel by `k`. */
+export const darker = (colour: number, k: number): number =>
+  (Math.round(((colour >> 16) & 255) * k) << 16) |
+  (Math.round(((colour >> 8) & 255) * k) << 8) |
+  Math.round((colour & 255) * k);
 
 export interface HoistPart {
   root: THREE.Group;
@@ -262,8 +277,10 @@ function buildDrum(
   const x1 = PLATE_IN[1] - 0.1;
   const R = HOIST.barrelR;
   const inner = R - HOIST.barrelWall;
-  // the barrel: a tube with its inside, the groove drawn in its material
+  // the barrel: a tube with its inside, the groove drawn in its material. Never baked into a shared material: the merge would lose the patch
   const barrelMat = look.drum.clone();
+  barrelMat.name = 'grooved-barrel';
+  barrelMat.userData.noShare = true;
   patchGroove(barrelMat, HOIST.ropePitch, windingX(0), R);
   rot.add(mesh(ringX(R, inner, x0, x1, 48), barrelMat));
   // two flanges, the end discs inside the tube, the shaft through
@@ -357,7 +374,7 @@ function buildDrum(
       [x0 + 0.03, x0 + 0.05, z + 0.05, z + inner, 0x8d9196],
       [x1 - 0.05, x1 - 0.03, z - inner, z - 0.05, 0x8d9196],
       [x1 - 0.05, x1 - 0.03, z + 0.05, z + inner, 0x8d9196],
-      [shaftX0, shaftX1, z - 0.05, z + 0.05, 0xe4e7ea],
+      [shaftX0, shaftX1, z - 0.05, z + 0.05, SHAFT_CAP, CAP_LIFT.shaft],
     ],
   };
 }
@@ -475,7 +492,22 @@ function buildGearbox(look: MachineLook): {
   shafts.push(s3);
   g.add(s3);
   const col = 0x8ea4b5;
-  const gearCol = 0xcfd3d6;
+  // a wheel in section: its body in the stage's tone, a darker band where the teeth are, meeting its partner's on the pitch circle; a steel hub, as `addGear` draws it
+  const wheelCut = (stage: number, zc: number, r: number): CutRect[] => {
+    const x0 = X(st[stage].at) - w / 2;
+    const x1 = X(st[stage].at) + w / 2;
+    const tone = STAGE_CAP[stage];
+    const teeth = darker(tone, 0.5);
+    const hub = r * 0.35;
+    const band = Math.min(TEETH_BAND, (r - hub) / 2);
+    return [
+      [x0, x1, zc - r + band, zc - hub, tone],
+      [x0, x1, zc + hub, zc + r - band, tone],
+      [x0, x1, zc - r, zc - r + band, teeth],
+      [x0, x1, zc + r - band, zc + r, teeth],
+      [x0 - 0.006, x1 + 0.006, zc - hub, zc + hub, 0x3b4046, CAP_LIFT.hub],
+    ];
+  };
   const cuts: CutRect[] = [
     // the walls in the plane
     [xa, xb, DRUM_Z - r1, DRUM_Z - r1 + t, col],
@@ -484,14 +516,11 @@ function buildGearbox(look: MachineLook): {
     [xb - t, xb, DRUM_Z - r1 + t, DRUM_Z - 0.052, col],
     [xb - t, xb, DRUM_Z + 0.052, MOTOR_Z - 0.05, col],
     [xb - t, xb, MOTOR_Z + 0.05, MOTOR_Z + r2 - t, col],
-    // the gears, top of the tooth
-    ...st.flatMap((s, i): CutRect[] => [
-      [X(s.at) - w / 2, X(s.at) + w / 2, zS[i] - s.pinion, zS[i] + s.pinion, gearCol],
-      [X(s.at) - w / 2, X(s.at) + w / 2, zS[i + 1] - s.wheel, zS[i + 1] + s.wheel, gearCol],
-    ]),
+    // the gears, a pair per stage: pinion on one shaft, wheel on the next
+    ...st.flatMap((s, i): CutRect[] => [...wheelCut(i, zS[i], s.pinion), ...wheelCut(i, zS[i + 1], s.wheel)]),
     // intermediate shafts
-    [X(st[0].at - 0.04), X(st[1].at + 0.04), zS[1] - 0.02, zS[1] + 0.02, 0xe4e7ea],
-    [X(st[1].at - 0.04), X(st[2].at + 0.04), zS[2] - 0.026, zS[2] + 0.026, 0xe4e7ea],
+    [X(st[0].at - 0.04), X(st[1].at + 0.04), zS[1] - 0.02, zS[1] + 0.02, SHAFT_CAP, CAP_LIFT.shaft],
+    [X(st[1].at - 0.04), X(st[2].at + 0.04), zS[2] - 0.026, zS[2] + 0.026, SHAFT_CAP, CAP_LIFT.shaft],
   ];
   return { g, shafts, blur, cuts };
 }
@@ -617,7 +646,7 @@ function buildMotor(look: MachineLook): {
       [lamB, lamB + 0.05, z - 0.135, z - 0.104, 0xd2792f],
       [lamB, lamB + 0.05, z + 0.104, z + 0.135, 0xd2792f],
       [lamA, lamB, z - 0.09, z + 0.09, 0x6c7178],
-      [shaftA, shaftB, z - 0.03, z + 0.03, 0xe4e7ea],
+      [shaftA, shaftB, z - 0.03, z + 0.03, SHAFT_CAP, CAP_LIFT.shaft],
     ],
   };
 }
@@ -699,24 +728,40 @@ function buildEncoder(look: MachineLook, cableTo: THREE.Vector3): { g: THREE.Gro
   };
   rot.add(half(1, look.scaleLight), half(-1, look.scaleDark));
   g.add(rot);
-  // the plug and its cable, back to the terminal box
-  box(g, look.steel, 0.024, 0.02, 0.02, a + 0.03, A + 0.048, MOTOR_Z);
-  const p0 = V(a + 0.03, A + 0.058, MOTOR_Z);
-  g.add(
-    mesh(
-      sweep(
-        [
-          p0,
-          V(a + 0.03, A + 0.2, MOTOR_Z + 0.02),
-          V(cableTo.x + 0.12, A + HOIST.ribR + 0.12, MOTOR_Z + 0.08),
-          V(cableTo.x, cableTo.y, cableTo.z),
-        ],
-        0.006,
-        6,
-      ),
-      look.cable,
-    ),
+  // the plug and its cable, back to the terminal box: it comes round the hood's edge and lies along the machine's flank, clipped on, up to the box's end: a wire never stands in the air
+  const plug = V(a + 0.03, A + 0.058, MOTOR_Z);
+  box(g, look.steel, 0.024, 0.02, 0.02, plug.x, plug.y - 0.01, plug.z);
+  const flank = (x: number, r: number) => V(x, A + r * Math.SQRT1_2, MOTOR_Z + r * Math.SQRT1_2);
+  const WIRE = 0.006;
+  const hoodR = HOIST.brakeR + 0.01 + WIRE;
+  const brakeR = HOIST.brakeR + WIRE + 0.001;
+  const ribR = HOIST.ribR + WIRE;
+  const brakeX = [X(HOIST.brakeEnd), X(HOIST.motorEnd)] as const;
+  const landing = V(cableTo.x + 0.04, cableTo.y - 0.015, cableTo.z - 0.03);
+  const path = rounded(
+    [
+      plug,
+      V(plug.x, A + 0.1, MOTOR_Z + 0.03),
+      flank(a + 0.012, hoodR * 0.86),
+      flank(a - 0.03, hoodR),
+      flank(brakeX[0] + 0.01, hoodR),
+      flank(brakeX[0] - 0.012, brakeR),
+      flank(brakeX[1] + 0.012, brakeR),
+      flank(brakeX[1] - 0.02, ribR),
+      flank(landing.x + 0.09, ribR),
+      V(landing.x + 0.035, landing.y - 0.012, landing.z + 0.03),
+      landing,
+    ],
+    0.014,
+    4,
   );
+  g.add(mesh(sweep(path, WIRE, 6), look.cable));
+  // two clips on the way
+  for (const x of [(a + brakeX[0]) / 2, brakeX[0] - 0.05]) {
+    const p = flank(x, x > brakeX[0] ? hoodR : brakeR);
+    const clip = box(g, look.steel, 0.012, 0.012, 0.022, p.x, p.y, p.z);
+    clip.rotation.x = -Math.PI / 4;
+  }
   return { g, rot };
 }
 
@@ -791,15 +836,14 @@ function buildGuide(look: MachineLook): { g: THREE.Group; move: THREE.Group } {
   const move = dyn(group('guide-move'));
   const Rg = DRUM_R + 0.04;
   const w = 0.072;
-  // a split ring round the drum, open at the rope's way out, its fork on the bar
-  const gap = 0.32;
+  // a split ring round the drum, open at the rope's way out, its fork on the bar. In the (z, y) plane the rope leaves on the −z side, at (DRUM_Z − R, A), and hangs straight down: the
+  // ring's lower lip stops above where that plumb line crosses its outer radius, with a rope's width to spare
+  const gapUp = 0.32;
+  const gapDown = Math.atan2(Math.sqrt(Rg * Rg - DRUM_R * DRUM_R), DRUM_R) + (2 * ROPE_R) / Rg + 0.03;
   const ring = new THREE.Shape();
-  const a0 = -Math.PI / 2 - gap;
-  // in the (z, y) plane the rope leaves on the −z side, at (DRUM_Z − R, A)
-  ring.absarc(0, 0, Rg, Math.PI + gap, Math.PI - gap + TAU, false);
-  ring.absarc(0, 0, Rg - 0.016, Math.PI - gap + TAU, Math.PI + gap, true);
+  ring.absarc(0, 0, Rg, Math.PI + gapDown, Math.PI - gapUp + TAU, false);
+  ring.absarc(0, 0, Rg - 0.016, Math.PI - gapUp + TAU, Math.PI + gapDown, true);
   ring.closePath();
-  void a0;
   const geo = extrudeAlongX(ring, -w / 2, w / 2, 26);
   geo.translate(0, A, DRUM_Z);
   move.add(mesh(geo, look.yellow));

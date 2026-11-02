@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { clamp, damp, group, mesh } from '@onigam/lab-kit/three';
-import type { ViewOpts } from '@onigam/lab-kit/three';
+import type { PartRegistry, ViewOpts } from '@onigam/lab-kit/three';
 import type { GravityState } from '../../sim/types';
 import { DECK_TOP, DRUM_R, GEARS, GOVERNOR, HOOK_BLOCK, PAD_TOP, STROKE, liftAt, windingX, woundAt } from '../dims';
 import { applyWear } from '../detail';
@@ -111,11 +111,40 @@ export interface Machine {
     halves: number;
     stackTop: number;
   };
+  /** May the blur discs show? A world says no while the part that holds them is hidden: the state's blur would put them back in mid-air every frame. */
+  blurAllowed: { fan: boolean; gears: boolean };
+  /** The drum's axis now, in the machine's frame. */
+  drumAxisInRoot(): THREE.Vector3;
   /** Rope speeds of the falls now, m/s, signed along the path from the hook to the drum, drawn in the flows. */
   update(s: GravityState, dt: number, view: ViewOpts): void;
 }
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+
+/** What the registry says of a world's parts this frame: is one hidden (isolate, or a step of a guide), has one left its place (the exploded view)? */
+export function partsNow(reg: PartRegistry): { hidden: boolean; exploded: boolean } {
+  let hidden = false;
+  let exploded = false;
+  for (const id of reg.ids()) {
+    const p = reg.get(id)!;
+    if (p.display === 'hidden') hidden = true;
+    if (p.factor > 0) exploded = true;
+  }
+  return { hidden, exploded };
+}
+
+/**
+ * What belongs to no selectable part, and so would stay standing in the void (lab-quality §1): the governor's rope and its lower sheave, the motor's cable. Neither follows a part
+ * that leaves in the exploded view, and neither is hidden by the registry. They show only when every part is there and in its place. Where the rope is no part (the `hoist` world),
+ * `rope: true` hides it with the rest while a part is hidden; exploded, it stays, aimed at its markers.
+ */
+export function holdScenery(m: Machine, reg: PartRegistry, o: { rope?: boolean } = {}): void {
+  const { hidden, exploded } = partsNow(reg);
+  const clear = !hidden && !exploded;
+  m.governorRope.visible = clear;
+  m.riser.visible = clear;
+  if (o.rope) m.rope.root.visible = !hidden;
+}
 
 export function buildMachine(o: MachineOptions = {}): Machine {
   const look = machineLook();
@@ -408,6 +437,7 @@ export function buildMachine(o: MachineOptions = {}): Machine {
 
   let lastSheave = 0;
   let woundDrawn: number | null = null;
+  const blurAllowed = { fan: true, gears: true };
   const update: Machine['update'] = (s, dt) => {
     const lift = liftAt(s.zFraction);
     drawn.lift = lift;
@@ -449,7 +479,7 @@ export function buildMachine(o: MachineOptions = {}): Machine {
     hoist.motorRot.rotation.x = -s.motorAngle;
     hoist.shafts[0].rotation.x = -s.motorAngle;
     hoist.encoderRot.rotation.x = -s.motorAngle;
-    hoist.blurFan.visible = s.motorBlur;
+    hoist.blurFan.visible = s.motorBlur && blurAllowed.fan;
     if (dt > 0) {
       const rate = Math.abs(dTheta) / dt;
       const rates = [ratio2 * rate, ratio3 * rate];
@@ -459,9 +489,9 @@ export function buildMachine(o: MachineOptions = {}): Machine {
         gearPhase[i + 1] += sign * Math.sign(dTheta) * shown * dt;
         hoist.shafts[i + 1].rotation.x = gearPhase[i + 1];
         const teeth = st[i].teethW * (rates[i] / (2 * Math.PI));
-        hoist.blurGears[i + 1].visible = teeth > TEETH_PER_SECOND_MAX;
+        hoist.blurGears[i + 1].visible = teeth > TEETH_PER_SECOND_MAX && blurAllowed.gears;
       }
-      hoist.blurGears[0].visible = s.motorBlur;
+      hoist.blurGears[0].visible = s.motorBlur && blurAllowed.gears;
     }
 
     // ---- brakes: spring-applied, released while the machine moves
@@ -519,6 +549,8 @@ export function buildMachine(o: MachineOptions = {}): Machine {
     explode,
     custom,
     drawn,
+    blurAllowed,
+    drumAxisInRoot: () => axisDrum.clone(),
     update,
   };
   return machine;

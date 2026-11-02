@@ -462,13 +462,14 @@ export function buildHeadFrame(look: MachineLook): { root: THREE.Group; roof: TH
   box(g, look.yellow, 2 * r, 0.1, 0.006, 0, DECK_TOP + 0.05, r);
   box(g, look.yellow, 0.006, 0.1, 2 * r, r, DECK_TOP + 0.05, 0);
   box(g, look.yellow, 0.006, 0.1, 2 * r, -r, DECK_TOP + 0.05, 0);
-  // the roof's posts on the legs' heads, then purlins and a pitched sheet: ridge along X, the ridge at the tower's height
+  // the roof's posts on the legs' heads, then purlins and a pitched sheet: ridge along X, the ridge at the tower's height. Posts and braces hold nothing but the roof: they
+  // belong to it, and leave with it in the `hoist` world
   const eaves = TOWER.eavesY;
   // the lamp's top is the tower's height
   const ridge = TOWER.height - 0.17;
   for (const sx of [-1, 1])
     for (const sz of [-1, 1]) {
-      g.add(
+      roof.add(
         mesh(hColumn(0.14, 0.012, 0.009, eaves - DECK_TOP), look.galvanised, [
           sx * (L - 0.02),
           DECK_TOP,
@@ -481,7 +482,7 @@ export function buildHeadFrame(look: MachineLook): { root: THREE.Group; roof: TH
       const len = a.distanceTo(b);
       const m = mesh(angleBar(0.06, 0.008, len), look.galvanisedDark);
       between(m, a, b, V(sx, 0, 0));
-      g.add(m);
+      roof.add(m);
     }
   // eaves beams and rafters
   const zE = L + TOWER.roofOverhang;

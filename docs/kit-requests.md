@@ -29,3 +29,9 @@ Numbered, one paragraph each. Nothing here was worked around by patching the kit
 
 20. **The cartouche: « Projection européenne » touches the line beside it.** The kit writes it to the left of the title block, ending on the block's edge, and the lab's disclaimer starts on that edge: on every sheet the two run together (« européenneNE PAS CONSTRUIRE »). A gap of a few millimetres in the kit would do; nothing here works around it.
 21. **The part sheet's tabs wrap at 1280 in French.** « Aperçu, Caractéristiques, Entretien, Conception » take two lines in the default panel: readable, and the same in every French lab, but the fourth stands alone on its line.
+
+## From the fixes after the review
+
+22. **A hotspot that follows the state.** The ghost stack of `site` needs a label that says what it is, reads the state, and shows only with the ghost. The kit reads a label's text and its visibility when the display changes, not every frame, and a hotspot needs a part. The world writes the DOM itself (`.hotspot__text`, `style.visibility`) from the `CSS2DObject` under its anchor. The same world sets `text-transform: none` on that one label, since the kit's capitals would misspell its units (« 128 T, 3 KWH »). A `Hotspot.label` that may be a function, a `Hotspot.visible()` and a way to keep a label's case would replace all of it. Kit 0.6.0 does not have them.
+
+Answered by kit 0.6.0 and used in `src/three`: 14 in part (`near`, `far`; the rest stays open in the kit's list), 19 in part (`declutter`, for the collisions with every label on; a label's side stays open), the explode flag and the frame box per part that `docs/qa.md` asked of the lead. `merge.ts`, `common.ts` and the copied `detail.ts` were left as they are: moving to the kit's `applyWear` and `contactShadow` is a choice of its own (`lab-kit/docs/kit-0.6.0.md`).

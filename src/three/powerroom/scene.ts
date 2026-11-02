@@ -7,7 +7,7 @@ import { paperFloor, FlowDots } from '../common';
 import { contactShadow } from '../detail';
 import { DEVICE, ESTOP, MODULE, SHED, SHELF } from '../dims';
 import { mergeStatic } from '../merge';
-import { box } from '../rig/shapes';
+import { box, rounded, sweep } from '../rig/shapes';
 import { anchor, hotspots, workshopScene, type HotspotDef } from '../world';
 import { POWER_PARTS, buildPowerParts, buildTray, type PowerId, type PowerPieces } from './parts';
 import { buildShedShell } from './room';
@@ -89,17 +89,14 @@ export function createPowerroomScene(): PowerroomScene {
   // near detail, scenery: a lamp, a board, a stool, a drum of cable, a fire extinguisher, floor markings
   const props = group('props');
   scene.add(props);
+  // the floor's marking: the clear zone in front of the three cabinets, closed against the back wall and the shelf
   const floorEdge = new THREE.MeshStandardMaterial({ color: 0xb9860f, roughness: 0.7 });
-  box(
-    props,
-    floorEdge,
-    DEVICE.motorInverter.x + 1.2 + 0.56,
-    0.003,
-    0.05,
-    (DEVICE.regenSupply.x + DEVICE.motorInverter.x) / 2 + 0.1,
-    0.0015,
-    1.1,
-  );
+  const zoneX = [DEVICE.regenSupply.x - 0.655, SHELF.x - SHELF.w / 2 + 0.03] as const;
+  const zoneZ = 1.1;
+  const tape = 0.05;
+  box(props, floorEdge, zoneX[1] - zoneX[0], 0.003, tape, (zoneX[0] + zoneX[1]) / 2, 0.0015, zoneZ);
+  box(props, floorEdge, tape, 0.003, zoneZ, zoneX[0], 0.0015, zoneZ / 2);
+  box(props, floorEdge, tape, 0.003, zoneZ - SHELF.d, zoneX[1], 0.0015, (zoneZ + SHELF.d) / 2);
   const lampMat = new THREE.MeshStandardMaterial({
     color: 0xd8d2c4,
     roughness: 0.3,
@@ -107,12 +104,51 @@ export function createPowerroomScene(): PowerroomScene {
     emissiveIntensity: 0.6,
   });
   box(props, lampMat, 1.1, 0.06, 0.12, -0.4, SHED.h - 0.04, 1.2);
-  const ext = new THREE.CylinderGeometry(0.075, 0.075, 0.46, 18);
-  ext.translate(-2.75, 0.23 + 0.01, 1.05);
-  props.add(mesh(ext, MAT.redPaint()));
-  const extTop = new THREE.CylinderGeometry(0.02, 0.05, 0.08, 12);
-  extTop.translate(-2.75, 0.52, 1.05);
-  props.add(mesh(extTop, MAT.printBlack()));
+  // a fire extinguisher on the floor by the wall: a shouldered red bottle on a black foot, a valve with its lever and gauge, a hose down to a nozzle clipped on its side
+  const ext = group('extinguisher', [-2.75, 0, 1.05]);
+  const bottle = new THREE.LatheGeometry(
+    [
+      [0, 0.02],
+      [0.072, 0.02],
+      [0.076, 0.03],
+      [0.076, 0.42],
+      [0.07, 0.45],
+      [0.05, 0.475],
+      [0.022, 0.49],
+      [0, 0.49],
+    ].map(([r, y]) => new THREE.Vector2(r, y)),
+    20,
+  );
+  ext.add(mesh(bottle, MAT.redPaint()));
+  const blackMat = MAT.printBlack();
+  const steelMat = new THREE.MeshStandardMaterial({ color: 0xa9adb0, roughness: 0.4, metalness: 0.7 });
+  const cylY = (r: number, y0: number, y1: number, x = 0, z = 0, seg = 14) =>
+    mesh(new THREE.CylinderGeometry(r, r, y1 - y0, seg), blackMat, [x, (y0 + y1) / 2, z]);
+  ext.add(cylY(0.08, 0, 0.022, 0, 0, 20));
+  ext.add(cylY(0.018, 0.49, 0.53));
+  box(ext, blackMat, 0.03, 0.025, 0.05, 0, 0.545, 0);
+  // the carrying handle and the lever above it
+  const lever = box(ext, steelMat, 0.018, 0.006, 0.11, 0, 0.565, 0.045);
+  lever.rotation.x = -0.2;
+  box(ext, steelMat, 0.018, 0.006, 0.1, 0, 0.545, 0.05);
+  // the gauge on the valve
+  const gauge = new THREE.CylinderGeometry(0.014, 0.014, 0.008, 12);
+  gauge.rotateX(Math.PI / 2);
+  ext.add(mesh(gauge, steelMat, [0.03, 0.53, -0.012]));
+  // the label band
+  box(ext, new THREE.MeshStandardMaterial({ color: 0xe8e0cd, roughness: 0.8 }), 0.09, 0.14, 0.004, 0, 0.24, 0.076);
+  // the hose, from the valve down the side to the nozzle in its clip
+  const hose = [
+    new THREE.Vector3(-0.015, 0.535, 0),
+    new THREE.Vector3(-0.07, 0.52, 0),
+    new THREE.Vector3(-0.1, 0.42, 0.01),
+    new THREE.Vector3(-0.095, 0.2, 0.02),
+    new THREE.Vector3(-0.088, 0.12, 0.02),
+  ];
+  ext.add(mesh(sweep(rounded(hose, 0.03, 4), 0.007, 6), blackMat));
+  ext.add(mesh(new THREE.CylinderGeometry(0.008, 0.014, 0.08, 10), blackMat, [-0.088, 0.09, 0.02]));
+  box(ext, steelMat, 0.02, 0.012, 0.02, -0.08, 0.2, 0.02);
+  props.add(ext);
   // a drum of cable by the door: wood, on its flange
   const drum = group('cable-drum', [2.4, 0, 2.5]);
   const flangeG = new THREE.CylinderGeometry(0.28, 0.28, 0.025, 28);
@@ -199,6 +235,7 @@ export function createPowerroomScene(): PowerroomScene {
     home: { position: V(-0.3, 1.75, 6.4), target: V(0.28, 1.12, 0.6) },
     minDistance: 0.25,
     maxDistance: 25,
+    declutter: true,
     homePadding: 0.78,
     update(s, dt, view) {
       let solids = 0;

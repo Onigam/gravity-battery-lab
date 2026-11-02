@@ -270,19 +270,34 @@ export function buildYard(
   place(-3, 1.9, 0, false, true, seed++);
   place(-1.2, 1.9, 0, false, true, seed++);
   place(0.6, 1.9, 0, false, true, seed++);
-  // the crane's four pads: steel plates on the stone
-  const plate = MAT.steelBlack();
+  // the crane's four pads: weathered steel plates on the stone, a lifting eye at two corners of each
+  const plate = new THREE.MeshStandardMaterial({ color: 0x5f5a52, roughness: 0.85, metalness: 0.35 });
+  const edge = new THREE.MeshStandardMaterial({ color: 0x4b463f, roughness: 0.8, metalness: 0.4 });
   for (const [x, z] of [
     [-5.4, -3.6],
     [5.4, -3.6],
     [-5.4, 3.6],
     [5.4, 3.6],
-  ] as const)
+  ] as const) {
     box(g, plate, 1, 0.03, 1, x, top + 0.015, z);
-  // lifting chains hung on a stand
+    // a stiffener cross under the eye's line, and two eyes
+    box(g, edge, 0.9, 0.012, 0.05, x, top + 0.036, z);
+    box(g, edge, 0.05, 0.012, 0.9, x, top + 0.036, z);
+    for (const c of [-0.38, 0.38]) cyl(g, edge, 'z', 0.03, z + c - 0.012, z + c + 0.012, x + c, top + 0.05, 10);
+  }
+  // lifting chains hung on a stand: a post on its foot plate, an arm, and the chains down from it
   box(g, galv(), 0.06, 1.4, 0.06, 3.6, top + 0.7, 2);
   box(g, galv(), 0.7, 0.06, 0.06, 3.6, top + 1.38, 2);
-  box(g, MAT.steelBlack(), 0.5, 0.012, 0.45, 3.6, top + 0.006, 2);
+  box(g, edge, 0.5, 0.012, 0.45, 3.6, top + 0.006, 2);
+  for (const [dx, len] of [
+    [-0.3, 0.86],
+    [-0.2, 0.7],
+    [0.2, 0.78],
+    [0.3, 0.62],
+  ] as const) {
+    cyl(g, edge, 'y', 0.009, top + 1.35 - len, top + 1.35, 3.6 + dx, 2, 6);
+    cyl(g, MAT.warningYellow(), 'y', 0.022, top + 1.35 - len - 0.05, top + 1.35 - len, 3.6 + dx, 2, 8);
+  }
   return g;
 }
 
@@ -381,40 +396,93 @@ export function buildTelehandler(x: number, z: number, rot: number): THREE.Group
   const body = new THREE.MeshStandardMaterial({ color: 0xc66a1f, roughness: 0.55, metalness: 0.15 });
   const dark = MAT.steelBlack();
   const tyre = MAT.rubber();
+  const rimSteel = new THREE.MeshStandardMaterial({ color: 0xc9c4b6, roughness: 0.5, metalness: 0.4 });
   const wheel = (wx: number, wz: number) => {
-    const t = new THREE.CylinderGeometry(0.62, 0.62, 0.42, 22);
+    const side = Math.sign(wx);
+    // a tyre with a rounded shoulder, a dished rim, its nuts
+    const t = new THREE.LatheGeometry(
+      [
+        [0.34, -0.21],
+        [0.52, -0.21],
+        [0.6, -0.18],
+        [0.62, -0.1],
+        [0.62, 0.1],
+        [0.6, 0.18],
+        [0.52, 0.21],
+        [0.34, 0.21],
+      ].map(([r, y]) => new THREE.Vector2(r, y)),
+      24,
+    );
     t.rotateZ(Math.PI / 2);
     t.translate(wx, 0.62, wz);
     g.add(mesh(t, tyre));
-    const h = new THREE.CylinderGeometry(0.3, 0.3, 0.44, 14);
-    h.rotateZ(Math.PI / 2);
-    h.translate(wx, 0.62, wz);
-    g.add(mesh(h, body));
+    const rim = new THREE.CylinderGeometry(0.345, 0.345, 0.3, 22);
+    rim.rotateZ(Math.PI / 2);
+    rim.translate(wx, 0.62, wz);
+    g.add(mesh(rim, rimSteel));
+    const hub = new THREE.CylinderGeometry(0.15, 0.17, 0.05, 16);
+    hub.rotateZ((side * -Math.PI) / 2);
+    hub.translate(wx + side * 0.17, 0.62, wz);
+    g.add(mesh(hub, body));
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * TAU;
+      const u = 0.62 + 0.115 * Math.sin(a);
+      cyl(g, dark, 'x', 0.016, wx + side * 0.19, wx + side * 0.215, u, wz + 0.115 * Math.cos(a), 6);
+    }
     // lugs on the tyre: a ring of low blocks, so that it reads as a tractor's
     for (let i = 0; i < 12; i++) {
       const a = (i / 12) * TAU;
-      box(g, tyre, 0.44, 0.06, 0.14, wx, 0.62 + 0.62 * Math.sin(a), wz + 0.62 * Math.cos(a)).rotation.x = -a;
+      box(g, tyre, 0.34, 0.05, 0.14, wx, 0.62 + 0.625 * Math.sin(a), wz + 0.625 * Math.cos(a)).rotation.x = -a;
     }
   };
   for (const s of [-1, 1]) {
     wheel(s * 1.04, 1.45);
     wheel(s * 1.04, -1.45);
   }
-  // chassis and engine
+  // chassis, and the engine under a hood with a sloping top, louvres, a grille at the back and a tail pipe
   boxFromTo(g, dark, [-0.75, 0.45, -2.2], [0.75, 0.75, 2.2]);
-  boxFromTo(g, body, [-0.15, 0.75, -2.4], [0.8, 1.55, 0.4]);
-  // cab
+  const hood = new THREE.Shape();
+  hood.moveTo(-2.4, 0.75);
+  hood.lineTo(0.4, 0.75);
+  hood.lineTo(0.4, 1.32);
+  hood.lineTo(0.15, 1.42);
+  hood.lineTo(-2.0, 1.55);
+  hood.lineTo(-2.4, 1.35);
+  hood.closePath();
+  const hoodGeo = new THREE.ExtrudeGeometry(hood, { depth: 0.95, bevelEnabled: false });
+  // the shape's x is the machine's z: turned about Y it runs along the machine, from x = 0.8 to x = −0.15
+  hoodGeo.rotateY(-Math.PI / 2);
+  hoodGeo.translate(0.8, 0, 0);
+  g.add(mesh(hoodGeo, body));
+  for (let i = 0; i < 6; i++) box(g, dark, 0.012, 0.03, 0.34, 0.805, 1.05 + i * 0.05, -1.5);
+  boxFromTo(g, dark, [-0.05, 0.85, -2.415], [0.7, 1.3, -2.4]);
+  for (const lx of [-0.02, 0.67]) cyl(g, MAT.warningYellow(), 'z', 0.035, -2.43, -2.41, lx, 1.36, 10);
+  cyl(g, dark, 'y', 0.035, 1.4, 2.0, 0.55, -1.65, 8);
+  // cab: glass in a frame, a door's line, a seat's back behind the glass, a mirror, a step
   const glassy = new THREE.MeshStandardMaterial({ color: 0x2b3940, roughness: 0.2, metalness: 0.2 });
-  boxFromTo(g, glassy, [-0.92, 0.85, -0.6], [-0.2, 2.35, 1.1]);
+  boxFromTo(g, glassy, [-0.92, 1.25, -0.6], [-0.2, 2.35, 1.1]);
+  boxFromTo(g, body, [-0.93, 0.75, -0.61], [-0.19, 1.25, 1.11]);
   boxFromTo(g, body, [-0.95, 2.35, -0.65], [-0.17, 2.45, 1.15]);
   for (const zz of [-0.62, 1.12])
     for (const xx of [-0.94, -0.18]) boxFromTo(g, dark, [xx - 0.03, 0.85, zz - 0.03], [xx + 0.03, 2.38, zz + 0.03]);
-  // the boom: lowered, along the machine on its right, from the rear to beyond the front
-  const boom = group('boom', [0.2, 1.65, -1.9]);
-  boom.rotation.x = 0.21;
+  boxFromTo(g, dark, [-0.95, 1.24, -0.62], [-0.91, 2.36, -0.56]);
+  boxFromTo(g, dark, [-0.95, 1.24, 0.42], [-0.91, 2.36, 0.48]);
+  box(g, dark, 0.03, 0.03, 0.18, -0.97, 1.75, 0.3);
+  boxFromTo(g, dark, [-1.1, 0.5, 0.1], [-0.93, 0.54, 0.6]);
+  boxFromTo(g, dark, [-1.02, 2.1, 1.12], [-1.0, 2.3, 1.14]);
+  box(g, glassy, 0.02, 0.2, 0.12, -1.06, 2.15, 1.16);
+  // the boom: lowered, along the machine on its right, from a pivot on a post at the rear, over the hood, to beyond the front, its lifting ram under it
+  boxFromTo(g, dark, [0.02, 1.4, -2.05], [0.38, 1.95, -1.72]);
+  const boom = group('boom', [0.2, 1.95, -1.9]);
+  boom.rotation.x = 0.2;
   boxFromTo(boom, body, [-0.18, -0.2, 0], [0.18, 0.2, 3.9]);
   boxFromTo(boom, dark, [-0.13, -0.15, 3.9], [0.13, 0.15, 5.1]);
+  cyl(boom, dark, 'x', 0.09, -0.2, 0.2, 0, 0, 12);
   g.add(boom);
+  const ramFoot = V(0.2, 0.75, 0.55);
+  const ramTop = V(0.2, 1.1, 1.4);
+  g.add(mesh(sweep([ramFoot, ramFoot.clone().lerp(ramTop, 0.55)], 0.075, 10), dark));
+  g.add(mesh(sweep([ramFoot.clone().lerp(ramTop, 0.5), ramTop], 0.04, 10), rimSteel));
   // the fork plate and forks on the ground
   const fz = 3.3;
   boxFromTo(g, dark, [-0.46, 0.05, fz], [0.86, 0.8, fz + 0.1]);

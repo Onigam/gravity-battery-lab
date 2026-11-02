@@ -1,12 +1,13 @@
 import * as THREE from 'three';
+import { l, tr, type L } from '@onigam/lab-kit/i18n';
 import { clamp, damp, emissive, group, PartRegistry } from '@onigam/lab-kit/three';
-import type { SceneModule } from '@onigam/lab-kit/three';
+import type { Hotspot, SceneModule } from '@onigam/lab-kit/three';
 import { BLOCK, DECK_TOP, PANEL_H, SHED, SITE, STACK, TOWER, levelY } from '../dims';
 import type { GravityParams, GravityState } from '../../sim/types';
 import { FlowDots } from '../common';
 import { mergeStatic } from '../merge';
 import { buildShedShell } from '../powerroom/room';
-import { buildMachine, type Machine } from '../rig/machine';
+import { buildMachine, partsNow, type Machine } from '../rig/machine';
 import { blockGeometry } from '../rig/weight';
 import { anchor, hotspots, type HotspotDef } from '../world';
 import { buildBarn, buildHouse } from './buildings';
@@ -39,6 +40,8 @@ const HOTSPOTS: HotspotDef[] = [
   { id: 'barn-solar-roof', fr: 'Toit solaire de la grange', en: 'Barn solar roof' },
   { id: 'farmhouse', fr: 'Maison', en: 'Farmhouse' },
   { id: 'block-yard', fr: 'Aire à blocs', en: 'Block yard' },
+  // the ghost is no part: its label follows the state, shows only with it, and leads to the yard the blocks would come from
+  { id: 'block-yard#ghost', fr: '', en: '' },
   { id: 'exclusion-fence', fr: 'Clôture de sécurité', en: 'Exclusion fence', minor: true },
   { id: 'interlocked-gate', fr: 'Portail asservi', en: 'Interlocked gate', minor: true },
   { id: 'cable-trench', fr: 'Tranchée de câbles', en: 'Cable trench', minor: true },
@@ -46,7 +49,7 @@ const HOTSPOTS: HotspotDef[] = [
   { id: 'wind-mast', fr: 'Mât anémométrique', en: 'Wind mast', minor: true },
 ];
 
-/** Explode offsets, site frame, metres: every part rises by its own amount. */
+/** Offsets of a part dropping in during a guide, site frame, metres: every part rises by its own amount. There is no explode tool in this world (`WORLD.site`): its tower and its pad hovered 12 m above their own shadow, which teaches nothing. */
 export const EXPLODE: Record<string, [number, number, number]> = {
   'machine-tower': [0, 12, 0],
   'barn-solar-roof': [0, 9, 0],
@@ -65,7 +68,7 @@ export const SITE_MACHINE = { windingDetail: [12, 4] as [number, number], wear: 
 
 export interface SiteScene extends SceneModule<GravityState> {
   machine: Machine;
-  ghost: { blocks: THREE.InstancedMesh; towers: THREE.InstancedMesh; shown: number };
+  ghost: { blocks: THREE.InstancedMesh; towers: THREE.InstancedMesh; shown: number; label: L; anchor: THREE.Object3D };
   gate: { leaves: THREE.Group[] };
   sun: THREE.DirectionalLight;
   house: { panes: THREE.MeshStandardMaterial; light: THREE.PointLight };
@@ -75,6 +78,17 @@ export interface SiteScene extends SceneModule<GravityState> {
 }
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+
+/** What the ghost stands for, in words: « 128 t*, 6,4 tours*, pour 3 kWh* ». Modelled figures, so marked; the comma or the point of each language. */
+export function ghostLabel(s: Pick<GravityState, 'ghostTonnes' | 'ghostTowers'>, nightKwh: number): L {
+  const fmt = (locale: string, v: number, digits: number) =>
+    v.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  const kwh = Number.isInteger(nightKwh) ? 0 : 1;
+  return l(
+    `${fmt('fr-FR', s.ghostTonnes, 0)} t*, ${fmt('fr-FR', s.ghostTowers, 1)} tours*, pour ${fmt('fr-FR', nightKwh, kwh)} kWh*`,
+    `${fmt('en-GB', s.ghostTonnes, 0)} t*, ${fmt('en-GB', s.ghostTowers, 1)} towers*, for ${fmt('en-GB', nightKwh, kwh)} kWh*`,
+  );
+}
 
 /** A translucent copper for what the ghost is: not a thing, a quantity. Double the depth write off: its faces overlap without a fight. */
 const ghostMaterial = (opacity: number): THREE.MeshStandardMaterial =>
@@ -255,6 +269,10 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
   anchors['grid-connection'] = anchor(gridRoot, pGrid.x, SITE.pole.h + 0.5, pGrid.z, 'grid-label');
   anchors['grid-connection'].userData.keep = true;
   anchors['wind-mast'] = mast.anchor;
+  const ghostAnchor = new THREE.Object3D();
+  ghostAnchor.name = 'ghost-label';
+  scene.add(ghostAnchor);
+  anchors['block-yard#ghost'] = ghostAnchor;
 
   registry.add('machine-tower', machine.root, V(...EXPLODE['machine-tower']));
   registry.add('barn-solar-roof', barn.group, V(...EXPLODE['barn-solar-roof']));
@@ -320,6 +338,9 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
       ghostTowers.setMatrixAt(i, m4);
     }
     ghostTowers.instanceMatrix.needsUpdate = true;
+    // the label stands over the first column of stacks, half way back: it reads to the right, over them
+    const rows = Math.ceil(Math.ceil(n / 6) / g.cols);
+    ghostAnchor.position.set(g.x, 3 * BLOCK.height + 0.9, g.z + ((rows - 1) / 2) * (STACK.width + 0.5));
   };
 
   // ---- "Flows": the current, along the wires and the trench
@@ -330,8 +351,13 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
   const fHouse = flows.addPath(houseLine, 40);
   const fGrid = flows.addPath([...lineWest.slice().reverse(), ...dropLine], 40);
 
+  const hs = hotspots(HOTSPOTS, anchors);
+  const ghostHotspot: Hotspot = hs.find((h) => h.anchor === ghostAnchor)!;
   let ghostAlpha = 0;
   let ghostBase: number | null = null;
+  // the kWh the state's tonnes were worked out for: the parameter moves first, and the state follows at the next step of a running simulation
+  let ghostKwh = 0;
+  let ghostTonnes = -1;
   let ghostKey = '';
   let wingFlap = 0;
   const lightUp = { k: 0 };
@@ -339,23 +365,29 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
     id: 'site',
     scene,
     registry,
-    hotspots: hotspots(HOTSPOTS, anchors),
+    hotspots: hs,
     machine,
-    ghost: { blocks: ghostBlocks, towers: ghostTowers, shown: 0 },
+    ghost: { blocks: ghostBlocks, towers: ghostTowers, shown: 0, label: ghostHotspot.label, anchor: ghostAnchor },
     gate,
     sun: sky.sun,
     house: { panes: house.panes, light: house.light },
     trenchLine: trench.line,
     flows,
     scenery: () => [terrain.group, plants.group, props, machine.root],
-    home: { position: V(64, 31, 96), target: V(0, 6, -13) },
+    // the view's middle is half way between the barn and the house, a little right of the tower: a narrow view, which backs off by its width, keeps both
+    home: { position: V(69, 31, 93), target: V(5, 6, -16) },
     minDistance: 2,
-    maxDistance: 340,
+    // what a narrow view backs off to (the kit sets the distance by the width): further than this, the farm is a strip in the middle of a field (D35)
+    maxDistance: 320,
+    // with every label on, a name with no room folds into its dot
+    declutter: true,
     update(s, dt, view) {
       const p = params();
       sky.update(s.hour, view.time);
       WIND.time.value = view.time;
+      machine.blurAllowed.fan = machine.blurAllowed.gears = registry.get('machine-tower')!.display !== 'hidden';
       machine.update(s, dt, view);
+      const isolating = partsNow(registry).hidden;
 
       // ---- the windows: a warm light from when the sun goes, in proportion to what the house asks
       const dark = sky.night;
@@ -383,7 +415,7 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
       // ---- the ghost: appears when the question is asked, follows the answer
       if (ghostBase === null) ghostBase = s.ghostTonnes;
       const asked = Math.abs(s.ghostTonnes - ghostBase) > 1e-3 || view.schematic;
-      const want = asked && s.ghostTonnes > 0 ? 1 : 0;
+      const want = asked && s.ghostTonnes > 0 && !isolating ? 1 : 0;
       ghostAlpha = damp(ghostAlpha, want, 4, Math.min(dt, 0.1));
       const shown = ghostAlpha > 0.01;
       ghostBlocks.visible = shown;
@@ -398,10 +430,33 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
         }
       }
       mod.ghost.shown = shown ? ghostBlocks.count : 0;
+      // its label says what it is. The kit reads a label's text when the display changes, not every frame, and a part's label shows whatever the state says: the DOM is written here
+      // (no DOM under vitest: `element` is then absent; kit request 22)
+      if (s.ghostTonnes !== ghostTonnes) {
+        ghostTonnes = s.ghostTonnes;
+        ghostKwh = p.nightKwh;
+      }
+      if (shown) Object.assign(ghostHotspot.label, ghostLabel(s, ghostKwh));
+      const css = ghostAnchor.children[0] as (THREE.Object3D & { element?: HTMLElement }) | undefined;
+      if (css?.element) {
+        css.element.style.visibility = want === 1 ? '' : 'hidden';
+        if (shown) {
+          const text = css.element.querySelector<HTMLElement>('.hotspot__text');
+          // a label reads to the right of its dot: on a phone, the mass and the towers are what fits
+          const narrow = (css.element.ownerDocument.documentElement.clientWidth ?? 1280) < 560;
+          const label = narrow ? tr(ghostHotspot.label).split(/, (?:pour|for) /)[0] : tr(ghostHotspot.label);
+          if (text && text.textContent !== label) {
+            text.textContent = label;
+            // the kit writes labels in capitals: « 128 T, 3 KWH » would misspell the units
+            text.style.textTransform = 'none';
+          }
+        }
+      }
 
       // ---- "Flows": the machine's current through the trench, the sun's from the roof, the house's, the grid's
-      flows.object.visible = view.schematic;
-      if (view.schematic) {
+      const flowing = view.schematic && !isolating;
+      flows.object.visible = flowing;
+      if (flowing) {
         const speed = (w: number) => clamp(Math.abs(w) / 1500, 0, 8) * Math.sign(w);
         flows.advance(fTrench, s.flowDirection * Math.abs(speed(s.chain.meter)), dt);
         flows.advance(fRoof, speed(s.pv), dt);
