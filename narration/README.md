@@ -8,7 +8,7 @@ Check the plan without generating anything (`HOME=<empty dir>` keeps the tool fr
 
 ## Budget (spoken characters, cues removed)
 
-- French **21 288** (intro 2 336, worlds 2 836, parts 16 116), English **20 603** (intro 2 221, worlds 2 887, parts 15 495). The aim is 17 000 to 24 000, the owner's ceiling 30 000
+- French **21 288** (intro 2 336, worlds 2 836, parts 16 116), English **20 602** (intro 2 221, worlds 2 887, parts 15 494). The aim is 17 000 to 24 000, the owner's ceiling 30 000
   per language (`src/narration.test.ts`). The research's estimate was about 20 000: the French is about 6 % over it, and costs nothing here.
 - Ordinary part 230 to 345 characters; the longest are `energy-meter` (472), `lfp-module` (448), `safety-gear` (422), then `hook-block`, `regen-supply`, `hoist-gearbox`, `concrete-block`.
 
@@ -40,14 +40,14 @@ A fridge is never said to be out of reach (a test refuses it): the tower serves 
 **Other safety lines, once each, short:** the link stays charged (`dc-link`), the panel has several sources (`ac-panel`), the stop button isolates nothing (`emergency-stop`), two people on the
 ladder (`service-ladder`), a line still live (`grid-connection`), never touch the brake's springs (`service-brake`).
 
-## Cues (95 in each language, the same in both)
+## Cues (97 in each language, the same in both)
 
-- Totals: frame 37, flows 16, home 10, cutaway 10, scene 7, mode 6, explode 6, xray 2, select 1. Every « on » has its « off » before the end of the segment.
+- Totals: frame 37, flows 16, home 10, cutaway 8, scene 7, mode 6, explode 6, xray 6, select 1. Every « on » has its « off » before the end of the segment.
 - Intro (26): `home`, `frame` on the tower, roof, trench; `scene` hops hoist, tower, power room, site; the module framed for the verdict; `mode` hops assembly, install, sim, lessons, plans, explore; `scene:site`, `select:none`.
 - Worlds: `home` then at least five parts framed. `flows` in the site (it also shows the ghost stack, which the voice then explains, at the default night of 3 kWh: 128 t), the tower and the power room;
-  `explode` in the tower and the hoist; `cutaway` in the hoist only (`WORLD[...].cutaway`, read by the test).
-- Parts (they start framed and selected, so none moves the camera): `cutaway` on `hoist-motor`, `service-brake`, `hoist-gearbox`, `rope-drum`; `flows` on `hook-block`, `hoist-rope`, `regen-supply`, `motor-inverter`,
-  `battery-inverter`; `explode` on `concrete-block`; `xray` on `safety-gear` (the wedges among ghosts).
+  `explode` in the tower and the hoist; `xray` in the tower, on the safety gear; `cutaway` in the hoist only (`WORLD[...].cutaway`, read by the test).
+- Parts (they start framed and selected, so none moves the camera): `cutaway` on `hoist-motor`, `hoist-gearbox`, `rope-drum`, none on the brake, framed from the side, where a horizontal section shows nothing; `flows` on `hook-block`, `hoist-rope`, `regen-supply`, `motor-inverter`,
+  `battery-inverter`; `explode` on `concrete-block`; `xray` on `safety-gear` (the wedges among ghosts) and `service-brake`.
 - The flows move only when the machine does: the voice says what they mean and never claims a movement on screen at a given word.
 - Spacing: camera cues at least 35 spoken characters apart. No `lab:` cue: `src/lab.ts` defines no `narration.onCue` (`docs/kit-requests.md` item 13). The weight does not move on the narrator's word.
 
@@ -60,7 +60,7 @@ once `public/audio/<lang>/manifest.json` exists, the manifest, the audio files a
 
 ## After generation
 
-The lab still needs `narration: { manifest: 'audio/{lang}/manifest.json' }` in `src/lab.ts` and `scripts/check-narration.mjs` in its build (neither is there yet; the skipped test wakes up with the first manifest).
+`src/lab.ts` already has `narration: { manifest: 'audio/{lang}/manifest.json' }` and the build runs `scripts/check-narration.mjs`; the skipped test wakes up with the first manifest.
 Then back-transcription, rate and subtitles, as `lab-narrator` says. Nobody has listened to anything yet.
 
 ## Words the voice may stumble on
