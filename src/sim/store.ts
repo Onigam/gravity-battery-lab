@@ -90,7 +90,6 @@ export function newState(p: GravityParams, start: Start): GravityState {
     motorRise: 0,
     drumAngle: 0,
     sheaveAngle: 0,
-    angle: 0,
     motorAngle: 0,
     motorBlur: false,
     brakeReleased: false,

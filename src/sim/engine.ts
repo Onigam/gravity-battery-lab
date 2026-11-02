@@ -31,9 +31,6 @@ import type { GravityParams, GravityState, PresetId, ScenarioId, Scope } from '.
 // slow things (the height, the battery, the energy counters) run at the clock of `timeScale`; the scripted scenarios in real seconds.
 // Deterministic: nothing drawn at random.
 
-/** The template's wheel (src/three/device.ts) reads `angle` until the 3D role replaces it. */
-export type DemoState = GravityState;
-
 /** Longest real step at once, s (a tab that was in the background does not make one giant step). */
 const DT_MAX = 0.25;
 /** Longest step of the clock, s. */
@@ -206,7 +203,6 @@ export class GravitySim implements LabSim {
     const motor = ((s.motorRpm * 2 * Math.PI) / 60) * clock;
     s.drumAngle = (s.drumAngle + sign * drum * dt) % (2 * Math.PI);
     s.sheaveAngle = s.drumAngle;
-    s.angle = s.drumAngle;
     s.motorAngle = (s.motorAngle + sign * Math.min(MOTOR_VISUAL_MAX, motor) * dt) % (2 * Math.PI);
     s.motorBlur = motor > MOTOR_VISUAL_MAX;
   }

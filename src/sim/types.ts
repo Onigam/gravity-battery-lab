@@ -168,8 +168,6 @@ export interface GravityState {
   /** Drum and sheaves share the rope; angles in rad, signed as raising. */
   drumAngle: number;
   sheaveAngle: number;
-  /** The drum's angle again, for the template's wheel, until the 3D role replaces src/three/device.ts. */
-  angle: number;
   /** Motor angle at a capped speed; `motorBlur` tells when the real speed is past what the eye can read. */
   motorAngle: number;
   motorBlur: boolean;
