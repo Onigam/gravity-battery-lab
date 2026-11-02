@@ -1,0 +1,414 @@
+{
+  "lang": "fr",
+  "voiceLabel": {
+    "fr": "Voix de synthèse",
+    "en": "Synthetic voice"
+  },
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35,
+    "speed": 0.95
+  },
+  "segments": [
+    {
+      "id": "intro",
+      "scope": "intro",
+      "title": "Présentation du labo",
+      "scene": "site",
+      "text": "[[home]] Imaginez une ferme, dans une plaine toute plate. Ni colline, ni lac. À midi, le toit de la grange a du soleil en trop, et le soir, la maison en manque. Comment garder un peu de midi pour ce soir ? [[frame:machine-tower]] Avec une tour… et un poids de vingt tonnes. Ce qu’on lève, on peut le laisser redescendre. Suivons un petit rayon de soleil. [[frame:barn-solar-roof]] Il tombe sur le toit, et le voici devenu courant. [[frame:cable-trench]] Il file sous la cour, jusqu’au pied de la tour. [[scene:hoist]] Tout en haut, il réveille un moteur, qui tourne très vite. [[frame:hoist-gearbox]] Le réducteur change cette vitesse en force, [[frame:rope-drum]] et le tambour enroule son câble, tout doucement. [[scene:tower]] Là-bas, vingt tonnes se mettent à monter, à quatre mètres par minute. [[frame:concrete-block]] Notre rayon de soleil est devenu de la hauteur, et il attend, là-haut, sans s’user. [[scene:power-room]] Le soir, le poids redescend. Le moteur devient générateur, [[frame:energy-meter]] et le courant revient par le compteur. [[scene:site]] Retour à la ferme, où la maison l’attendait. [[frame:farmhouse]] Voilà toute l’histoire : un rayon de soleil, vingt tonnes, vingt mètres… et une fenêtre allumée. [[home]] Maintenant, le chiffre qui dit tout. Un kilowattheure, c’est une tonne levée à trois cent soixante-sept mètres. Quelle merveille : un peu de courant, et une tonne monte plus haut que n’importe quelle cathédrale ! Et quelle déception : tout cela pour une bouilloire, pendant une demi-heure. [[frame:machine-tower]] Notre tour, elle, garde un virgule zéro neuf kilowattheure. [[scene:power-room]] Et sur une étagère de ce local, un petit coffret vous attend. [[frame:lfp-module]] Ce module de batterie, quarante kilos, en garde autant que quatre virgule quatre tours. Disons-le franchement : à cette échelle, la batterie gagne. Ce n’est pas une défaite : c’est là que cela devient intéressant ! [[scene:site]] Quelques repères, pour mener l’enquête. Quatre vues : la ferme, la tour, le treuil et le local électrique. Cliquez sur une pièce : sa fiche s’ouvre, et vous pouvez écouter son histoire. [[mode:assembly]] Le guide de montage raconte comment se dresse la tour. [[mode:install]] Le guide d’installation va de la cour au local. [[mode:sim]] La simulation vous laisse changer le poids, la hauteur, et lancer dix scénarios. [[mode:lessons]] Six leçons, avec des quiz, expliquent la physique. [[mode:plans]] Les plans réunissent les dessins. [[mode:explore]] Une dernière chose : ce laboratoire est une reconstitution pédagogique. [[scene:site]] La machine est générique, et personne ne la vend. Les chiffres viennent de sources publiées ou de notre modèle. La vidéo que je cite parfois, celle d’un bricoleur dans sa cour, est dans les Sources. [[select:none]] À vous de jouer !"
+    },
+    {
+      "id": "scene-site",
+      "scope": "scene:site",
+      "title": "Une ferme, une tour, un seul kilowattheure",
+      "scene": "site",
+      "text": "[[home]] Bienvenue à la ferme : une cour plate, exprès. Sans colline ni lac, pas question de pomper de l’eau. [[flows:on]] [[frame:barn-solar-roof]] Le toit de la grange donne son surplus de midi. [[frame:power-shed]] Le courant passe par le local électrique, [[frame:cable-trench]] puis plonge dans la tranchée, sous la cour. [[frame:machine-tower]] Et la tour le change en hauteur : vingt tonnes, vingt mètres. [[frame:farmhouse]] Le soir, c’est la maison qui réclame. [[frame:grid-connection]] Le branchement au réseau donne au courant un endroit où aller. [[frame:exclusion-fence]] Autour de la tour, une clôture garde un grand cercle vide, [[frame:interlocked-gate]] et son portail arrête tout dès qu’on l’ouvre. [[frame:wind-mast]] Le mât, lui, surveille le vent sur la plaine. [[home]] Et ces blocs couleur de cuivre, sur le pré ? Une pile fantôme : le béton qu’il faudrait pour une nuit de trois kilowattheures. Environ cent vingt-huit tonnes ! Pour sept kilowattheures, plus de quatorze tours. [[flows:off]]"
+    },
+    {
+      "id": "scene-tower",
+      "scope": "scene:tower",
+      "title": "La tour et son poids",
+      "scene": "tower",
+      "text": "[[home]] Voici la machine, et on la voit de part en part. [[frame:foundation-pad]] Tout part du sol, de ce gros massif de fondation. [[frame:tower-leg,tower-bracing]] Quatre montants et leurs diagonales montent jusqu’en haut, [[frame:head-frame]] où le portique de tête porte tout le treuil. [[frame:guide-rail]] Dans le puits, deux rails guident la charge. [[frame:weight-carrier,concrete-block]] Le châssis et ses huit blocs : voilà les vingt tonnes. [[frame:hoist-rope,hook-block]] [[flows:on]] Quatre brins de câble tiennent la moufle, et ce sont eux qui portent tout. [[flows:off]] [[frame:safety-gear]] En réserve, le parachute attend de mordre les rails. [[home]] [[explode:0.6]] Écartons les blocs, pour voir comment tout s’empile… et le câble reste sur ses poulies. [[explode:0]] Un mot sérieux, un seul. Ne restez jamais sous une charge suspendue. Et n’en construisez jamais une sans ingénieur de structure ni contrôleur de levage. Même une version de jardin peut tuer."
+    },
+    {
+      "id": "scene-hoist",
+      "scope": "scene:hoist",
+      "title": "Le treuil, en haut de la tour",
+      "scene": "hoist",
+      "text": "[[home]] Montons tout en haut : ici, la force se lit dans l’ordre. [[frame:hoist-motor]] Le moteur tourne à environ deux mille neuf cents tours par minute. [[frame:service-brake]] Son frein, serré par des ressorts, ne s’ouvre que sous courant. [[frame:hoist-gearbox]] Le réducteur change cette vitesse en couple, [[frame:rope-drum]] jusqu’au tambour, qui ne fait plus qu’une quinzaine de tours. [[frame:drum-brake]] Le second frein veille de ce côté, tout près de la charge. [[home]] [[cutaway:on]] Coupons tout cela par le milieu : voici les engrenages, le rotor, l’intérieur du tambour. Suivez le couple : environ quarante-huit newtons-mètres au moteur, huit mille cinq cents au tambour ! [[cutaway:off]] [[explode:0.6]] Écartons les pièces, pour voir ce qui tient à quoi… [[explode:0]] Ce treuil sort d’un catalogue publié, mais personne ne le vend pour stocker de l’énergie."
+    },
+    {
+      "id": "scene-power-room",
+      "scope": "scene:power-room",
+      "title": "Le local électrique, dans l’ordre du courant",
+      "scene": "power-room",
+      "text": "[[home]] Le long de ce mur, le courant se lit de gauche à droite. [[flows:on]] [[frame:pv-inverter]] Notre rayon de soleil entre par l’onduleur solaire, [[frame:energy-meter]] et le compteur le mesure au passage. [[frame:ac-panel]] Puis le tableau général le partage. [[frame:regen-supply,dc-link,motor-inverter]] Alimentation réversible, bus continu, variateur : ces trois armoires font monter le poids. À la descente, le courant fait demi-tour. [[flows:off]] [[frame:brake-chopper,brake-resistor]] Si le réseau tombe, le hacheur et la résistance prennent le relais, quelques secondes. [[frame:safety-controller,emergency-stop]] L’automate et l’arrêt d’urgence veillent. [[home]] Et voici la surprise du local. Sous un virgule neuf kilowatt au crochet, plus rien ne sort : le poids descend, et tout part en pertes. Un frigo de cent watts ? La tour peut le servir, mais il lui coûte environ deux kilowatts au crochet !"
+    },
+    {
+      "id": "part-barn-solar-roof",
+      "scope": "part:barn-solar-roof",
+      "title": "Toit solaire de la grange",
+      "scene": "site",
+      "text": "Toute l’histoire commence ici : un toit qui a trop de courant à midi, et plus rien le soir. À pleine vitesse, le treuil prend environ dix-sept virgule six kilowatts au compteur. Alors on attend assez de soleil, puis on monte d’un trait. En rampant, la même montée garderait à peine trente-sept pour cent."
+    },
+    {
+      "id": "part-farmhouse",
+      "scope": "part:farmhouse",
+      "title": "Maison",
+      "scene": "site",
+      "text": "Le client du soir : un frigo, quelques lampes, une bouilloire. La maison demande peu, mais longtemps, tout le contraire de ce qu’aime la tour. Personne ne publie la nuit d’un foyer. Alors relevez votre compteur, le soir et le matin, pendant une semaine : c’est le seul chiffre vraiment à vous."
+    },
+    {
+      "id": "part-machine-tower",
+      "scope": "part:machine-tower",
+      "title": "Tour de stockage",
+      "scene": "site",
+      "text": "Vingt tonnes, vingt mètres : de quoi chauffer une bouilloire pendant une demi-heure. Et pour cela, vingt-huit mètres de treillis. La tour a la taille, en énergie, du seul démonstrateur de ce genre construit en Europe. Son prix, en ordre de grandeur : de cent mille à deux cent cinquante mille euros."
+    },
+    {
+      "id": "part-power-shed",
+      "scope": "part:power-shed",
+      "title": "Local électrique",
+      "scene": "site",
+      "text": "Le petit bâtiment où le courant change de sens. Tout ce qui parle au treuil vit ici, à l’abri, hors de la zone de chute. Une clé de consignation par personne : celui qui monte à la tour la garde en poche, et rien ne repart sans lui."
+    },
+    {
+      "id": "part-cable-trench",
+      "scope": "part:cable-trench",
+      "title": "Tranchée de câbles",
+      "scene": "site",
+      "text": "Le chemin secret du courant, sous la cour. Puissance et signaux voyagent dans des fourreaux séparés, car un variateur hache la tension, et son câble rayonne. Au-dessus, un grillage attend le prochain qui creuse. C’est lui qui remonte dans le godet, avant le câble !"
+    },
+    {
+      "id": "part-grid-connection",
+      "scope": "part:grid-connection",
+      "title": "Branchement au réseau",
+      "scene": "site",
+      "text": "Un moteur qui freine une charge fabrique du courant, et ce courant doit bien aller quelque part. Le réseau de la ferme le reçoit : environ neuf virgule quatre kilowatts, en pleine descente. Une protection coupe tout s’il tombe : personne ne doit travailler sur une ligne encore alimentée."
+    },
+    {
+      "id": "part-exclusion-fence",
+      "scope": "part:exclusion-fence",
+      "title": "Clôture de sécurité",
+      "scene": "site",
+      "text": "Quel rayon garder autour d’une telle tour ? Aucune règle trouvée. Ce labo prend sa hauteur, vingt-huit mètres : là où elle arriverait si elle tombait. La clôture n’arrête aucun poids, elle tient les gens à distance. Avant de garer une remorque ici, demandez-vous si vous la poseriez sous une grue."
+    },
+    {
+      "id": "part-interlocked-gate",
+      "scope": "part:interlocked-gate",
+      "title": "Portail asservi",
+      "scene": "site",
+      "text": "Un portail n’empêche personne d’entrer, mais il peut prévenir la machine. Ouvrez-le, et tout s’arrête, freins fermés. Deux voies le relient à l’automate : si l’une casse, l’autre coupe encore. À la fermeture, rien ne repart seul : il faut un geste volontaire, depuis l’extérieur."
+    },
+    {
+      "id": "part-wind-mast",
+      "scope": "part:wind-mast",
+      "title": "Mât anémométrique",
+      "scene": "site",
+      "text": "On reproche aux tours à blocs le vent qui balance la charge. Ici, le poids court entre des rails, et le vent n’y ajoute presque rien. Alors, à quoi sert ce mât ? À protéger la tour, et ceux qui y travaillent. Au-dessus de dix-huit mètres par seconde, le seuil choisi ici, on arrête tout."
+    },
+    {
+      "id": "part-block-yard",
+      "scope": "part:block-yard",
+      "title": "Aire à blocs",
+      "scene": "site",
+      "text": "La masse n’a rien de sophistiqué, et c’est tout son charme : ni chimie, ni terres rares. Chaque bloc, environ deux tonnes quatre, arrive à la grue mobile, par beau temps. Neufs, ils pèsent lourd en carbone. Mais des blocs de rebut changent tout le calcul : c’est l’argument le plus honnête de la gravité."
+    },
+    {
+      "id": "part-foundation-pad",
+      "scope": "part:foundation-pad",
+      "title": "Massif de fondation",
+      "scene": "tower",
+      "text": "Ce n’est pas le poids qui dimensionne ce massif, c’est le vent : une tour si étroite fait levier sur ses pieds. On l’estime à environ soixante-treize mètres cubes de béton armé, dix fois le béton de la pile ! Et il ne garde aucune énergie. Dans la vidéo, un bricoleur voit sa base se soulever, et ajoute un bloc."
+    },
+    {
+      "id": "part-tower-leg",
+      "scope": "part:tower-leg",
+      "title": "Montant",
+      "scene": "tower",
+      "text": "Quatre colonnes d’angle, boulonnées par tronçons, à la grue. Et voici la curiosité : quand le poids monte, leur charge ne change pas, car il pend toujours du même point. Elle change d’un coup quand il se pose sur la butée. Sur ces vingt-huit mètres, seuls les vingt de la course gardent de l’énergie."
+    },
+    {
+      "id": "part-tower-bracing",
+      "scope": "part:tower-bracing",
+      "title": "Contreventement",
+      "scene": "tower",
+      "text": "Poussez un carré de barres articulées : il se couche. Ajoutez une diagonale : il se fige en triangles. C’est tout le secret d’un treillis. À chaque rafale, chaque diagonale tire, puis pousse. Et un claquement par vent fort, c’est presque toujours une diagonale desserrée."
+    },
+    {
+      "id": "part-head-frame",
+      "scope": "part:head-frame",
+      "title": "Portique de tête",
+      "scene": "tower",
+      "text": "Toute la machine pend de ce plancher d’acier. Il reçoit le treuil, plus d’une tonne. Il doit rester raide : si le tambour et la poulie se désalignent, le câble saute de ses gorges. Et ne laissez aucun outil sur le caillebotis : ici, ce qui tombe fait vingt-cinq mètres."
+    },
+    {
+      "id": "part-guide-rail",
+      "scope": "part:guide-rail",
+      "title": "Rail de guidage",
+      "scene": "tower",
+      "text": "Une charge qui pend se balance : c’est le reproche fait, à bon droit, aux tours à grues. Ici, le châssis court entre deux rails, comme une cabine d’ascenseur, et aucune rafale ne lui donne d’élan. C’est aussi là que mordent les coins du parachute : un joint se reprend à la lime fine."
+    },
+    {
+      "id": "part-end-buffer",
+      "scope": "part:end-buffer",
+      "title": "Butée amortissante",
+      "scene": "tower",
+      "text": "Vingt tonnes à quatre mètres par minute : cela semble énorme. Quarante-quatre joules d’énergie de mouvement, presque rien ! L’énergie est dans la hauteur, pas dans la vitesse. La butée attend donc une petite erreur, pas une chute. Le poids s’y repose aussi pendant les longs arrêts."
+    },
+    {
+      "id": "part-weight-carrier",
+      "scope": "part:weight-carrier",
+      "title": "Châssis de charge",
+      "scene": "tower",
+      "text": "Sans ce châssis, une pile de blocs ne serait qu’une pile. Il porte le béton, les patins et le parachute. Avec le palonnier et la moufle, on suppose environ trois tonnes deux. Or à pleine vitesse, la machine cesse de rapporter sous environ deux tonnes sept : juste en dessous de ce poids à vide."
+    },
+    {
+      "id": "part-concrete-block",
+      "scope": "part:concrete-block",
+      "title": "Bloc de béton",
+      "scene": "tower",
+      "text": "Aucune astuce ici : du béton ordinaire, ces blocs qu’on empile pour des murs de stockage. [[explode:0.5]] Écartons-les : rien là-dedans n’en fait une batterie ! [[explode:0]] La gravité ne regarde que la masse et la hauteur : du fer ou de l’eau rendraient autant, tonne pour tonne. Un bloc, levé de vingt mètres, garde environ cent trente et un wattheures : moins de quatre minutes de bouilloire."
+    },
+    {
+      "id": "part-stack-tie",
+      "scope": "part:stack-tie",
+      "title": "Tirant de pile",
+      "scene": "tower",
+      "text": "À force de petits chocs, une pile libre finit par marcher. Ces tiges d’acier la serrent donc sur son plateau. Elles ne portent presque rien, sauf le jour où le parachute arrête la charge d’un coup. Et elles se défont à la clé, car il faut pouvoir retirer un bloc."
+    },
+    {
+      "id": "part-guide-shoe",
+      "scope": "part:guide-shoe",
+      "title": "Patin de guidage",
+      "scene": "tower",
+      "text": "Le contact du châssis avec ses rails : une simple garniture de plastique dur. À quatre mètres par minute, glisser suffit. Il faut un peu de jeu : trop, et la charge bat ; trop peu, et elle frotte. Ce réglage ne se dessine pas : il se trouve à la main, sur la vraie tour."
+    },
+    {
+      "id": "part-safety-gear",
+      "scope": "part:safety-gear",
+      "title": "Parachute",
+      "scene": "tower",
+      "text": "[[xray:on]] Et si tout le reste lâchait ? Dans le châssis, des coins d’acier attendent, à quelques millimètres des rails. Un arbre casse, la charge accélère. Au-delà d’environ trente centimètres par seconde, les coins mordent, et tout s’arrête en une dizaine de centimètres. [[xray:off]] Personne n’a publié d’essai à cette taille : ce sont nos hypothèses. Dans la vidéo, un couvercle mal vissé fait tomber un sac de pierres, et rien ne l’attrape."
+    },
+    {
+      "id": "part-hook-block",
+      "scope": "part:hook-block",
+      "title": "Moufle",
+      "scene": "tower",
+      "text": "[[flows:on]] Un câble de vingt millimètres, seul, ne tiendrait pas vingt tonnes avec une marge correcte. Alors il fait l’aller-retour : tambour, moufle, poulie, moufle, point fixe. Quatre brins se partagent la charge : cinq tonnes chacun, sur le papier. En échange, le tambour enroule seize mètres de câble par minute, pour quatre au crochet. [[flows:off]] La force change, la vitesse aussi, l’énergie jamais."
+    },
+    {
+      "id": "part-hoist-rope",
+      "scope": "part:hoist-rope",
+      "title": "Câble de levage",
+      "scene": "tower",
+      "text": "[[flows:on]] Un câble d’acier n’est pas une tige : ses fils glissent les uns sur les autres, à chaque poulie. [[flows:off]] Celui-ci casse à trois cent quinze kilonewtons au moins. Mais il meurt de ses flexions bien plus que de sa charge, parfois sans prévenir. Aucune réparation possible : au critère de dépose, on le retire."
+    },
+    {
+      "id": "part-service-ladder",
+      "scope": "part:service-ladder",
+      "title": "Échelle et ligne de vie",
+      "scene": "tower",
+      "text": "Une machine sans entretien ? Pourtant, quelqu’un doit monter voir les boulons, le câble et les freins, tout en haut de la tour. Deux personnes, jamais une, et un plan pour redescendre un blessé. Une batterie, elle, se change avec un chariot !"
+    },
+    {
+      "id": "part-height-scale",
+      "scope": "part:height-scale",
+      "title": "Échelle des kilowattheures",
+      "scene": "tower",
+      "text": "Cette pièce n’existe sur aucune vraie machine : c’est le cadeau de ce labo. Une règle, avec des mètres d’un côté, des wattheures de l’autre. Chaque mètre vaut cinquante-quatre wattheures et demi : une demi-heure de frigo, sans aucune perte. Et voici le plus beau : une batterie affiche un pourcentage, une tour montre sa charge à qui lève la tête."
+    },
+    {
+      "id": "part-hoist-motor",
+      "scope": "part:hoist-motor",
+      "title": "Moteur-générateur",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] Deux métiers, une seule machine : moteur de quinze kilowatts à la montée, générateur à la descente. Mais ses pertes de cuivre suivent le couple, pas la vitesse. [[cutaway:off]] Même au seuil où plus rien ne sort, il perd encore environ cinq cent soixante-neuf watts. Un moteur aime tourner vite, un poids doit descendre lentement : les réconcilier, cela coûte."
+    },
+    {
+      "id": "part-motor-encoder",
+      "scope": "part:motor-encoder",
+      "title": "Codeur",
+      "scene": "hoist",
+      "text": "Tenir vingt tonnes presque à l’arrêt, puis partir sans à-coup : le variateur doit savoir où en est le rotor. Le codeur le lui dit. Un tour de moteur, et le crochet bouge d’à peine un millimètre et demi. Mais il ne voit que le moteur : si un arbre casse après le réducteur, il annonce une vitesse normale."
+    },
+    {
+      "id": "part-service-brake",
+      "scope": "part:service-brake",
+      "title": "Frein de service",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] Que veut-on qu’il se passe quand tout s’arrête ? Des ressorts serrent deux disques en permanence, et une bobine ne les libère que pendant que le poids bouge. Une coupure, et le frein se ferme. [[cutaway:off]] Sa faiblesse : il agit avant le réducteur. Et ne touchez jamais aux ressorts pour gagner du couple."
+    },
+    {
+      "id": "part-hoist-gearbox",
+      "scope": "part:hoist-gearbox",
+      "title": "Réducteur",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] Le moteur tourne à environ deux mille neuf cents tours par minute, le tambour à une quinzaine. D’où un rapport d’environ cent quatre-vingt-huit pour un, que le fabricant ne publie pas. [[cutaway:off]] Une vis sans fin se bloquerait d’elle-même. Ces dents hélicoïdales, elles, se laissent entraîner à l’envers. Dans la vidéo, avec un réducteur imprimé, douze kilos ne descendent pas du tout !"
+    },
+    {
+      "id": "part-rope-drum",
+      "scope": "part:rope-drum",
+      "title": "Tambour",
+      "scene": "hoist",
+      "text": "Un cylindre étonnamment long, où le câble s’enroule en une seule couche : ainsi, il ne s’écrase jamais sur lui-même. [[cutaway:on]] Son diamètre n’est pas publié : ce labo prend trente-trois centimètres. Ce choix change les vitesses des arbres, mais aucune énergie. [[cutaway:off]] Quelques tours restent toujours enroulés, pour soulager le point fixe."
+    },
+    {
+      "id": "part-drum-brake",
+      "scope": "part:drum-brake",
+      "title": "Frein de tambour",
+      "scene": "hoist",
+      "text": "Le deuxième frein, du côté de la charge : il tient même si le réducteur a cédé. Il se ferme un instant après l’autre, ce qui ménage ses garnitures. C’est la logique de la ceinture et des bretelles. Et cela se paie : environ cent cinquante watts, tant que le poids bouge."
+    },
+    {
+      "id": "part-rope-guide",
+      "scope": "part:rope-guide",
+      "title": "Guide-câble",
+      "scene": "hoist",
+      "text": "Quand le poids se pose, le câble se détend, et c’est là qu’une spire peut sauter de sa gorge. Cet anneau avance avec l’enroulement, et la plaque à sa place. Une pièce modeste, qui évite le pire au câble : une spire montée sur sa voisine. Un clac au démarrage : cherchez ici."
+    },
+    {
+      "id": "part-rope-anchor",
+      "scope": "part:rope-anchor",
+      "title": "Point fixe du câble",
+      "scene": "hoist",
+      "text": "Là où finit le câble. Un manchon à coin le tient : plus le câble tire, plus le coin serre, sans ressort ni serrage de plus. Pour le surveiller, un instrument qui ne tombe jamais en panne : un trait de peinture sur le câble, au ras du manchon."
+    },
+    {
+      "id": "part-return-sheave",
+      "scope": "part:return-sheave",
+      "title": "Poulie de renvoi",
+      "scene": "hoist",
+      "text": "Pour faire quatre brins avec un seul câble, il faut une poulie fixe : la voici. Elle plie le câble une fois de plus. D’où une règle publiée : au moins dix-huit fois son diamètre, soit trente-six centimètres. Dans la vidéo, une poulie imprimée ne tient pas : cherchez toujours la pièce la plus faible."
+    },
+    {
+      "id": "part-overload-cell",
+      "scope": "part:overload-cell",
+      "title": "Limiteur de charge",
+      "scene": "hoist",
+      "text": "Cette pièce pèse la charge sans arrêt, et refuse de monter à plus de dix pour cent au-dessus de sa valeur normale. Une surcharge viendrait d’un bloc ajouté, d’un rail coincé, ou d’un coin de parachute à moitié engagé. Un stockage par gravité est honnête par construction : sa charge se pèse."
+    },
+    {
+      "id": "part-limit-switch",
+      "scope": "part:limit-switch",
+      "title": "Fin de course",
+      "scene": "hoist",
+      "text": "Le crochet ne doit jamais toucher le treuil. Des cames, entraînées par le tambour, ralentissent puis arrêtent le moteur. Un second contact coupe en dernier recours. Gagner un décimètre rapporterait cinq wattheures et demi, au mieux. Dans la vidéo, un capteur lit simplement une marque de peinture noire sur le câble."
+    },
+    {
+      "id": "part-overspeed-governor",
+      "scope": "part:overspeed-governor",
+      "title": "Limiteur de vitesse",
+      "scene": "hoist",
+      "text": "Une sécurité ne doit pas partager ses pannes avec ce qu’elle surveille. Ni courant, ni calculateur : un petit câble indépendant entraîne des masselottes, qui s’écartent avec la vitesse. Au-delà d’environ trente centimètres par seconde, elles bloquent la poulie, et tout s’enclenche. L’idée vient des ascenseurs."
+    },
+    {
+      "id": "part-hoist-base",
+      "scope": "part:hoist-base",
+      "title": "Châssis du treuil",
+      "scene": "hoist",
+      "text": "Tout le treuil tient ici : mille trois cent vingt et un kilos, sur quatre gros boulons de trente millimètres. Voici la frontière entre un treuil vendu et une tour inventée : ces cotes-là sont publiées. Un seul pied qui ne porte pas, et le bâti se tord au serrage. On cale d’abord, on serre ensuite."
+    },
+    {
+      "id": "part-pv-inverter",
+      "scope": "part:pv-inverter",
+      "title": "Onduleur solaire",
+      "scene": "power-room",
+      "text": "Première pièce dans l’ordre du courant : c’est ici que notre rayon de soleil entre dans la ferme. Un toit donne du continu, une ferme vit en alternatif, et cet appareil convertit, sans rien savoir de la tour. Surprise : si le réseau disparaît, il s’arrête. Pas de montée pendant une coupure, même en plein soleil."
+    },
+    {
+      "id": "part-energy-meter",
+      "scope": "part:energy-meter",
+      "title": "Compteur d’énergie",
+      "scene": "power-room",
+      "text": "Le juge de paix : il compte à part ce qui monte et ce qui descend. Aller-retour, à pleine vitesse : cinquante-trois pour cent. C’est ce que trouve notre modèle. Les constructeurs annoncent davantage, mais ce sont des annonces, à une tout autre échelle. Et sur une vraie journée ? Environ sept pour cent. Les seuls contrôles, une estimation, tirent chaque jour à peu près ce que le poids garde. Aucune machine comme celle-ci n’a été mesurée : ce compteur serait le premier."
+    },
+    {
+      "id": "part-ac-panel",
+      "scope": "part:ac-panel",
+      "title": "Tableau général",
+      "scene": "power-room",
+      "text": "Le carrefour : le soleil, le réseau, la maison et la machine s’y rencontrent. Le courant y change de sens selon les heures, sans aucun problème : un jeu de barres ne sait pas qui pousse. Une règle reste entière : quand on ouvre ce tableau, tout n’y est pas forcément coupé. Plusieurs sources l’alimentent."
+    },
+    {
+      "id": "part-regen-supply",
+      "scope": "part:regen-supply",
+      "title": "Alimentation réversible",
+      "scene": "power-room",
+      "text": "[[flows:on]] Voici notre ajout. Un treuil ordinaire brûle sa descente dans une résistance. Pour en faire une batterie, ce labo ajoute cette alimentation, qui renvoie la puissance au réseau. Sans elle, la machine n’aurait aucun sens. [[flows:off]] Un réglage décide de la facture. Prête à répondre, la machine tire environ deux cent quatre-vingt-quatre watts. Par jour, plus de six fois ce que garde le poids."
+    },
+    {
+      "id": "part-dc-link",
+      "scope": "part:dc-link",
+      "title": "Bus continu",
+      "scene": "power-room",
+      "text": "Entre le réseau et le moteur, un bus continu, à environ six cents volts. L’alimentation le remplit, le variateur le vide, puis c’est l’inverse à la descente. Mais cette énergie reste là quand tout est éteint. Une vingtaine de secondes après une coupure, il reste près de six cents volts. Alors on attend, puis on mesure."
+    },
+    {
+      "id": "part-motor-inverter",
+      "scope": "part:motor-inverter",
+      "title": "Variateur de levage",
+      "scene": "power-room",
+      "text": "[[flows:on]] Il fabrique pour le moteur la tension et la fréquence qui tiennent le poids, à toute vitesse, dans les deux sens. [[flows:off]] Mais même au ralenti, vingt tonnes pèsent autant sur le moteur. Et savez-vous ce que pèse le rotor, vu du crochet, à travers tous les rapports ? Environ deux mille soixante-quinze tonnes ! D’où une rampe de deux secondes."
+    },
+    {
+      "id": "part-brake-chopper",
+      "scope": "part:brake-chopper",
+      "title": "Hacheur de freinage",
+      "scene": "power-room",
+      "text": "Si le réseau tombe en pleine descente, l’énergie n’a plus où aller, et le bus grimpe. À environ sept cent cinquante volts, ce transistor met la résistance en service. Une pointe d’environ quatorze kilowatts, pour trois wattheures et demi brûlés : une affaire de puissance, pas d’énergie."
+    },
+    {
+      "id": "part-brake-resistor",
+      "scope": "part:brake-resistor",
+      "title": "Résistance de freinage",
+      "scene": "power-room",
+      "text": "Une résistance fait ce qu’elle sait faire : elle chauffe. Sans logiciel, sans pièce mobile. Sur un treuil de chantier, toute la descente part par ici. Sur cette machine, presque rien, quelques wattheures par coupure : voilà toute la différence. Son coffre ajouré ne se bâche jamais."
+    },
+    {
+      "id": "part-motor-cable",
+      "scope": "part:motor-cable",
+      "title": "Câble moteur",
+      "scene": "power-room",
+      "text": "Du local au treuil, environ cinquante-cinq mètres de câble. Environ cent soixante-six watts perdus en pleine descente. Et au seuil où plus rien ne sort, toujours cent soixante-sept ! Le poids est le même, donc le courant aussi. Et le variateur reste au local : une tour ne convient ni à l’électronique, ni à celui qui la dépanne."
+    },
+    {
+      "id": "part-safety-controller",
+      "scope": "part:safety-controller",
+      "title": "Automate de sécurité",
+      "scene": "power-room",
+      "text": "Le portail, les limites, les limiteurs, le vent : tout passe par lui, souvent en deux voies qu’il compare. Un désaccord, et il coupe le variateur, puis les freins se ferment. Une sécurité ne demande jamais l’avis de ce qu’elle arrête. Testez chaque entrée, une par une, à date fixe, selon une liste écrite."
+    },
+    {
+      "id": "part-emergency-stop",
+      "scope": "part:emergency-stop",
+      "title": "Arrêt d’urgence",
+      "scene": "power-room",
+      "text": "Un coup de poing, et les deux freins se ferment, sans attendre la fin de la rampe. Retenez pourtant ceci : ce bouton n’isole rien. Le bus reste chargé, le réseau reste au tableau, la charge reste en l’air. Et essayez-le à date fixe : un contact détaché, et le bouton s’enfonce sans rien ouvrir."
+    },
+    {
+      "id": "part-control-ups",
+      "scope": "part:control-ups",
+      "title": "Onduleur de contrôle",
+      "scene": "power-room",
+      "text": "Une batterie, pour la sécurité d’un stockage sans batterie ! Quand le réseau tombe, les ressorts tiennent le poids, mais il faut un témoin éveillé. Ce petit onduleur garde l’automate, les capteurs et le journal allumés. Coupez son alimentation une fois par trimestre : une vieille batterie affiche pleine, et ne tient plus."
+    },
+    {
+      "id": "part-battery-inverter",
+      "scope": "part:battery-inverter",
+      "title": "Onduleur batterie",
+      "scene": "power-room",
+      "text": "[[flows:on]] Tout droit, un frigo coûte très cher à la tour. Alors on change la règle du jeu. La batterie suit la maison. Quand sa charge tombe à trente pour cent, la tour s’y vide d’un coup, à sa meilleure allure. Environ quatre cent trente wattheures atteignent alors le frigo, au lieu de cinquante-quatre. Huit fois plus, avec le même poids ! [[flows:off]]"
+    },
+    {
+      "id": "part-lfp-module",
+      "scope": "part:lfp-module",
+      "title": "Module LFP",
+      "scene": "power-room",
+      "text": "Quarante kilos, deux personnes le portent. Par kilo, ce module garde environ deux mille deux cents fois plus que la tour. Alors, que reste-t-il à la gravité ? Une puissance indépendante de l’énergie, aucune usure chimique, une masse qui peut être n’importe quoi de lourd. Cela compte dans un puits déjà creusé, à très grande échelle. Lancez « La course » : à un kilowatt, la tour tient environ vingt et une minutes, le module plus de quatre heures."
+    }
+  ]
+}

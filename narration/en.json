@@ -1,0 +1,414 @@
+{
+  "lang": "en",
+  "voiceLabel": {
+    "fr": "Voix de synthèse",
+    "en": "Synthetic voice"
+  },
+  "settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.35,
+    "speed": 0.95
+  },
+  "segments": [
+    {
+      "id": "intro",
+      "scope": "intro",
+      "title": "About the lab",
+      "scene": "site",
+      "text": "[[home]] Picture a farm, on a plain as flat as a table. No hill, no lake. At midday, the barn roof has sun to spare, and in the evening, the house is short of it. How do you keep a little midday for tonight? [[frame:machine-tower]] With a tower… and a twenty-tonne weight. What you lift, you can let back down. Let’s follow one small ray of sunlight. [[frame:barn-solar-roof]] It lands on the roof, and now it is current. [[frame:cable-trench]] It runs under the yard, to the foot of the tower. [[scene:hoist]] Right at the top, it wakes a motor that spins very fast. [[frame:hoist-gearbox]] The gearbox turns that speed into force, [[frame:rope-drum]] and the drum winds in its rope, ever so gently. [[scene:tower]] Down there, twenty tonnes start to rise, at four metres a minute. [[frame:concrete-block]] Our ray of sunlight has become height, and it waits up there, without wearing out. [[scene:power-room]] In the evening, the weight comes down. The motor becomes a generator, [[frame:energy-meter]] and the current comes back through the meter. [[scene:site]] Back at the farm, where the house has been waiting. [[frame:farmhouse]] That is the whole story: a ray of sunlight, twenty tonnes, twenty metres… and one lit window. [[home]] Now for the figure that says it all. One kilowatt-hour is one tonne raised three hundred and sixty-seven metres. How wonderful: a little current, and a tonne goes higher than any cathedral! And how disappointing: all that for one kettle, for half an hour. [[frame:machine-tower]] Our tower holds one point zero nine kilowatt-hours. [[scene:power-room]] And on a shelf in this room, a small box is waiting for you. [[frame:lfp-module]] This battery module, forty kilos, holds as much as four point four towers. Let’s say it plainly: at this scale, the battery wins. That is not a defeat: that is where it gets interesting! [[scene:site]] A few landmarks, for the investigation. Four views: the farm, the tower, the hoist and the power room. Click on a part: its sheet opens, and you can listen to its story. [[mode:assembly]] The assembly guide tells how the tower goes up. [[mode:install]] The installation guide goes from the yard to the power room. [[mode:sim]] The simulation lets you change the weight and the height, and run ten scenarios. [[mode:lessons]] Six lessons, with quizzes, explain the physics. [[mode:plans]] The plans gather the drawings. [[mode:explore]] One last thing: this lab is an educational reconstruction. [[scene:site]] The machine is generic, and nobody sells it. The figures come from published sources or from our model. The video I sometimes quote, a home builder in his courtyard, is in the Sources. [[select:none]] Over to you!"
+    },
+    {
+      "id": "scene-site",
+      "scope": "scene:site",
+      "title": "A farm, a tower, one kilowatt-hour",
+      "scene": "site",
+      "text": "[[home]] Welcome to the farm: a yard that is flat on purpose. With no hill and no lake, there is no pumping water uphill here. [[flows:on]] [[frame:barn-solar-roof]] The barn roof gives up its midday surplus. [[frame:power-shed]] The current goes through the power shed, [[frame:cable-trench]] then dives into the trench, under the yard. [[frame:machine-tower]] And the tower turns it into height: twenty tonnes, twenty metres. [[frame:farmhouse]] In the evening, the house asks for it back. [[frame:grid-connection]] The grid connection gives the current somewhere to go. [[frame:exclusion-fence]] Around the tower, a fence keeps a wide circle empty, [[frame:interlocked-gate]] and its gate stops everything the moment it opens. [[frame:wind-mast]] The mast, meanwhile, watches the wind across the plain. [[home]] And those copper-coloured blocks on the meadow? A ghost stack: the concrete a night of three kilowatt-hours would take. About one hundred and twenty-eight tonnes! For seven kilowatt-hours, more than fourteen towers. [[flows:off]]"
+    },
+    {
+      "id": "scene-tower",
+      "scope": "scene:tower",
+      "title": "The tower and its weight",
+      "scene": "tower",
+      "text": "[[home]] Here is the machine, and you can see right through it. [[frame:foundation-pad]] It all starts at the ground, with this big foundation pad. [[frame:tower-leg,tower-bracing]] Four legs and their diagonals climb all the way up, [[frame:head-frame]] to the head frame that carries the whole hoist. [[frame:guide-rail]] In the shaft, two rails guide the load. [[frame:weight-carrier,concrete-block]] The carrier and its eight blocks: there are your twenty tonnes. [[frame:hoist-rope,hook-block]] [[flows:on]] Four falls of rope hold the hook block, and they carry everything. [[flows:off]] [[frame:safety-gear]] In reserve, the safety gear waits to bite the rails. [[home]] [[explode:0.6]] Let’s pull the blocks apart, to see how it all stacks up… and the rope stays on its sheaves. [[explode:0]] One serious word, just one. Never stand under a suspended load. And never build one without a structural engineer and a lifting inspector. Even a home-sized version can kill."
+    },
+    {
+      "id": "scene-hoist",
+      "scope": "scene:hoist",
+      "title": "The hoist, at the top of the tower",
+      "scene": "hoist",
+      "text": "[[home]] Let’s climb to the very top: here, the force reads in order. [[frame:hoist-motor]] The motor turns at about two thousand nine hundred revolutions a minute. [[frame:service-brake]] Its brake, clamped by springs, only opens when the current flows. [[frame:hoist-gearbox]] The gearbox turns that speed into torque, [[frame:rope-drum]] all the way to the drum, which makes about fifteen turns. [[frame:drum-brake]] The second brake keeps watch on this side, right by the load. [[home]] [[cutaway:on]] Let’s cut it all down the middle: here are the gears, the rotor, the inside of the drum. Follow the torque: about forty-eight newton-metres at the motor, eight thousand five hundred at the drum! [[cutaway:off]] [[explode:0.6]] Let’s pull the parts apart, to see what holds what… [[explode:0]] This hoist comes from a published catalogue, but nobody sells it to store energy."
+    },
+    {
+      "id": "scene-power-room",
+      "scope": "scene:power-room",
+      "title": "The power room, in the order the current flows",
+      "scene": "power-room",
+      "text": "[[home]] Along this wall, the current reads from left to right. [[flows:on]] [[frame:pv-inverter]] Our ray of sunlight comes in through the solar inverter, [[frame:energy-meter]] and the meter measures it on the way past. [[frame:ac-panel]] Then the main panel shares it out. [[frame:regen-supply,dc-link,motor-inverter]] Regenerative supply, direct-current link, hoist inverter: these three cabinets lift the weight. On the way down, the current turns around. [[flows:off]] [[frame:brake-chopper,brake-resistor]] If the grid goes, the chopper and the resistor take over, for a few seconds. [[frame:safety-controller,emergency-stop]] The safety controller and the emergency stop keep watch. [[home]] And here is the surprise of the room. Below one point nine kilowatts at the hook, nothing comes out: the weight comes down, and it all goes in losses. A hundred-watt fridge? The tower can serve it, but it costs about two kilowatts at the hook!"
+    },
+    {
+      "id": "part-barn-solar-roof",
+      "scope": "part:barn-solar-roof",
+      "title": "Barn solar roof",
+      "scene": "site",
+      "text": "The whole story starts here: a roof with too much current at midday, and none in the evening. At full speed, the hoist takes about seventeen point six kilowatts at the meter. So we wait for enough sun, then climb in one go. Crawling, the same climb would keep barely thirty-seven per cent."
+    },
+    {
+      "id": "part-farmhouse",
+      "scope": "part:farmhouse",
+      "title": "Farmhouse",
+      "scene": "site",
+      "text": "The evening’s customer: a fridge, a few lights, a kettle. It asks for little, but for a long time: the very opposite of what the tower likes. Nobody publishes a household’s night. So read your meter, morning and evening, for a week: it is the only figure that is truly yours."
+    },
+    {
+      "id": "part-machine-tower",
+      "scope": "part:machine-tower",
+      "title": "Storage tower",
+      "scene": "site",
+      "text": "Twenty tonnes, twenty metres: enough to run a kettle for half an hour. And for that, twenty-eight metres of lattice. In energy, it is the size of the only demonstrator of its kind built in Europe. Its price, as an order of magnitude: from one hundred thousand to two hundred and fifty thousand euros."
+    },
+    {
+      "id": "part-power-shed",
+      "scope": "part:power-shed",
+      "title": "Power shed",
+      "scene": "site",
+      "text": "The little building where the current changes direction. Everything that talks to the hoist lives here, under cover, out of the fall zone. One lockout key per person: whoever climbs the tower keeps theirs in a pocket, and nothing restarts without them."
+    },
+    {
+      "id": "part-cable-trench",
+      "scope": "part:cable-trench",
+      "title": "Cable trench",
+      "scene": "site",
+      "text": "The secret path of the current, under the yard. Power and signals travel in separate ducts, because an inverter chops the voltage, and its cable radiates. Above them, a warning mesh waits for the next person who digs. It comes up in the bucket, before the cable does!"
+    },
+    {
+      "id": "part-grid-connection",
+      "scope": "part:grid-connection",
+      "title": "Grid connection",
+      "scene": "site",
+      "text": "A motor braking a load makes current, and that current has to go somewhere. The farm’s grid takes it: about nine point four kilowatts, at full descent. A protection cuts everything if the grid goes: nobody must work on a line that is still live."
+    },
+    {
+      "id": "part-exclusion-fence",
+      "scope": "part:exclusion-fence",
+      "title": "Exclusion fence",
+      "scene": "site",
+      "text": "How wide a circle should you keep around such a tower? We found no rule. This lab takes its height, twenty-eight metres: that is where it would land if it fell. The fence stops no weight, it keeps people away. Before you park a trailer here, ask yourself whether you would park it under a crane."
+    },
+    {
+      "id": "part-interlocked-gate",
+      "scope": "part:interlocked-gate",
+      "title": "Interlocked gate",
+      "scene": "site",
+      "text": "A gate stops nobody from walking in, but it can tell the machine. Open it, and everything stops, brakes closed. Two channels link it to the safety controller: if one breaks, the other still cuts. When it closes, nothing restarts by itself: it takes a deliberate gesture, from outside."
+    },
+    {
+      "id": "part-wind-mast",
+      "scope": "part:wind-mast",
+      "title": "Wind mast",
+      "scene": "site",
+      "text": "Block towers are blamed for the wind swinging the load. Here, the weight runs between rails, and the wind adds almost nothing. So what is this mast for? To protect the tower, and the people who work on it. Above eighteen metres a second, the limit chosen here, everything stops."
+    },
+    {
+      "id": "part-block-yard",
+      "scope": "part:block-yard",
+      "title": "Block yard",
+      "scene": "site",
+      "text": "The mass is nothing sophisticated, and that is its charm: no chemistry, no rare earths. Each block, about two point four tonnes, arrives by mobile crane, in good weather. New, they weigh heavily in carbon. But scrap blocks change the whole sum: that is gravity’s most honest argument."
+    },
+    {
+      "id": "part-foundation-pad",
+      "scope": "part:foundation-pad",
+      "title": "Foundation pad",
+      "scene": "tower",
+      "text": "It is not the weight that sizes this pad, it is the wind: a tower this narrow levers on its feet. We estimate about seventy-three cubic metres of reinforced concrete, ten times the concrete in the stack! And it holds no energy at all. In the video, a home builder sees his base lifting, and adds a block."
+    },
+    {
+      "id": "part-tower-leg",
+      "scope": "part:tower-leg",
+      "title": "Tower leg",
+      "scene": "tower",
+      "text": "Four corner columns, bolted in sections, by crane. And here is a curiosity: as the weight climbs, their load does not change, because it always hangs from the same point. It changes all at once when it settles on the buffer. Of these twenty-eight metres, only the twenty of the stroke hold any energy."
+    },
+    {
+      "id": "part-tower-bracing",
+      "scope": "part:tower-bracing",
+      "title": "Bracing",
+      "scene": "tower",
+      "text": "Push a square of hinged bars: it lies down. Add a diagonal: it locks into triangles. That is the whole secret of a lattice. With every gust, each diagonal pulls, then pushes. And a clatter in a strong wind is nearly always a loose diagonal."
+    },
+    {
+      "id": "part-head-frame",
+      "scope": "part:head-frame",
+      "title": "Head frame",
+      "scene": "tower",
+      "text": "The whole machine hangs from this steel deck. It takes the hoist, more than a tonne. It must stay stiff: if the drum and the sheave drift out of line, the rope jumps from its grooves. And leave no tool on the grating: up here, whatever falls, falls twenty-five metres."
+    },
+    {
+      "id": "part-guide-rail",
+      "scope": "part:guide-rail",
+      "title": "Guide rail",
+      "scene": "tower",
+      "text": "A hanging load swings: crane towers are rightly blamed for it. Here, the carrier runs between two rails, like a lift car, and no gust can give it any momentum. This is also where the wedges of the safety gear bite: a joint is dressed with a fine file."
+    },
+    {
+      "id": "part-end-buffer",
+      "scope": "part:end-buffer",
+      "title": "End buffer",
+      "scene": "tower",
+      "text": "Twenty tonnes at four metres a minute: it sounds enormous. Forty-four joules of moving energy, next to nothing! The energy is in the height, not in the speed. So the buffer waits for a small error, not for a fall. The weight also rests on it during long stops."
+    },
+    {
+      "id": "part-weight-carrier",
+      "scope": "part:weight-carrier",
+      "title": "Weight carrier",
+      "scene": "tower",
+      "text": "Without this carrier, a pile of blocks would be just a pile. It holds the concrete, the shoes and the safety gear. With the spreader beam and the hook block, we assume about three point two tonnes. And at full speed, the machine stops paying below about two point seven tonnes: just under this empty weight."
+    },
+    {
+      "id": "part-concrete-block",
+      "scope": "part:concrete-block",
+      "title": "Concrete block",
+      "scene": "tower",
+      "text": "No trick here: plain concrete, the blocks people stack for storage walls. [[explode:0.5]] Let’s pull them apart: nothing in there makes a battery! [[explode:0]] Gravity looks only at mass and height: iron or water would give as much, tonne for tonne. One block, raised twenty metres, keeps about one hundred and thirty-one watt-hours: under four minutes of kettle."
+    },
+    {
+      "id": "part-stack-tie",
+      "scope": "part:stack-tie",
+      "title": "Stack tie",
+      "scene": "tower",
+      "text": "With enough small jolts, a loose stack ends up walking. So these steel rods clamp it to its plate. They carry almost nothing, except on the day the safety gear stops the load dead. And they come undone with a spanner, because you must be able to take a block out."
+    },
+    {
+      "id": "part-guide-shoe",
+      "scope": "part:guide-shoe",
+      "title": "Guide shoe",
+      "scene": "tower",
+      "text": "Where the carrier meets its rails: a simple lining of hard plastic. At four metres a minute, sliding is enough. It needs a little play: too much, and the load rattles; too little, and it rubs. This setting is not drawn: it is found by hand, on the real tower."
+    },
+    {
+      "id": "part-safety-gear",
+      "scope": "part:safety-gear",
+      "title": "Safety gear",
+      "scene": "tower",
+      "text": "[[xray:on]] And if everything else let go? In the carrier, steel wedges wait, a few millimetres from the rails. A shaft breaks, the load speeds up. Past about thirty centimetres a second, the wedges bite, and it all stops within about ten centimetres. [[xray:off]] Nobody has published a test at this size: these are our assumptions. In the video, a badly screwed cover drops a bag of rocks, and nothing catches it."
+    },
+    {
+      "id": "part-hook-block",
+      "scope": "part:hook-block",
+      "title": "Hook block",
+      "scene": "tower",
+      "text": "[[flows:on]] A twenty-millimetre rope, alone, would not hold twenty tonnes with a decent margin. So it goes there and back: drum, hook block, sheave, hook block, anchor. Four falls share the load: five tonnes each, on paper. In exchange, the drum winds in sixteen metres of rope a minute, for four at the hook. [[flows:off]] The force changes, the speed too, the energy never."
+    },
+    {
+      "id": "part-hoist-rope",
+      "scope": "part:hoist-rope",
+      "title": "Hoist rope",
+      "scene": "tower",
+      "text": "[[flows:on]] A steel rope is not a rod: its wires slide over one another, at every sheave. [[flows:off]] This one breaks at three hundred and fifteen kilonewtons at least. But it dies of bending far more than of its load, sometimes without warning. No repair is possible: at the discard criterion, it comes off."
+    },
+    {
+      "id": "part-service-ladder",
+      "scope": "part:service-ladder",
+      "title": "Ladder and fall arrest",
+      "scene": "tower",
+      "text": "A machine with no upkeep? Yet someone has to climb up to check the bolts, the rope and the brakes, right at the top of the tower. Two people, never one, and a plan to bring an injured person down. A battery, on the other hand, gets changed with a trolley!"
+    },
+    {
+      "id": "part-height-scale",
+      "scope": "part:height-scale",
+      "title": "Kilowatt-hour scale",
+      "scene": "tower",
+      "text": "This part exists on no real machine: it is this lab’s gift to you. A ruler, with metres on one side and watt-hours on the other. Each metre is worth fifty-four and a half watt-hours: half an hour of fridge, with no losses at all. And here is the finest part: a battery shows a percentage, a tower shows its charge to anyone who looks up."
+    },
+    {
+      "id": "part-hoist-motor",
+      "scope": "part:hoist-motor",
+      "title": "Motor-generator",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] Two trades, one machine: a fifteen-kilowatt motor on the way up, a generator on the way down. But its copper losses follow the torque, not the speed. [[cutaway:off]] Even at the threshold where nothing comes out, it still loses about five hundred and sixty-nine watts. A motor likes to spin fast, a weight must come down slowly: reconciling them costs."
+    },
+    {
+      "id": "part-motor-encoder",
+      "scope": "part:motor-encoder",
+      "title": "Encoder",
+      "scene": "hoist",
+      "text": "Holding twenty tonnes almost at rest, then moving off smoothly: the inverter must know where the rotor is. The encoder tells it. One turn of the motor, and the hook moves barely a millimetre and a half. But it only sees the motor: if a shaft breaks after the gearbox, it still reports a normal speed."
+    },
+    {
+      "id": "part-service-brake",
+      "scope": "part:service-brake",
+      "title": "Service brake",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] What do we want to happen when everything stops? Springs clamp two discs all the time, and a coil frees them only while the weight is moving. A power cut, and the brake closes. [[cutaway:off]] Its weakness: it acts before the gearbox. And never touch the springs to gain torque."
+    },
+    {
+      "id": "part-hoist-gearbox",
+      "scope": "part:hoist-gearbox",
+      "title": "Gearbox",
+      "scene": "hoist",
+      "text": "[[cutaway:on]] The motor turns at about two thousand nine hundred revolutions a minute, the drum at about fifteen. Hence a ratio of about one hundred and eighty-eight to one, which the maker does not publish. [[cutaway:off]] A worm gear would lock itself. These helical teeth, though, let themselves be driven backwards. In the video, with a printed gearbox, twelve kilos will not come down at all!"
+    },
+    {
+      "id": "part-rope-drum",
+      "scope": "part:rope-drum",
+      "title": "Rope drum",
+      "scene": "hoist",
+      "text": "A surprisingly long cylinder, where the rope winds in a single layer: that way, it never crushes itself. [[cutaway:on]] Its diameter is not published: this lab takes thirty-three centimetres. That choice changes the speeds of the shafts, but no energy at all. [[cutaway:off]] A few turns always stay on the drum, to ease the anchor."
+    },
+    {
+      "id": "part-drum-brake",
+      "scope": "part:drum-brake",
+      "title": "Drum brake",
+      "scene": "hoist",
+      "text": "The second brake, on the load side: it holds even if the gearbox has given way. It closes a moment after the other, which spares its linings. Belt and braces, in a word. And it has its price: about one hundred and fifty watts, as long as the weight is moving."
+    },
+    {
+      "id": "part-rope-guide",
+      "scope": "part:rope-guide",
+      "title": "Rope guide",
+      "scene": "hoist",
+      "text": "When the weight settles, the rope goes slack, and that is when a turn can jump out of its groove. This ring travels with the winding, and presses it back into place. A modest part, and it spares the rope the worst: one turn riding on its neighbour. A clack on starting: look here."
+    },
+    {
+      "id": "part-rope-anchor",
+      "scope": "part:rope-anchor",
+      "title": "Rope anchor",
+      "scene": "hoist",
+      "text": "Where the rope ends. A wedge socket holds it: the harder the rope pulls, the tighter the wedge grips, with no spring and no extra clamping. To keep an eye on it, an instrument that never breaks down: a line of paint on the rope, right at the socket."
+    },
+    {
+      "id": "part-return-sheave",
+      "scope": "part:return-sheave",
+      "title": "Return sheave",
+      "scene": "hoist",
+      "text": "To make four falls out of one rope, you need a fixed sheave: here it is. It bends the rope once more. Hence a published rule: at least eighteen times its diameter, so thirty-six centimetres. In the video, a printed pulley does not hold: always look for the weakest part."
+    },
+    {
+      "id": "part-overload-cell",
+      "scope": "part:overload-cell",
+      "title": "Overload cell",
+      "scene": "hoist",
+      "text": "This part weighs the load all the time, and refuses to lift more than ten per cent above its normal value. An overload would come from an added block, a jammed rail, or a half-engaged safety wedge. Gravity storage is honest by construction: its charge can be weighed."
+    },
+    {
+      "id": "part-limit-switch",
+      "scope": "part:limit-switch",
+      "title": "Limit switch",
+      "scene": "hoist",
+      "text": "The hook must never touch the hoist. Cams, driven by the drum, slow the motor and then stop it. A second contact cuts as a last resort. Gaining a decimetre would bring in five and a half watt-hours, at best. In the video, a sensor simply reads a black paint mark on the rope."
+    },
+    {
+      "id": "part-overspeed-governor",
+      "scope": "part:overspeed-governor",
+      "title": "Overspeed governor",
+      "scene": "hoist",
+      "text": "A safety device must not share its faults with what it watches. No current, no computer: a small separate rope drives flyweights, which spread apart with the speed. Past about thirty centimetres a second, they lock the pulley, and it all kicks in. The idea comes from lifts."
+    },
+    {
+      "id": "part-hoist-base",
+      "scope": "part:hoist-base",
+      "title": "Hoist base",
+      "scene": "hoist",
+      "text": "The whole hoist sits here: one thousand three hundred and twenty-one kilos, on four big thirty-millimetre bolts. Here runs the border between a hoist you can buy and a tower we made up: these dimensions are published. One foot that does not bear, and the frame twists as you tighten. Shim first, tighten after."
+    },
+    {
+      "id": "part-pv-inverter",
+      "scope": "part:pv-inverter",
+      "title": "Solar inverter",
+      "scene": "power-room",
+      "text": "First in the order of the current: this is where our ray of sunlight enters the farm. A roof gives direct current, a farm lives on alternating, and this device converts, knowing nothing of the tower. A surprise: if the grid goes, it stops. No climbing during a power cut, even in full sun."
+    },
+    {
+      "id": "part-energy-meter",
+      "scope": "part:energy-meter",
+      "title": "Energy meter",
+      "scene": "power-room",
+      "text": "The referee: it counts what goes up and what comes down, separately. There and back, at full speed: fifty-three per cent. That is what our model finds. The makers claim more, but those are claims, at quite another scale. And over a real day? About seven per cent. The controls alone, an estimate, draw about as much each day as the weight holds. No machine like this one has been measured: this meter would be the first."
+    },
+    {
+      "id": "part-ac-panel",
+      "scope": "part:ac-panel",
+      "title": "Main AC panel",
+      "scene": "power-room",
+      "text": "The crossroads: the sun, the grid, the house and the machine all meet here. The current changes direction with the hours, with no trouble at all: a busbar does not know who is pushing. One rule stands: when you open this panel, not everything inside is necessarily off, because several sources feed it."
+    },
+    {
+      "id": "part-regen-supply",
+      "scope": "part:regen-supply",
+      "title": "Regenerative supply",
+      "scene": "power-room",
+      "text": "[[flows:on]] This is our addition. An ordinary hoist burns its descent in a resistor. To make a battery of it, this lab adds this supply, which sends the power back to the grid. Without it, the machine would make no sense. [[flows:off]] One setting decides the bill. Ready to answer, the machine draws about two hundred and eighty-four watts. Per day, that is more than six times what the weight holds."
+    },
+    {
+      "id": "part-dc-link",
+      "scope": "part:dc-link",
+      "title": "DC link",
+      "scene": "power-room",
+      "text": "Between the grid and the motor, a direct-current link, at about six hundred volts. The supply fills it, the inverter empties it, and on the way down it is the reverse. But that energy stays there when everything is off. Some twenty seconds after a cut, nearly six hundred volts remain. So you wait, then you measure."
+    },
+    {
+      "id": "part-motor-inverter",
+      "scope": "part:motor-inverter",
+      "title": "Hoist inverter",
+      "scene": "power-room",
+      "text": "[[flows:on]] It makes the voltage and the frequency that hold the weight for the motor, at any speed, in both directions. [[flows:off]] But even at a crawl, twenty tonnes weigh just as much on the motor. And do you know what the rotor weighs, seen from the hook, through all those ratios? About two thousand and seventy-five tonnes! Hence a ramp of two seconds."
+    },
+    {
+      "id": "part-brake-chopper",
+      "scope": "part:brake-chopper",
+      "title": "Brake chopper",
+      "scene": "power-room",
+      "text": "If the grid goes at full descent, the energy has nowhere to go, and the link climbs. At about seven hundred and fifty volts, this transistor brings in the resistor. A peak of about fourteen kilowatts, for three and a half watt-hours burnt: a matter of power, not energy."
+    },
+    {
+      "id": "part-brake-resistor",
+      "scope": "part:brake-resistor",
+      "title": "Brake resistor",
+      "scene": "power-room",
+      "text": "A resistor does what it knows how to do: it gets hot. No software, no moving part. On a building-site hoist, the whole descent goes out through here. On this machine, almost nothing, a few watt-hours per power cut: that is all the difference. Its ventilated box is never covered up."
+    },
+    {
+      "id": "part-motor-cable",
+      "scope": "part:motor-cable",
+      "title": "Motor cable",
+      "scene": "power-room",
+      "text": "From the room to the hoist, about fifty-five metres of cable. About one hundred and sixty-six watts lost at full descent. And at the threshold where nothing comes out, still one hundred and sixty-seven! The weight is the same, so the current is too. And the inverter stays in the room: a tower suits neither electronics nor whoever comes to repair them."
+    },
+    {
+      "id": "part-safety-controller",
+      "scope": "part:safety-controller",
+      "title": "Safety controller",
+      "scene": "power-room",
+      "text": "The gate, the limits, the governor, the wind: it all goes through here, often in two channels that it compares. One disagreement, and it cuts the inverter, then the brakes close. A safety device never asks the opinion of what it stops. Test each input, one by one, on a fixed date, from a written list."
+    },
+    {
+      "id": "part-emergency-stop",
+      "scope": "part:emergency-stop",
+      "title": "Emergency stop",
+      "scene": "power-room",
+      "text": "One punch, and both brakes close, without waiting for the ramp to end. But remember this: the button isolates nothing. The link stays charged, the grid stays on the panel, the load stays in the air. And try it on a fixed date: with a detached contact, the button goes in and opens nothing."
+    },
+    {
+      "id": "part-control-ups",
+      "scope": "part:control-ups",
+      "title": "Control UPS",
+      "scene": "power-room",
+      "text": "A battery, for the safety of a store with no battery! When the grid goes, the springs hold the weight, but an awake witness is still needed. This little backup keeps the controller, the sensors and the log alive. Cut its supply once a quarter: an old battery shows full, and holds nothing."
+    },
+    {
+      "id": "part-battery-inverter",
+      "scope": "part:battery-inverter",
+      "title": "Battery inverter",
+      "scene": "power-room",
+      "text": "[[flows:on]] Straight from the tower, a fridge is very expensive. So we change the rules of the game. The battery follows the house. When its charge falls to thirty per cent, the tower empties into it all at once, at its best pace. About four hundred and thirty watt-hours then reach the fridge, instead of fifty-four. Eight times more, from the same weight! [[flows:off]]"
+    },
+    {
+      "id": "part-lfp-module",
+      "scope": "part:lfp-module",
+      "title": "LFP module",
+      "scene": "power-room",
+      "text": "Forty kilos: two people can carry it. Per kilo, this module holds about two thousand two hundred times more than the tower. So what is left for gravity? Power that does not depend on energy, no chemical wear, a mass that can be anything heavy. That counts in a shaft already dug, at very large scale. Run “The race”: at one kilowatt, the tower lasts about twenty-one minutes, the module more than four hours."
+    }
+  ]
+}
