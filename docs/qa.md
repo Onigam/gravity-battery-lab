@@ -249,6 +249,8 @@ Computed, and read back from the page for the nine stages. The supply left the l
 
 **Labels, main, at home, fresh page.** `tower`: clean at all widths in French; in English « Head frame and hoist » is cut by 3 px at 390 and 12 px at 768. `hoist`: at 768 and 390 « Réducteur » touches the dot of « Poulie de renvoi » by a few pixels, both still read; for the modeler. `power-room` and `site`: clean at 1280; at narrow widths, see « Open ».
 
+**Live, `28f0ef0`.** Same bundle as the local build, no request to Google, `status: building`, 1280 in dark looked at. One console line: the 404 of `audio/fr/manifest.json`, until the audio exists; the dev server answers that request with its fallback page, so the walks above do not show it.
+
 **The fence's cue (D18).** At the voice's padding, 151 m against a home of 160 m at 1280, measured in the page: no longer farther than home.
 
 ## Open
