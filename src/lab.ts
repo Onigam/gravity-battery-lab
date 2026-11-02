@@ -21,7 +21,9 @@ const sim = new GravitySim();
 
 export const lab: LabDefinition<GravitySim> = {
   id: 'gravity-battery-lab',
-  brand: { title: strL('labTitle'), tagline: strL('tagline'), icon: './favicon.svg' },
+  brand: { title: strL('labTitle'), tagline: strL('tagline') },
+  // the size in a part's Specs is computed from the model, so it carries the lab's mark for an estimate
+  envelopeMark: '*',
   sim,
   defaultScene: 'site',
   video: { id: VIDEO_ID },
