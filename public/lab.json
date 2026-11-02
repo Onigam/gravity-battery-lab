@@ -1,6 +1,6 @@
 {
-  "id": "lab-template",
-  "title": { "fr": "Lab Template", "en": "Lab Template" },
+  "id": "gravity-battery-lab",
+  "title": { "fr": "Gravity Battery Lab", "en": "Gravity Battery Lab" },
   "tagline": { "fr": "Un lab à remplacer", "en": "A lab to replace" },
   "tags": [],
   "difficulty": 1,

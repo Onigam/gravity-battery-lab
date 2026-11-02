@@ -1,8 +1,8 @@
 {
-  "name": "lab-template",
+  "name": "gravity-battery-lab",
   "private": true,
   "version": "0.1.0",
-  "description": "Template of an interactive 3D energy lab built on @onigam/lab-kit",
+  "description": "Interactive 3D lab of a gravity battery: lift a mass, store the energy, get it back",
   "type": "module",
   "scripts": {
     "dev": "vite",
