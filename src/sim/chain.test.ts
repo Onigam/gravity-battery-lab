@@ -17,6 +17,7 @@ import {
 import { comparatorRows, raceLanes, ROUND_TRIP_CLAIMS } from './comparator';
 import { diyLightest } from './diy';
 import { energyWh } from './energy';
+import { rung, rungEnergyTag, tagMark } from './ladder';
 import {
   backDriven,
   CARRIER_MASS,
@@ -413,5 +414,18 @@ describe('the comparator', () => {
   });
   it('the tower’s lane is 0 when the load is beyond it', () => {
     expect(raceLanes(FARM, FARM_MASS, 20000)[0].lasts).toBe(0);
+  });
+  it('a rung’s energy carries the status its source gives it, one figure one mark', () => {
+    expect(tagMark(rungEnergyTag(rung('farm')))).toBe('†');
+    expect(tagMark(rungEnergyTag(rung('leith')))).toBe('†');
+    expect(tagMark(rungEnergyTag(rung('gravitylight')))).toBe('†');
+    expect(tagMark(rungEnergyTag(rung('rudong')))).toBe('');
+    expect(tagMark(rungEnergyTag(rung('ares')))).toBe('');
+    expect(tagMark(rungEnergyTag(rung('nant')))).toBe('');
+    expect(tagMark(rungEnergyTag(rung('garden')))).toBe('*');
+    expect(tagMark(rungEnergyTag(rung('diy')))).toBe('*');
+  });
+  it('a fridge’s 100 W is not beyond it: the tower serves it, for about half an hour, at its price', () => {
+    expect(raceLanes(FARM, FARM_MASS, 100)[0].lasts / 60).toBeCloseTo(32, 0);
   });
 });

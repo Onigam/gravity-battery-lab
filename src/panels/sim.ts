@@ -16,7 +16,7 @@ import {
 import { comparatorRows, lfpCo2Kg, towerCo2Tonnes } from '../sim/comparator';
 import type { DayResult, GravitySim } from '../sim/engine';
 import { energyWh, heightForKwh } from '../sim/energy';
-import { ISO_ENERGIES, LADDER_BOX, rung, RUNGS, rungEnergyWh, tagMark, type Tag } from '../sim/ladder';
+import { ISO_ENERGIES, LADDER_BOX, rung, RUNGS, rungEnergyTag, rungEnergyWh, tagMark, type Tag } from '../sim/ladder';
 import { LFP } from '../sim/lfp';
 import { FALLS_OPTIONS, machineKind, PRESET_IDS, rangeFor, SCENARIO_IDS, type RangedKey } from '../sim/presets';
 import type { Control, GravityParams, PresetId, ScenarioId } from '../sim/types';
@@ -725,7 +725,7 @@ export class SimPanel implements PanelController {
           {},
           `${i + 1}. ${st(RUNG_KEYS[r.id])} `,
           h('b', {}, energyText(rungEnergyWh(rung(r.id)))),
-          h('small', {}, ` ${mark(r.tag)}`),
+          h('small', {}, ` ${mark(rungEnergyTag(r))}`),
         ),
       ),
     );

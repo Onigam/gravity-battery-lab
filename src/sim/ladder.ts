@@ -5,9 +5,8 @@ import { energyWh, massFor } from './energy';
 
 export type Tag = 'reported' | 'derived' | 'estimate' | 'assumption' | 'model';
 
-/** The visitor's mark for a tag: † computed from reported figures or by the model, * an estimate of ours, nothing for a reported figure. */
-export const tagMark = (tag: Tag): string =>
-  tag === 'derived' || tag === 'model' ? '†' : tag === 'reported' ? '' : '*';
+/** The visitor's mark for a tag, the same in the panel, the sheets and the texts: † computed from published figures; * an estimate, an assumption or a result of the model; nothing for a reported figure. */
+export const tagMark = (tag: Tag): string => (tag === 'derived' ? '†' : tag === 'reported' ? '' : '*');
 
 export type RungId =
   | 'gravitylight'
@@ -30,6 +29,8 @@ export interface Rung {
   power: number | null;
   /** Tag of the mass and height pair. */
   tag: Tag;
+  /** Tag of the energy where it differs from the pair's: a reported pair can give a computed energy, a computed pair can stand for a reported energy. */
+  energyTag?: Tag;
   /** Built, or a study: for the chart's colour. */
   built: boolean;
   note: { fr: string; en: string };
@@ -42,6 +43,7 @@ export const RUNGS: readonly Rung[] = [
     height: 1.8,
     power: 0.1,
     tag: 'reported',
+    energyTag: 'derived',
     built: true,
     note: {
       fr: 'Sac de 12,5 kg, 1,8 m : une petite lumière pendant 12 à 28 minutes.',
@@ -78,6 +80,7 @@ export const RUNGS: readonly Rung[] = [
     height: 20,
     power: 13080,
     tag: 'assumption',
+    energyTag: 'derived',
     built: false,
     note: {
       fr: 'La tour de ce lab : des pièces publiées, une machine que personne ne vend.',
@@ -90,6 +93,7 @@ export const RUNGS: readonly Rung[] = [
     height: 15,
     power: 250000,
     tag: 'reported',
+    energyTag: 'derived',
     built: true,
     note: {
       fr: 'Édimbourg, 2021 : 2 × 25 t, tour de 15 m, 250 kW en moins d’une seconde. Démontée en juillet 2021.',
@@ -138,6 +142,7 @@ export const RUNGS: readonly Rung[] = [
     height: 656,
     power: 50000000,
     tag: 'derived',
+    energyTag: 'reported',
     built: false,
     note: {
       fr: 'Train sur une pente de 9,3 km à 7 % : 50 MW, 12,5 MWh. Pas construit à cette taille, à notre connaissance.',
@@ -150,6 +155,7 @@ export const RUNGS: readonly Rung[] = [
     height: 100,
     power: 25000000,
     tag: 'derived',
+    energyTag: 'reported',
     built: true,
     note: {
       fr: 'Chine : 25 MW, 100 MWh, 148 m. Raccordée fin 2023, en attente d’autorisations en mars 2026. Le nombre de blocs n’est pas publié : tracée pour une chute moyenne de 100 m.',
@@ -177,6 +183,9 @@ export const rung = (id: RungId): Rung => {
 };
 
 export const rungEnergyWh = (r: Rung): number => energyWh(r.mass, r.height);
+
+/** The status of a rung's energy: K7, K20 and K28 are computed, K23 and K26 are reported as they stand. */
+export const rungEnergyTag = (r: Rung): Tag => r.energyTag ?? r.tag;
 
 /** The lines of equal energy on the chart, Wh. */
 export const ISO_ENERGIES: readonly number[] = [1, 1e3, 1e6, 1e9];

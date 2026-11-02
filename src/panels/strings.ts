@@ -9,8 +9,8 @@ export const SIM_STRINGS = {
     'Raising a mass keeps its energy, and the physics is honest. Choose a machine and watch what is left at each stage. Whatever is not published is an estimate of this lab, marked with a star.',
   ],
   marksLegend: [
-    '† calculé à partir de chiffres publiés. * dépend d’une estimation de ce lab : personne n’a mesuré une machine de cette taille.',
-    '† computed from published figures. * rests on an estimate of this lab: nobody has measured a machine of this size.',
+    '† calculé à partir de chiffres publiés. * dépend d’une estimation de ce lab, ou sort de son modèle : personne n’a mesuré une machine de cette taille.',
+    '† computed from published figures. * rests on an estimate of this lab, or comes from its model: nobody has measured a machine of this size.',
   ],
   preset: ['Point de départ', 'Starting point'],
   custom: ['Personnalisé', 'Custom'],
@@ -371,7 +371,7 @@ export const SIM_STRINGS = {
   laneTower: ['La tour', 'The tower'],
   laneModule: ['Un module', 'One module'],
   laneWater: ['La même masse d’eau, en haut d’une chute alpine', 'The same mass of water, up an Alpine head'],
-  raceNoTower: ['ne peut pas la servir', 'cannot serve it'],
+  raceNoTower: ['n’atteint pas cette puissance', 'does not reach this power'],
   raceHint: [
     'Même masse, autre hauteur : voilà tout l’écart entre la tour et le lac. Chaque barre se vide au rythme de l’horloge, depuis le début du scénario.',
     'The same mass at another height: that is the whole gap between the tower and the lake. Each bar empties at the pace of the clock, from the start of the scenario.',
