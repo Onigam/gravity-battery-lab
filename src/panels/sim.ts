@@ -26,6 +26,7 @@ import {
   dayChartData,
   etaChartData,
   isFarmTower,
+  ISO_COLOUR,
   isoMarks,
   ladderChartData,
   ladderMark,
@@ -201,7 +202,7 @@ export class SimPanel implements PanelController {
       series: ISO_ENERGIES.map((wh, i) => ({
         key: `iso-${i}`,
         label: () => energyText(wh),
-        color: '#5b6878',
+        color: ISO_COLOUR,
         dash: true,
       })),
       yMin: box.yMin,
@@ -212,7 +213,7 @@ export class SimPanel implements PanelController {
         const p = sim().params;
         const you = ladderMark(p.ladderTonnes, p.ladderHeight);
         return [
-          ...isoMarks().map((m) => ({ x: m.x, y: m.y, label: m.label, color: '#5b6878' })),
+          ...isoMarks().map((m) => ({ x: m.x, y: m.y, label: m.label, color: ISO_COLOUR })),
           ...rungMarks().map((r) => ({ x: r.x, y: r.y, label: r.label, color: SERIES_COLORS.hydro })),
           { x: you.x, y: you.y, label: st('markYou'), color: SERIES_COLORS.dump },
         ];
@@ -634,8 +635,9 @@ export class SimPanel implements PanelController {
             {},
             h('i', { style: `background:${r.colour}` }),
             `${st(r.key)} `,
-            h('b', {}, powerText(r.watts)),
-            h('small', {}, ` ${num((100 * r.watts) / total)} %`),
+            // a figure stays with its unit when the legend wraps
+            h('b', {}, powerText(r.watts).replace(' ', '\u00a0')),
+            h('small', {}, ` ${num((100 * r.watts) / total)}\u00a0%`),
           ),
         ),
       ),

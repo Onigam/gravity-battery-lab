@@ -138,17 +138,24 @@ export interface Segment {
   colour: string;
 }
 
-const COLOUR = {
-  useful: '#2f8f5b',
-  guide: '#8a7a5c',
-  reeving: '#b08a4a',
-  gear: '#c4692c',
-  motor: '#c99700',
-  cable: '#2a7fb8',
-  inverter: '#6b4fd8',
-  supply: '#8e7cdb',
-  aux: '#b23a48',
+/**
+ * The stages of the loss bar and their legend, on the panel's card in both themes (none of these colours a text: the legend's words are the
+ * kit's): a token where one says the stage, and where none does, a value of middle lightness that holds 3:1 on both cards. `model.test.ts` reads them.
+ */
+export const COLOUR = {
+  useful: 'var(--leaf)',
+  guide: 'var(--ink-3)',
+  reeving: '#a07c3c',
+  gear: 'var(--copper)',
+  motor: '#a98000',
+  cable: 'var(--water)',
+  inverter: 'var(--violet)',
+  supply: '#b05fa8',
+  aux: 'var(--alarm)',
 } as const;
+
+/** The ladder's lines of equal energy and their dots. A canvas cannot read `var()`, and this one is not of the kit's four series: a value that holds in both themes. */
+export const ISO_COLOUR = '#7f8c99';
 
 /**
  * The power crossing the machine, stage by stage: going up from the meter to the weight, going down from the weight to the meter. The
