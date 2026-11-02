@@ -46,8 +46,8 @@ export const RUNGS: readonly Rung[] = [
     energyTag: 'derived',
     built: true,
     note: {
-      fr: 'Sac de 12,5 kg, 1,8 m : une petite lumière pendant 12 à 28 minutes.',
-      en: 'A 12.5 kg bag, 1.8 m: a small light for 12 to 28 minutes.',
+      fr: 'Sac de 8 à 12,5 kg, 1,8 m : une petite lumière pendant 12 à 28 minutes.',
+      en: 'An 8 to 12.5 kg bag, 1.8 m: a small light for 12 to 28 minutes.',
     },
   },
   {
