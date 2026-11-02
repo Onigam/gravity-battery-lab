@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@onigam/lab-kit": "github:Onigam/lab-kit#v0.5.1",
-    "three": "^0.186.1"
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "@types/three": "^0.186.0",
