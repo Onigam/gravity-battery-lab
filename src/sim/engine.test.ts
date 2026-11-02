@@ -90,10 +90,14 @@ describe('the integrator against the chain', () => {
     const sim = new GravitySim();
     sim.set({ control: 'load', loadPower: 2000 });
     sim.state.z = 20;
-    const t0 = performance.now();
-    run(sim, 300);
-    const each = (performance.now() - t0) / (300 / FRAME);
-    expect(each).toBeLessThan(0.1);
+    // The fastest of several stretches of the same descent: a busy machine can only slow a stretch down, while a step that has become dear is dear in all of them.
+    const stretches = Array.from({ length: 10 }, () => {
+      const t0 = performance.now();
+      run(sim, 30);
+      return (performance.now() - t0) / (30 / FRAME);
+    });
+    expect(Math.min(...stretches)).toBeLessThan(0.1);
+    expect(sim.state.mode).toBe('lowering');
   });
   it('the farm’s bus balances at every step', () => {
     const sim = new GravitySim();
