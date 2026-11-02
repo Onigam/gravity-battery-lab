@@ -1,10 +1,16 @@
 {
   "id": "gravity-battery-lab",
-  "title": { "fr": "Gravity Battery Lab", "en": "Gravity Battery Lab" },
-  "tagline": { "fr": "Un lab à remplacer", "en": "A lab to replace" },
-  "tags": [],
-  "difficulty": 1,
-  "minutes": 10,
+  "title": {
+    "fr": "Stockage par gravité : garder l’énergie en soulevant des poids",
+    "en": "Gravity storage: keeping energy by lifting weights"
+  },
+  "tagline": {
+    "fr": "Une tour de 20 tonnes pour un seul kilowattheure : ce que la gravité peut stocker, et ce qu’elle ne peut pas",
+    "en": "A 20-tonne tower for one kilowatt-hour: what gravity can store, and what it can’t"
+  },
+  "tags": ["gravity", "storage", "electricity", "lifting"],
+  "difficulty": 2,
+  "minutes": 25,
   "status": "building",
   "energyProfile": null
 }

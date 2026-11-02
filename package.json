@@ -2,11 +2,11 @@
   "name": "gravity-battery-lab",
   "private": true,
   "version": "0.1.0",
-  "description": "Interactive 3D lab of a gravity battery: lift a mass, store the energy, get it back",
+  "description": "Interactive 3D lab of gravity storage on a farm: a 20-tonne tower for one kilowatt-hour, what gravity can store, and what it can’t",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "node scripts/check-narration.mjs && tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
