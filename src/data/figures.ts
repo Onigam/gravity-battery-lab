@@ -161,6 +161,7 @@ export const FIG = {
   stage2Torque: m(270, 0, ' N·m'),
   motorTorqueUp: m(48.5, 1, ' N·m'),
   motorTorqueDown: m(38.3, 1, ' N·m'),
+  drumBrakeTimes: m(175, 0, [' fois', ' times']), // 8,500 / 48.5: what the drum brake holds against the motor's brake
   motorAmpsUp: m(27.7, 1, ' A'),
   motorAmpsDown: m(24, 0, ' A'),
   motorRiseK: m(23, 0, ' K'),
@@ -235,7 +236,6 @@ export const FIG = {
   fanW: e(100, 0, ' W'),
   drumBrakeW: e(150, 0, ' W'),
   brakesW: e(219, 0, ' W'), // 69 W (a reference brake) + 150 W
-  drumBrakeTimes: e(150, 0, [' fois', ' times']),
   controlsW: e(40, 0, ' W'),
   controlsLow: e(15, 0, ' W'),
   controlsHigh: e(80, 0, ' W'),

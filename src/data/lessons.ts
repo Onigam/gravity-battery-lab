@@ -2,7 +2,7 @@
 // 5 what holds 20 tonnes up, 6 who wins, and where. Each opens a world, a part and one of the simulation's ten scenarios, and names the others it needs by the name the
 // panel gives them, so that all ten are reachable from a lesson (lessons.test.ts checks it).
 //
-// Shape: four paragraphs of at most 95 words, 15 questions in all, three choices of about the same length, a wrong choice for each misconception the text names. Every term is
+// Shape: four paragraphs of at most 95 words, 15 questions in all, three choices of about the same length, the longest right about one time in three (lessons.test.ts), a wrong choice for each misconception the text names. Every term is
 // defined once, in bold, in the first lesson that needs it. Numbers: no mark, reported by a source; † arithmetic on reported figures; * the model or an estimate of ours, never a measurement.
 // Real projects and companies are named in lesson 6 only, with their dates and no adjective: the sceptics' arithmetic is reported, not their words. The status of a company or a plant ages, so
 // each one carries its date.
@@ -31,12 +31,12 @@ export const LESSONS: Lesson[] = [
         'This lab’s tower lifts 20 t through 20 m: {grossKwh}, with no loss at all. Per kilo that is {whPerKg}, whatever the material: per tonne and at the same height, concrete, iron and water keep exactly the same thing. A 40 kg battery module reaches {lfpWhPerKg}: {densityRatio} times more. This whole lab follows from that ratio.',
       ),
       lf(
-        'Le graphique des machines réelles, dans la Simulation, place la masse contre la hauteur, avec des lignes d’égale énergie. On y lit un sac de 12,5 kg levé de 1,8 m, un démonstrateur de 2 × 25 t sur 15 m, soit {leithMaxKwh} au plus, puis 25 millions de m³ d’eau à {nantHead}, soit 20 GWh. Même formule, de la lampe au lac : ce qui change, c’est seulement l’échelle.',
-        'The chart of real machines, in the Simulation, sets mass against height, with lines of equal energy. It shows a 12.5 kg bag raised 1.8 m, a 2 × 25 t demonstrator over 15 m, {leithMaxKwh} at most, then 25 million m³ of water at {nantHead}, that is 20 GWh. The same formula, from the lamp to the lake: all that changes is the scale.',
+        'Le graphique des machines réelles, dans la Simulation, place la masse contre la hauteur, avec des lignes d’égale énergie. On y lit un sac de 8 à 12,5 kg levé de 1,8 m, un démonstrateur de 2 × 25 t sur 15 m, soit {leithMaxKwh} au plus, puis 25 millions de m³ d’eau à {nantHead}, soit 20 GWh. Même formule, de la lampe au lac : ce qui change, c’est seulement l’échelle.',
+        'The chart of real machines, in the Simulation, sets mass against height, with lines of equal energy. It shows an 8 to 12.5 kg bag raised 1.8 m, a 2 × 25 t demonstrator over 15 m, {leithMaxKwh} at most, then 25 million m³ of water at {nantHead}, that is 20 GWh. The same formula, from the lamp to the lake: all that changes is the scale.',
       ),
       lf(
-        'Personne ne publie la nuit d’un foyer, alors ce scénario la fait varier de {nightMin} à {nightMax}, une hypothèse. Sans aucune perte, il faudrait de {gross1T} à {gross7T}. Avec les pertes du modèle, en passant par une batterie, il en faut de {night1T} à {night7T} : de {night1Towers} à {night7Towers}, et {night7M3} de béton. Regardez la pile fantôme grandir sur la cour.',
-        'Nobody publishes a household’s night, so this scenario moves it from {nightMin} to {nightMax}, an assumption. With no loss at all, it would take {gross1T} to {gross7T}. With the model’s losses, going through a battery, it takes {night1T} to {night7T}: {night1Towers} to {night7Towers}, and {night7M3} of concrete. Watch the ghost stack grow on the yard.',
+        'Personne ne publie la nuit d’un foyer, alors ce scénario la fait varier de {nightMin} à {nightMax}, une hypothèse. Sans aucune perte, il faudrait de {gross1T} à {gross7T}. Avec les pertes du modèle, en passant par une batterie, il en faut de {night1T} à {night7T} : de {night1Towers} à {night7Towers}, et {night7M3} de béton. Regardez la pile fantôme grandir sur le pré.',
+        'Nobody publishes a household’s night, so this scenario moves it from {nightMin} to {nightMax}, an assumption. With no loss at all, it would take {gross1T} to {gross7T}. With the model’s losses, going through a battery, it takes {night1T} to {night7T}: {night1Towers} to {night7Towers}, and {night7M3} of concrete. Watch the ghost stack grow on the meadow.',
       ),
     ],
     formula: 'E = m · g · h',
@@ -58,10 +58,7 @@ export const LESSONS: Lesson[] = [
         ),
         choices: [
           l('Aussi haut : l’énergie ne dépend que de la hauteur', 'As high: the energy depends only on the height'),
-          l(
-            'Dix fois moins haut : masse et hauteur se remplacent',
-            'Ten times lower: mass and height stand in for each other',
-          ),
+          l('Dix fois moins haut : masse et hauteur s’échangent', 'Ten times lower: mass and height trade off'),
           l('Dix fois plus haut : une charge lourde demande plus', 'Ten times higher: a heavy load asks for more'),
         ],
         answer: 1,
@@ -78,7 +75,7 @@ export const LESSONS: Lesson[] = [
         choices: [
           l('Le béton : il est bien plus dense que l’eau', 'The concrete: it is far denser than water'),
           l('L’eau : elle se pompe, donc elle se récupère mieux', 'The water: it can be pumped, so it returns better'),
-          l('Aucune : à la tonne, elles gardent la même énergie', 'Neither: per tonne, they keep the same energy'),
+          l('Aucune : à la tonne, l’énergie est la même', 'Neither: per tonne, the energy is the same'),
         ],
         answer: 2,
         explain: l(
@@ -151,8 +148,8 @@ export const LESSONS: Lesson[] = [
         ),
         choices: [
           l(
-            'La machine s’use dans la journée, et elle perd de sa force',
-            'The machine wears during the day, and loses its strength',
+            'La machine s’use dans la journée, et elle perd peu à peu de sa force',
+            'The machine wears during the day, and slowly loses its strength',
           ),
           l(
             'La veille tourne jour et nuit, et la maison demande lentement',
@@ -231,7 +228,7 @@ export const LESSONS: Lesson[] = [
         ),
         choices: [
           l(
-            'Il rend un peu moins, en proportion de la vitesse',
+            'Il rend un peu moins qu’avant, en proportion de la vitesse',
             'It gives back a little less, in proportion to the speed',
           ),
           l('Il paie : les pertes dépassent ce que donne le crochet', 'It pays: the losses exceed what the hook gives'),
@@ -281,7 +278,7 @@ export const LESSONS: Lesson[] = [
           ),
           l(
             'Le module supprime la veille et les pertes du moteur',
-            'The module removes the standby and the motor’s losses',
+            'The module does away with the standby and the motor’s losses',
           ),
         ],
         answer: 0,
@@ -310,8 +307,8 @@ export const LESSONS: Lesson[] = [
         'In a video, a home builder lifts 12 kg through a 1:27 gearbox: it goes up, and it does not come down. The lab’s model finds that stall, with an estimated friction: below {diyLightestKg} with a {diyRollerCm} roller. Adding stages makes it worse; a bigger roller makes it better. At his final 46 kg load, the model gives {diyWatts} and {diyRoundTrip} round trip: a mere plausibility, since neither the height nor the roller is known.',
       ),
       lf(
-        'Sur la tour, c’est loin d’être le problème : le poids descend seul dès {lightestKg}, entre {lightestLow} et {lightestHigh} selon les hypothèses, et le châssis vide pèse déjà {carrierT}. Le vrai seuil est ailleurs : à pleine vitesse, la machine cesse de rapporter sous {stopsPayingT}. Dans le scénario « Trop léger », on retire des blocs : elle cesse d’abord de rapporter, puis ne descend plus d’elle-même, et il faut alors que le moteur la pousse.',
-        'On the tower that is far from the problem: the weight comes down alone from {lightestKg}, between {lightestLow} and {lightestHigh} depending on the assumptions, and the empty carrier already weighs {carrierT}. The real limit lies elsewhere: at full speed, the machine stops paying below {stopsPayingT}. In the “Too light” scenario, blocks come off: first it stops paying, then it no longer comes down by itself, and the motor has to push it.',
+        'Sur la tour, c’est loin d’être le problème : le poids descend seul dès {lightestKg}, entre {lightestLow} et {lightestHigh} selon les hypothèses, et le châssis vide pèse déjà {carrierT}. Le vrai seuil est ailleurs : à pleine vitesse, la machine cesse de rapporter sous {stopsPayingT}. Le scénario « Trop léger » retire les blocs, puis, par la pensée, le châssis lui-même : elle cesse d’abord de rapporter, puis ne descend plus d’elle-même, et le moteur doit la pousser.',
+        'On the tower that is far from the problem: the weight comes down alone from {lightestKg}, between {lightestLow} and {lightestHigh} depending on the assumptions, and the empty carrier already weighs {carrierT}. The real limit lies elsewhere: at full speed, the machine stops paying below {stopsPayingT}. The “Too light” scenario takes off the blocks, then, as a thought experiment, the carrier too: first it stops paying, then it no longer comes down by itself, and the motor has to push it.',
       ),
       lf(
         'Tout dépend aussi de la nature des dents. Une vis sans fin à fort rapport se bloque d’elle-même, et ne rendrait rien. Des engrenages hélicoïdaux se laissent entraîner à l’envers presque aussi bien qu’à l’endroit : {meshEta} par étage, ici. Et un plus petit moteur ? Avec 5 kW et un plus grand rapport, le seuil descend à {smallMotorKw}, mais le poids monte à {smallMotorMpm} au lieu de 4 m/min, et l’aller-retour tombe à {smallMotorTrip}.',
@@ -357,7 +354,7 @@ export const LESSONS: Lesson[] = [
         ),
         choices: [
           l('Le poids ne descend plus de lui-même', 'The weight no longer comes down by itself'),
-          l('Le câble se détend et saute de sa gorge', 'The rope goes slack and jumps its groove'),
+          l('Le câble se détend et saute hors de sa gorge', 'The rope goes slack and jumps its groove'),
           l('La machine cesse de rapporter de l’énergie', 'The machine stops paying back energy'),
         ],
         answer: 2,
@@ -425,11 +422,14 @@ export const LESSONS: Lesson[] = [
           'Why does the governor have its own thin rope, instead of using the motor’s encoder?',
         ),
         choices: [
-          l('Parce qu’un codeur coûte trop cher pour ce service', 'Because an encoder costs too much for this duty'),
-          l('Parce que le codeur est trop lent pour une chute', 'Because the encoder is too slow for a fall'),
           l(
-            'Parce que le codeur ne voit pas ce qui casse après le réducteur',
-            'Because the encoder cannot see what breaks after the gearbox',
+            'Parce qu’un codeur coûte trop cher pour un tel service',
+            'Because an encoder costs too much for a duty like this',
+          ),
+          l('Parce que le codeur réagit trop lentement à une chute', 'Because the encoder reacts too slowly to a fall'),
+          l(
+            'Parce que le codeur ne voit rien au-delà du réducteur',
+            'Because the encoder sees nothing beyond the gearbox',
           ),
         ],
         answer: 2,
@@ -498,7 +498,7 @@ export const LESSONS: Lesson[] = [
         choices: [
           l(
             'Qu’aucune installation de ce type ne sera jamais raccordée',
-            'That no plant of this kind will ever be connected',
+            'That no plant of this kind will ever be connected to a grid',
           ),
           l('Que la gravité viole la conservation de l’énergie', 'That gravity breaks the conservation of energy'),
           l(
@@ -520,7 +520,10 @@ export const LESSONS: Lesson[] = [
         choices: [
           l('Que la hauteur compte bien plus que la matière', 'That height counts far more than the material'),
           l('Que le fer coûte moins cher en profondeur', 'That iron costs less at depth'),
-          l('Qu’un puits profond n’a besoin d’aucune machine', 'That a deep shaft needs no machine at all'),
+          l(
+            'Qu’un puits profond n’a besoin d’aucune machine de levage',
+            'That a deep shaft needs no hoisting machine at all',
+          ),
         ],
         answer: 0,
         explain: l(

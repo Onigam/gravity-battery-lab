@@ -1,7 +1,10 @@
+import { FIG } from '../data/figures';
 import type { EfficiencyCurve } from '../sim/chain';
+import type { ComparatorRow } from '../sim/comparator';
 import type { DayResult } from '../sim/engine';
-import { massFor } from '../sim/energy';
+import { energyWh, massFor } from '../sim/energy';
 import { ISO_ENERGIES, isoLine, LADDER_BOX, RUNGS, type RungId, type Tag } from '../sim/ladder';
+import { FARM_MASS, FARM_STROKE } from '../sim/machine';
 import type { MachineSpec } from '../sim/presets';
 import type { GravityParams, GravityState, PresetId, ScenarioId, Scope } from '../sim/types';
 import type { SimKey } from './strings';
@@ -167,6 +170,21 @@ export function lossSegments(s: GravityState): Segment[] {
     { key: 'chainAux', watts: c.auxiliaries, colour: COLOUR.aux },
   ];
 }
+
+/** Whether the tower's line of the comparison is the machine the research prices: the farm tower, 20 t over 20 m. */
+export const isFarmTower = (row: Pick<ComparatorRow, 'energy'>): boolean =>
+  Math.abs(row.energy - energyWh(FARM_MASS, FARM_STROKE)) < 1;
+
+/**
+ * What the tower's capacity costs, €/kWh: the research's rounded range, as the sheets and lesson 6 write it. It prices that one machine, so another
+ * load or stroke has no figure: dividing the farm's cost by a mine shaft's energy would invent one.
+ */
+export const towerCostRange = (row: Pick<ComparatorRow, 'energy'>): { min: number; max: number } | null =>
+  isFarmTower(row) ? { min: FIG.costKwhLow.v, max: FIG.costKwhHigh.v } : null;
+
+/** The carbon of a module, kg of CO₂: to the nearest 5 kg as the research rounds it (55 to 165 kg), a decimal for what is too small for that. */
+export const carbonKg = (kg: number): { value: number; digits: number } =>
+  kg < 20 ? { value: kg, digits: 1 } : { value: Math.round(kg / 5) * 5, digits: 0 };
 
 export type Tone = 'note' | 'warn';
 

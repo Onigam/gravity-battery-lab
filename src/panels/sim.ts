@@ -22,8 +22,10 @@ import { FALLS_OPTIONS, machineKind, PRESET_IDS, rangeFor, SCENARIO_IDS, type Ra
 import type { Control, GravityParams, PresetId, ScenarioId } from '../sim/types';
 import type { EfficiencyCurve } from '../sim/chain';
 import {
+  carbonKg,
   dayChartData,
   etaChartData,
+  isFarmTower,
   isoMarks,
   ladderChartData,
   ladderMark,
@@ -40,8 +42,9 @@ import {
   SCENARIO_KEYS,
   SCENARIO_NOTES,
   statusOf,
+  towerCostRange,
 } from './model';
-import { durationText, energyText, massText, num, powerText, shortMass, st, type SimKey } from './strings';
+import { dropText, durationText, energyText, massText, num, powerText, shortMass, st, type SimKey } from './strings';
 
 // Simulation mode: introduction, starting points and scenarios, a few live figures, where the power goes, then everything else folded: the
 // control, the machine, the night and the battery, the site, all the figures; and the charts (what comes out, efficiency, a day, the
@@ -329,6 +332,7 @@ export class SimPanel implements PanelController {
           icon(ICONS.reset, 16),
         ),
       ),
+      machine !== 'farm' ? hint('presetKeepsTower') : null,
       h('div', { class: 'eyebrow' }, st('scenarios')),
       h(
         'div',
@@ -684,7 +688,7 @@ export class SimPanel implements PanelController {
     fill(
       this.falling,
       line(st('fallPeak'), `${num(s.fallPeak, 2)} m/s`, mark('estimate')),
-      line(st('fallDrop'), `${num(s.fallDrop, s.fallDrop < 1 ? 2 : 1)} m`, mark('estimate')),
+      line(st('fallDrop'), dropText(s.fallDrop), mark('estimate')),
       line(st('fallTime'), `${num(s.fallTime, 2)} s`, mark('estimate')),
       s.impactSpeed > 0 ? line(st('fallImpact'), `${num(s.impactSpeed, 1)} m/s`, mark('derived')) : null,
     );
@@ -743,9 +747,13 @@ export class SimPanel implements PanelController {
     };
     const trip = (a: number, b: number) =>
       Math.abs(a - b) < 0.005 ? `${num(100 * a)} %` : `${num(100 * a)}–${num(100 * b)} %`;
-    // an order of magnitude, never a false precision
-    const cost = (a: number, b: number) =>
-      a === b ? `${num(a)}` : `${num(Math.round(a / 10000) * 10000)}–${num(Math.round(b / 10000) * 10000)}`;
+    // the unit where each language writes it, as the sheets do: 231 €, €231; 100 CHF, CHF 100
+    const money = (text: string, unit: string) =>
+      getLang() !== 'en' ? `${text} ${unit}` : unit === '€' ? `€${text}` : `${unit} ${text}`;
+    const kg = (v: number) => {
+      const c = carbonKg(v);
+      return num(c.value, c.digits);
+    };
     const carbon: Record<(typeof rows)[number]['id'], string> = {
       tower: (() => {
         const c = towerCo2Tonnes();
@@ -753,16 +761,24 @@ export class SimPanel implements PanelController {
       })(),
       module: (() => {
         const c = lfpCo2Kg(rows[0].energy / 1000);
-        return `${num(c.min)}–${num(c.max)} kg CO₂`;
+        return `${kg(c.min)}–${kg(c.max)} kg CO₂`;
       })(),
       reservoir: '—',
+    };
+    // the farm tower's price and carbon are the research's; for another machine, there is no figure to show
+    const farm = isFarmTower(rows[0]);
+    const towerCost = towerCostRange(rows[0]);
+    const price = (r: (typeof rows)[number]): string | null => {
+      if (r.id !== 'tower') return money(num(r.costMin), r.id === 'reservoir' ? 'CHF' : '€');
+      return towerCost && money(`${num(towerCost.min)}–${num(towerCost.max)}`, '€');
     };
     const item = (label: string, value: string, tag: Tag) =>
       h('span', {}, `${label} `, h('b', {}, value), h('small', {}, ` ${mark(tag)}`));
     fill(
       this.compare,
-      ...rows.map((r) =>
-        h(
+      ...rows.map((r) => {
+        const cost = price(r);
+        return h(
           'div',
           {},
           h('div', { class: 'eyebrow' }, st(titles[r.id])),
@@ -771,14 +787,15 @@ export class SimPanel implements PanelController {
             { class: 'loss-legend' },
             item(st('rowEnergy'), energyText(r.energy), r.tags.energy),
             item(st('rowPower'), powerText(r.power), r.tags.energy),
-            item(st('rowMass'), massText(r.mass), r.id === 'tower' ? 'assumption' : r.tags.energy),
+            // 20 t is the hoist's published rating, unmarked everywhere; any other load on the tower is a setting
+            item(st('rowMass'), massText(r.mass), r.id !== 'tower' ? r.tags.energy : farm ? 'reported' : 'assumption'),
             item(st('rowDensity'), `${num(r.whPerKg, r.whPerKg < 1 ? 3 : 0)} Wh/kg`, 'derived'),
             item(st('rowRoundTrip'), trip(r.roundTripMin, r.roundTripMax), r.tags.roundTrip),
-            item(st('rowCost'), `${cost(r.costMin, r.costMax)} ${r.id === 'reservoir' ? 'CHF' : '€'}`, r.tags.cost),
-            r.id !== 'reservoir' ? item(st('rowCarbon'), carbon[r.id], 'estimate') : null,
+            cost ? item(st('rowCost'), cost, r.tags.cost) : null,
+            r.id === 'module' || (r.id === 'tower' && farm) ? item(st('rowCarbon'), carbon[r.id], 'estimate') : null,
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 

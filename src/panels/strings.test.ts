@@ -1,7 +1,18 @@
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { setLang } from '@onigam/lab-kit/i18n';
 import { RUNGS } from '../sim/ladder';
-import { durationText, energyText, massText, num, powerText, shortMass, SIM_STRINGS, st, type SimKey } from './strings';
+import {
+  dropText,
+  durationText,
+  energyText,
+  massText,
+  num,
+  powerText,
+  shortMass,
+  SIM_STRINGS,
+  st,
+  type SimKey,
+} from './strings';
 import { installFakeDom } from './test-dom';
 
 // The simulation's texts: French and English written together, same detail, no placeholder, no research code, no internal word, and no number
@@ -99,6 +110,8 @@ describe('the formats', () => {
     expect(energyText(1090)).toBe('1.09 kWh');
     expect(energyText(20e9)).toBe('20.0 GWh');
     expect(massText(46)).toBe('46.0 kg');
+    expect(dropText(0.0949)).toBe('9.5 cm');
+    expect(dropText(19.4)).toBe('19.4 m');
     expect(massText(20000)).toBe('20 t');
     expect(durationText(30)).toBe('30 s');
     expect(durationText(1280)).toBe('21 min');

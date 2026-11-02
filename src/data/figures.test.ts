@@ -270,6 +270,7 @@ const COMPUTED: Partial<Record<FigName, number>> = {
   stage2Torque: shafts.stages[1]?.torqueOut ?? 0,
   motorTorqueUp: up.motorTorque,
   motorTorqueDown: down.motorTorque,
+  drumBrakeTimes: shafts.drum.torque / up.motorTorque,
   motorAmpsUp: up.current,
   motorAmpsDown: down.current,
   motorRiseK: hot,

@@ -15,8 +15,8 @@ export const LAB_STRINGS = {
   goHoist: ['Monter voir le treuil', 'Go up to the hoist'],
   goPowerRoom: ['Entrer dans le local électrique', 'Go into the power room'],
   groupSite: ['La ferme', 'The farm'],
-  groupTower: ['La tour et son poids', 'The tower and its weight'],
-  groupHoist: ['Le treuil', 'The hoist'],
+  groupTower: ['La tour, son treuil et son poids', 'The tower, its hoist and its weight'],
+  groupHoist: ['La transmission', 'The drive'],
   groupPowerRoom: ['Le local électrique', 'The power room'],
   groupChart: ['Le bilan', 'The balance'],
   plansIntro: [

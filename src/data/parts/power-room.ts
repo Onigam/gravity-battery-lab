@@ -65,8 +65,8 @@ export const POWER_ROOM_PARTS: PartInfo[] = [
       'It measures what goes into the machine and what comes out: without it, any efficiency is only a promise.',
     ),
     description: lf(
-      'Il compte séparément les kilowattheures qui montent et ceux qui descendent. Une course complète à pleine vitesse prend {strokeInKwh} au compteur et en rend {strokeOutWh}, soit {roundTrip}, selon le modèle. Ce chiffre vient avec une plage, de {roundTripLow} à {roundTripHigh} selon les hypothèses. Sur une vraie journée, avec la veille et la maison qui demande peu, c’est bien pire : {dayInKwh} pris, {dayOutKwh} rendus, soit {dayDirect}. Des machines de ce genre annoncent souvent bien plus, de 75 à 90 %, à une tout autre échelle ; en réalité, un seul essai se rapproche d’une mesure, et ce n’est pas un rapport publié. Aucun de ces chiffres n’a été relevé sur une machine comme celle-ci : ce compteur serait le premier.',
-      'It counts the kilowatt-hours going up and those coming down separately. A full stroke at full speed takes {strokeInKwh} at the meter and gives back {strokeOutWh}, that is {roundTrip}, according to the model. That figure comes with a range, from {roundTripLow} to {roundTripHigh} depending on the assumptions. Over a real day, with the standby and a house asking for little, it is far worse: {dayInKwh} taken, {dayOutKwh} given back, that is {dayDirect}. Such machines often claim far more, 75 to 90%, at quite another scale; in reality only one test comes close to a measurement, and it is not a published report. None of these figures has been read on a machine like this one: this meter would be the first.',
+      'Il compte séparément les kilowattheures qui montent et ceux qui descendent. Une course complète à pleine vitesse prend {strokeInKwh} au compteur et en rend {strokeOutWh}, soit {roundTrip}, selon le modèle. Ce chiffre vient avec une plage, de {roundTripLow} à {roundTripHigh} selon les hypothèses. Sur une vraie journée, avec la veille et la maison qui demande peu, c’est bien pire : {dayInKwh} pris, {dayOutKwh} rendus, soit {dayDirect}. Des machines de ce genre annoncent souvent bien plus, de 80 à 90 %, à une tout autre échelle ; en réalité, un seul essai se rapproche d’une mesure, environ 75 %, et ce n’est pas un rapport publié. Aucun de ces chiffres n’a été relevé sur une machine comme celle-ci : ce compteur serait le premier.',
+      'It counts the kilowatt-hours going up and those coming down separately. A full stroke at full speed takes {strokeInKwh} at the meter and gives back {strokeOutWh}, that is {roundTrip}, according to the model. That figure comes with a range, from {roundTripLow} to {roundTripHigh} depending on the assumptions. Over a real day, with the standby and a house asking for little, it is far worse: {dayInKwh} taken, {dayOutKwh} given back, that is {dayDirect}. Such machines often claim far more, 80 to 90%, at quite another scale; in reality only one test comes close to a measurement, about 75%, and it is not a published report. None of these figures has been read on a machine like this one: this meter would be the first.',
     ),
     material: l(
       'Compteur bidirectionnel triphasé, tores de courant',
@@ -694,8 +694,8 @@ export const POWER_ROOM_PARTS: PartInfo[] = [
       'Forty kilos, 4.8 kWh: {towersPerModule} in a box two people can carry. At this scale, it wins.',
     ),
     description: lf(
-      'Ce module réel fait 442 × 420 × 162 mm, {lfpVolumeL} et 40 kg, pour 4,8 kWh en 48 V, dont 4,56 kWh utilisables. Son courant conseillé est de 50 A, 100 A au maximum, et sa fiche annonce plus de 6 000 cycles à 25 °C. Il atteint {lfpWhPerKg} là où la tour ne dépasse pas {whPerKg} : {densityRatio} fois plus par kilo. Son prix public d’avril 2026, 1 110,80 €, fait {lfpEuroPerKwh}. Par son onduleur, le modèle lui donne {lfpRoundTrip} d’aller-retour à sa pleine puissance, et {lfpFridgeTrip} seulement pour un frigo de {fridgeW}, car lui aussi perd à basse puissance. Il vieillit, sa chimie s’use, et il faudra le remplacer un jour : c’est sa seule vraie faiblesse face à la tour, et elle pèse peu ici.',
-      'This real module is 442 × 420 × 162 mm, {lfpVolumeL} and 40 kg, for 4.8 kWh at 48 V, of which 4.56 kWh is usable. Its recommended current is 50 A, 100 A at most, and its data sheet claims more than 6,000 cycles at 25 °C. It reaches {lfpWhPerKg} where the tower cannot get past {whPerKg}: {densityRatio} times more per kilo. Its April 2026 retail price, €1,110.80, comes to {lfpEuroPerKwh}. Through its inverter, the model gives it {lfpRoundTrip} round trip at full power, and only {lfpFridgeTrip} for a {fridgeW} fridge, since it too loses at low power. It ages, its chemistry wears out, and one day it must be replaced: that is its only real weakness against the tower, and it weighs little here.',
+      'Ce module réel fait 442 × 420 × 162 mm, {lfpVolumeL} et 40 kg, pour 4,8 kWh en 48 V, dont 4,56 kWh utilisables. Sa fiche conseille 50 A, son revendeur 80 A ; ce dernier annonce 100 A en continu, 200 A en pointe, et plus de 6 000 cycles à 25 °C. Il atteint {lfpWhPerKg} là où la tour ne dépasse pas {whPerKg} : {densityRatio} fois plus par kilo. Son prix public d’avril 2026, 1 110,80 €, fait {lfpEuroPerKwh}. Par son onduleur, le modèle lui donne {lfpRoundTrip} d’aller-retour à sa pleine puissance, et {lfpFridgeTrip} seulement pour un frigo de {fridgeW}, car lui aussi perd à basse puissance. Il vieillit, sa chimie s’use, et il faudra le remplacer un jour : c’est sa seule vraie faiblesse face à la tour, et elle pèse peu ici.',
+      'This real module is 442 × 420 × 162 mm, {lfpVolumeL} and 40 kg, for 4.8 kWh at 48 V, of which 4.56 kWh is usable. Its data sheet recommends 50 A, its retailer 80 A; the retailer also states 100 A continuous, 200 A at peak, and more than 6,000 cycles at 25 °C. It reaches {lfpWhPerKg} where the tower cannot get past {whPerKg}: {densityRatio} times more per kilo. Its April 2026 retail price, €1,110.80, comes to {lfpEuroPerKwh}. Through its inverter, the model gives it {lfpRoundTrip} round trip at full power, and only {lfpFridgeTrip} for a {fridgeW} fridge, since it too loses at low power. It ages, its chemistry wears out, and one day it must be replaced: that is its only real weakness against the tower, and it weighs little here.',
     ),
     material: l(
       'Cellules lithium-fer-phosphate, système de gestion, boîtier d’acier',
@@ -704,7 +704,14 @@ export const POWER_ROOM_PARTS: PartInfo[] = [
     specs: [
       sp('Énergie', 'Energy', l('4,8 kWh, 4,56 kWh utilisables', '4.8 kWh, 4.56 kWh usable')),
       sp('Taille, masse', 'Size, mass', l('442 × 420 × 162 mm, 40 kg', '442 × 420 × 162 mm, 40 kg')),
-      sp('Courant', 'Current', l('50 A conseillés, 100 A au maximum', '50 A recommended, 100 A at most')),
+      sp(
+        'Courant',
+        'Current',
+        l(
+          '50 à 80 A conseillés selon la source, 100 A en continu, 200 A en pointe',
+          '50 to 80 A recommended, depending on the source, 100 A continuous, 200 A peak',
+        ),
+      ),
       sp('Durée de vie annoncée', 'Stated life', l('plus de 6 000 cycles à 25 °C', 'more than 6,000 cycles at 25 °C')),
       sp(
         'Prix public, avril 2026',

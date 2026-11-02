@@ -35,3 +35,7 @@ The suspended-load notice: the `tower` overview, and the Sources (`safety`). Edu
 ## Changes from the research's lists
 
 Step 15 of the assembly: the governor stands in the `hoist` world and the safety gear in `tower`, so the governor comes with the overload cell in step 13, and step 15 ties the gear to it. Step 3 of the assembly frames the pad again, on purpose. Durations are dropped.
+
+## After the independent review
+
+`docs/qa.md` holds a note per defect. What changes how a figure is read: the rope's area is **196 mm²**, the maker's row for 4/1 (research C11). The module's current is said with its sources, 50 to 80 A recommended, 100 A continuous, 200 A peak (research C12, the 50 A open). The claims run from 80 to 90 %, and the 75 % is the one test. The comparison table of the simulation reads the tower's price from `FIG` and rounds a module's carbon as the research does, and it prints no price or carbon for a tower nobody priced. `rich.test.ts` runs the lab's texts through the kit's own `rich()`, in both languages.

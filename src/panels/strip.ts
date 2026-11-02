@@ -29,11 +29,14 @@ export const alarmText = (a: AlarmKey): string => st(ALARM_KEYS[a].key);
 export function stripValues(sim: GravitySim): StripValue[] {
   const s = sim.state;
   const hook = scaledPower(s.chain.hook);
-  const meter = scaledPower(-s.chain.meter);
+  // the strip is on every screen, and the panel's legend is not: it says in words who pays, and needs no sign
+  const meter = scaledPower(Math.abs(s.chain.meter));
+  const meterLabel: SimKey =
+    Math.round(Math.abs(s.chain.meter)) === 0 ? 'stripMeter' : s.chain.meter > 0 ? 'stripMeterPays' : 'stripMeterGets';
   const stored = scaledEnergy(s.storedWh);
   return [
     { label: st('stripHook'), value: num(hook.value, hook.digits), unit: hook.unit },
-    { label: st('stripMeter'), value: num(meter.value, meter.digits), unit: meter.unit, cls: 'live--water' },
+    { label: st(meterLabel), value: num(meter.value, meter.digits), unit: meter.unit, cls: 'live--water' },
     { label: st('stripHeight'), value: num(s.z, 1), unit: 'm' },
     { label: st('stripStored'), value: num(stored.value, stored.digits), unit: stored.unit },
   ];

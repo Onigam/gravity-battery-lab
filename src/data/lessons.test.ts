@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { L } from '@onigam/lab-kit/i18n';
 import { SIM_STRINGS } from '../panels/strings';
-import { SCENARIO_IDS } from '../sim/presets';
+import { CARRIER_MASS } from '../sim/machine';
+import { SCENARIO_IDS, scenarioSetup } from '../sim/presets';
 import { FIG, type Fig } from './figures';
 import { LESSONS } from './lessons';
 import { ASSEMBLY } from './assembly';
@@ -62,7 +63,8 @@ const REPORTED = new Set([
   '3.6', // MJ per kWh
   '20', // t and m (K6); 20 GWh (K33)
   '40', // kg (K31)
-  '12.5', // kg (K28)
+  '8', // kg, the light end of the lamp's bag (K28)
+  '12.5', // kg, its heavy end (K28)
   '1.8', // m (K28)
   '2', // 2 × 25 t (K19)
   '25', // t (K19); 25 million m³ (K33); 25 MW (K23)
@@ -175,6 +177,18 @@ describe('the lessons', () => {
     }
     expect(answers).toEqual(new Set([0, 1, 2]));
   });
+  it('do not give the answer away by its length: the longest is right about one time in three, in each language', () => {
+    const questions = LESSONS.flatMap((les) => les.quiz ?? []);
+    for (const lang of ['fr', 'en'] as const) {
+      const lengths = questions.map((qu) => ({ of: qu.choices.map((c) => c[lang].length), right: qu.answer }));
+      const longest = lengths.filter((q) => q.of[q.right] === Math.max(...q.of)).length;
+      const shortest = lengths.filter((q) => q.of[q.right] === Math.min(...q.of)).length;
+      // chance is 5 of 15: neither the longest nor the shortest may become a tell, whichever way
+      expect(longest, `${lang}: the longest is right in ${longest} of ${questions.length}`).toBeGreaterThanOrEqual(3);
+      expect(longest, `${lang}: the longest is right in ${longest} of ${questions.length}`).toBeLessThanOrEqual(6);
+      expect(shortest, `${lang}: the shortest is right in ${shortest} of ${questions.length}`).toBeLessThanOrEqual(6);
+    }
+  });
   it('write French and English together, with the same numbers', () => {
     for (const [where, t] of texts()) {
       expect(t.fr.trim().length, where).toBeGreaterThan(0);
@@ -230,6 +244,17 @@ describe('the lessons', () => {
       expect(/\b0[,.]7 ?%/.test(t.en + t.fr), where).toBe(false);
       expect(/flywheel|volant d’inertie/i.test(t.en + t.fr), where).toBe(false);
     }
+  });
+  it('give the lamp’s bag as the range the research has, and say that “Too light” ends as a thought experiment', () => {
+    const one = LESSONS.find((l) => l.id === 'kilowatt-hour-weight')!;
+    expect(bodyOf(one, 'fr')).toContain('8 à 12,5 kg');
+    expect(bodyOf(one, 'en')).toContain('8 to 12.5 kg');
+    const four = LESSONS.find((l) => l.id === 'will-not-come-down')!;
+    expect(bodyOf(four, 'fr')).toContain('par la pensée');
+    expect(bodyOf(four, 'en')).toContain('thought experiment');
+    // the scenario does go below the empty carrier: if it stopped doing so, the sentence would be wrong
+    const ramp = scenarioSetup('too-light').ramps.find((r) => r.key === 'mass');
+    expect(ramp?.to).toBeLessThan(CARRIER_MASS);
   });
   it('say the battery wins, plainly, at this scale', () => {
     const six = LESSONS.find((l) => l.id === 'who-wins-where')!;

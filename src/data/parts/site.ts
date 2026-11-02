@@ -65,8 +65,8 @@ export const SITE_PARTS: PartInfo[] = [
       'This roof also charges a {lfpChargeKw} battery without effort, at any hour of the day. That is the tower’s whole problem: its biggest customer is also the one that needs it least.',
     ),
     design: lf(
-      'Une grange plate sur une plaine plate : pas de colline, pas de lac, donc pas de pompage possible. C’est le seul cas où l’on se pose la question d’une tour, et le toit n’a pas besoin d’être grand pour lever {hookTopKw}.',
-      'A flat barn on a flat plain: no hill, no lake, so no pumped storage. It is the only case where the question of a tower arises at all, and the roof need not be large to lift {hookTopKw}.',
+      'Une grange sur une plaine plate : pas de colline, pas de lac, donc pas de pompage possible. C’est le seul cas où l’on se pose la question d’une tour, et le toit n’a pas besoin d’être grand pour lever {hookTopKw}.',
+      'A barn on a flat plain: no hill, no lake, so no pumped storage. It is the only case where the question of a tower arises at all, and the roof need not be large to lift {hookTopKw}.',
     ),
   },
   {

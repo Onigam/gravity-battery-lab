@@ -9,6 +9,7 @@ import { reevingSumDown, reevingSumUp } from '../sim/reeving';
 import { RUNGS } from '../sim/ladder';
 import { DECK_TOP, FOOT_X, GEARS, HOIST, HOOK_BLOCK, PAD, SITE, TOWER } from '../three/dims';
 import siteScene from '../three/site/scene.ts?raw';
+import labSource from '../lab.ts?raw';
 import plSite from './pl01-site.ts?raw';
 import { SHEETS } from './index';
 import { fallTensions, FALL_SPEED } from './pl04-reeving';
@@ -56,6 +57,13 @@ describe('the contract', () => {
       expect(s.parts?.length, s.id).toBeGreaterThan(0);
       for (const id of s.parts ?? []) expect(PARTS.find((p) => p.id === id)?.scene, `${s.id}: ${id}`).toBe(s.scene);
     }
+  });
+  it('lists the sheets in the order of their numbers: the kit shows them group by group, in the order the lab gives the groups', () => {
+    const groups = [...labSource.matchAll(/\{ id: '([a-z-]+)', label: strL\('group\w+'\) \}/g)].map((m) => m[1]);
+    expect(groups).toEqual(['site', 'tower', 'hoist', 'power-room', 'chart']);
+    const listed = groups.flatMap((g) => SHEETS.filter((s) => s.group === g).map((s) => s.number));
+    expect(listed).toEqual([...SHEETS.map((s) => s.number)].sort());
+    expect(listed).toHaveLength(8);
   });
   it('follows the list of the research', () => {
     expect(SHEETS.map((s) => s.id)).toEqual([

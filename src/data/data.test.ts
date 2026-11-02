@@ -172,7 +172,7 @@ const REPORTED = new Set(
     '28', // A (K10)
     '0.82', // cos φ (K10)
     '70', // % duty (K10)
-    '206', // mm² (K13)
+    '196', // mm², SH 6 at 4/1 (K13, corrected: C11 in research §11)
     '315', // kN (K13)
     '5', // the maker's factor of 5 (K13), a 5 kW motor on the slider (physics.md K49)
     '1321', // kg (K15)
@@ -223,8 +223,10 @@ const REPORTED = new Set(
     '50',
     '6000',
     '1110.80',
+    '80', // A recommended, the retailer's table (K31, C12 in research §11)
+    '200', // A at peak, the retailer's table (K31, C12)
     '2026',
-    // what others claim: K35
+    // what others claim: K35, 80 to 90 %; the one test near a measurement: K21, about 75 %
     '75',
     '90',
     // the supply of the farm: research §0
@@ -450,6 +452,8 @@ describe('every text', () => {
       [/\b0[,.]37 m\/min/, 'the old cut-in speed'],
       [/cannot be served|ne peut pas être servi|cannot serve/i, 'a fridge can be served, at a price'],
       [/\b0[,.]7 ?%/, 'the rope in mass, not energy'],
+      [/\b206 mm²/, 'the row of the maker’s table for 1/1 reeving: 4/1 has 196 mm²'],
+      [/\b75 (?:à|to) 90/, 'the 75 is the one test, not a claim: the claims run from 80 to 90'],
       [/9[,.]6 MJ/, 'a source’s error'],
       [/gravitricity\.com/i, 'a casino page'],
       [/flywheel|volant d’inertie|TEDx/i, 'the talk that is not about gravity'],
@@ -507,6 +511,36 @@ describe('every text', () => {
   });
 });
 
+describe('the figures the review corrected', () => {
+  const part = (id: string) => PARTS.find((p) => p.id === id)!;
+  it('reads the rope’s area on the maker’s row for 4/1 reeving', () => {
+    expect(part('hoist-rope').description.fr).toContain('196 mm²');
+    expect(part('hoist-rope').description.en).toContain('196 mm²');
+    expect(part('hoist-rope').specs.map((s) => s.value)).toContainEqual({ fr: '196 mm²', en: '196 mm²' });
+  });
+  it('tells the claims from the one test', () => {
+    expect(part('energy-meter').description.fr).toContain('de 80 à 90 %');
+    expect(part('energy-meter').description.fr).toContain('environ 75 %');
+    expect(part('energy-meter').description.en).toContain('80 to 90%');
+    expect(part('energy-meter').description.en).toContain('about 75%');
+  });
+  it('gives the drum brake the ratio its own two figures give', () => {
+    expect(FIG.drumBrakeTimes.v).toBeCloseTo(FIG.drumTorqueUp.v / FIG.motorTorqueUp.v, -1);
+    expect(part('drum-brake').description.fr).toContain('175 fois*');
+    expect(part('drum-brake').description.en).toContain('175 times*');
+  });
+  it('says what the retailer says of the module’s current: no flat maximum', () => {
+    const module = part('lfp-module');
+    for (const t of [module.description.fr, module.description.en]) expect(t).toMatch(/200 A/);
+    expect(module.description.fr).not.toMatch(/au maximum/);
+    expect(module.description.en).not.toMatch(/at most/);
+  });
+  it('calls the barn nothing it is not: its roof is pitched', () => {
+    expect(part('barn-solar-roof').design?.fr).not.toMatch(/grange plate/);
+    expect(part('barn-solar-roof').design?.en).not.toMatch(/flat barn/);
+  });
+});
+
 describe('the worlds’ overviews', () => {
   it('has the four worlds, each with a title and bold part names', () => {
     expect(Object.keys(OVERVIEWS)).toEqual([...WORLD_IDS]);
@@ -515,6 +549,12 @@ describe('the worlds’ overviews', () => {
       expect(OVERVIEWS[w].text.fr, w).toMatch(/\*\*/);
       expect(OVERVIEWS[w].text.en, w).toMatch(/\*\*/);
     }
+  });
+  it('says how to see the ghost stack, where it stands', () => {
+    expect(OVERVIEWS.site.text.fr).toContain('Activez **Flux**');
+    expect(OVERVIEWS.site.text.en).toContain('Switch on **Flows**');
+    expect(OVERVIEWS.site.text.fr).toContain('sur le pré');
+    expect(OVERVIEWS.site.text.en).toContain('on the meadow');
   });
   it('explains the marks once, in the first world', () => {
     const said = WORLD_IDS.filter((w) =>

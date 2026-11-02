@@ -664,8 +664,8 @@ export const TOWER_PARTS: PartInfo[] = [
       'The 20 mm rope, {ropeM}: the part that wears, and the one all the lifting rules are about.',
     ),
     description: lf(
-      'Un câble d’acier n’est pas une tige : il est fait de torons de fils qui glissent les uns sur les autres à chaque passage sur une poulie. Celui-ci fait 20 mm, porte 206 mm² d’acier et casse à 315 kN au moins ; le tableau publié annonce un coefficient d’au moins 5. À {staticKn} par brin, il travaille à {ropeFactorStatic} sans frottement, et à {ropeFactor} avec, dans le brin le plus chargé. Il pèse {ropeKg} pour {ropeM} : le tambour lève {ropeHangBottom} de câble au début de la montée, et {ropeHangTop} à la fin, soit {ropeEnergyPct} de l’énergie d’une course. Il meurt de ses flexions bien plus que de sa charge, souvent sans prévenir si personne ne regarde.',
-      'A steel rope is not a rod: it is made of strands of wires that slide on one another at each pass over a sheave. This one is 20 mm, has 206 mm² of steel and breaks at 315 kN at least; the published table states a factor of at least 5. At {staticKn} a fall it works at {ropeFactorStatic} with no friction, and {ropeFactor} with it, in the most loaded fall. It weighs {ropeKg} for {ropeM}: the drum lifts {ropeHangBottom} of rope at the start of the climb and {ropeHangTop} at the end, {ropeEnergyPct} of the energy of a stroke. It dies of its bends far more than of its load, often with no warning if nobody looks.',
+      'Un câble d’acier n’est pas une tige : il est fait de torons de fils qui glissent les uns sur les autres à chaque passage sur une poulie. Celui-ci fait 20 mm, porte 196 mm² d’acier et casse à 315 kN au moins ; le tableau publié annonce un coefficient d’au moins 5. À {staticKn} par brin, il travaille à {ropeFactorStatic} sans frottement, et à {ropeFactor} avec, dans le brin le plus chargé. Il pèse {ropeKg} pour {ropeM} : le tambour lève {ropeHangBottom} de câble au début de la montée, et {ropeHangTop} à la fin, soit {ropeEnergyPct} de l’énergie d’une course. Il meurt de ses flexions bien plus que de sa charge, souvent sans prévenir si personne ne regarde.',
+      'A steel rope is not a rod: it is made of strands of wires that slide on one another at each pass over a sheave. This one is 20 mm, has 196 mm² of steel and breaks at 315 kN at least; the published table states a factor of at least 5. At {staticKn} a fall it works at {ropeFactorStatic} with no friction, and {ropeFactor} with it, in the most loaded fall. It weighs {ropeKg} for {ropeM}: the drum lifts {ropeHangBottom} of rope at the start of the climb and {ropeHangTop} at the end, {ropeEnergyPct} of the energy of a stroke. It dies of its bends far more than of its load, often with no warning if nobody looks.',
     ),
     material: l(
       'Fils d’acier galvanisé en torons, âme, lubrifiant',
@@ -674,7 +674,7 @@ export const TOWER_PARTS: PartInfo[] = [
     specs: [
       sp('Diamètre, brins', 'Diameter, falls', l('20 mm, 4 brins', '20 mm, 4 falls')),
       sp('Force de rupture minimale', 'Minimum breaking force', l('315 kN', '315 kN')),
-      sp('Section métallique', 'Metallic area', l('206 mm²', '206 mm²')),
+      sp('Section métallique', 'Metallic area', l('196 mm²', '196 mm²')),
       sp('Longueur, masse', 'Length, mass', v('{ropeM}, {ropeKg}')),
       sp(
         'Coefficient, sans puis avec frottement',

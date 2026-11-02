@@ -16,6 +16,10 @@ export const SIM_STRINGS = {
   custom: ['Personnalisé', 'Custom'],
   resetSim: ['Recommencer', 'Start again'],
   scenarios: ['Scénarios', 'Scenarios'],
+  presetKeepsTower: [
+    'Le dessin reste celui de la tour de ferme : seuls les chiffres sont ceux de cette machine.',
+    'The picture stays the farm tower: only the figures belong to this machine.',
+  ],
   scenarioHint: [
     'Chaque scénario montre une seule chose. Il règle lui-même l’horloge, que vous pouvez changer en bas.',
     'Each scenario shows one thing. It sets the clock itself, and you can change it at the bottom.',
@@ -59,12 +63,12 @@ export const SIM_STRINGS = {
     'The battery follows the fridge, and the tower empties into the battery in one go, at the speed where it works less badly. The same weight lasts far longer.',
   ],
   noteNight: [
-    'La nuit grandit de 1 à 7 kWh, et la pile fantôme de la ferme grandit avec elle : voici les tonnes et les tours qu’il faudrait.',
-    'The night grows from 1 to 7 kWh, and the ghost stack on the farmyard grows with it: here are the tonnes and the towers it would take.',
+    'La nuit grandit de 1 à 7 kWh, et la pile fantôme grandit avec elle sur le pré : voici les tonnes et les tours qu’il faudrait.',
+    'The night grows from 1 to 7 kWh, and the ghost stack on the meadow grows with it: here are the tonnes and the towers it would take.',
   ],
   noteTooLight: [
-    'On retire des blocs pendant la descente. Le poids cesse d’abord de rapporter, puis il ne descend plus de lui-même : le moteur doit le pousser.',
-    'Blocks come off on the way down. First the weight stops paying, then it no longer comes down by itself: the motor has to push it.',
+    'On retire des blocs pendant la descente, puis, par la pensée, le châssis lui-même : la fin du scénario pèse moins que le châssis vide, que le dessin garde. Le poids cesse d’abord de rapporter, puis il ne descend plus de lui-même : le moteur doit le pousser.',
+    'Blocks come off on the way down, then, as a thought experiment, the carrier too: the end of the scenario weighs less than the empty carrier, which the picture keeps. First the weight stops paying, then it no longer comes down by itself: the motor has to push it.',
   ],
   noteBlackout: [
     'Le réseau tombe en pleine descente. La puissance n’a plus où aller : la résistance de freinage la brûle pendant la rampe, puis les freins se ferment. Le bus continu reste chargé après.',
@@ -169,6 +173,8 @@ export const SIM_STRINGS = {
 
   stripHook: ['Crochet', 'Hook'],
   stripMeter: ['Compteur', 'Meter'],
+  stripMeterPays: ['Compteur paie', 'Meter pays'],
+  stripMeterGets: ['Compteur reçoit', 'Meter receives'],
   stripHeight: ['Hauteur', 'Height'],
   stripStored: ['Stocké', 'Stored'],
 
@@ -211,8 +217,8 @@ export const SIM_STRINGS = {
   lowerPower: ['Puissance au crochet, en descente', 'Power at the hook, going down'],
   loadPower: ['La charge', 'The load'],
   controlHint: [
-    'Faites descendre la puissance au crochet jusqu’à ce que le compteur ne rende plus rien. Le treuil ne descend pas sous sa vitesse la plus lente.',
-    'Bring the power at the hook down until the meter gives nothing. The hoist does not go below its slowest speed.',
+    'En bas de course, « Descendre » ne fait rien, sinon afficher « Stock vide » : montez d’abord le poids, car c’est là qu’il attend à l’ouverture. Faites ensuite descendre la puissance au crochet jusqu’à ce que le compteur ne rende plus rien. Le treuil ne descend pas sous sa vitesse la plus lente.',
+    'At the bottom of the stroke, “Lower” does nothing but show “Store empty”: raise the weight first, since that is where it waits when the lab opens. Then bring the power at the hook down until the meter gives nothing. The hoist does not go below its slowest speed.',
   ],
 
   secMachine: ['La machine', 'The machine'],
@@ -335,8 +341,8 @@ export const SIM_STRINGS = {
   ladderEnergy: ['Cela fait', 'That makes'],
   ladderKwhHeight: ['Un kilowattheure, à cette masse', 'One kilowatt-hour, at this mass'],
   ladderAha: [
-    'Une tonne, 367 mètres : un kilowattheure. Chaque droite relie ce qui garde la même énergie.',
-    'One tonne, 367 metres: one kilowatt-hour. Each line joins what keeps the same energy.',
+    'Une tonne, 367 mètres† : un kilowattheure. Chaque droite relie ce qui garde la même énergie.',
+    'One tonne, 367 metres†: one kilowatt-hour. Each line joins what keeps the same energy.',
   ],
   rungGravitylight: ['Lampe à poids', 'Weight-driven lamp'],
   rungDiy: ['La cour', 'The courtyard'],
@@ -442,6 +448,11 @@ export function shortMass(tonnes: number): string {
   if (tonnes >= 1000) return `${num(tonnes / 1000)} kt`;
   if (tonnes >= 1) return `${num(tonnes)} t`;
   return `${num(tonnes * 1000)} kg`;
+}
+
+/** A height as the sheets write it: centimetres under a metre, so that a fall is 9,5 cm and not 0,09 m. */
+export function dropText(metres: number): string {
+  return metres < 1 ? `${num(metres * 100, 1)} cm` : `${num(metres, 1)} m`;
 }
 
 /** A duration in s, min, h or days. */

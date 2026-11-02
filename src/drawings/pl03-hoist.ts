@@ -244,7 +244,7 @@ function side(d: Drawing): void {
 export const hoistSheet: DrawingSheet = {
   id: 'hoist-layout',
   number: 'PL-G03',
-  group: 'hoist',
+  group: 'tower',
   title: l('Le treuil et le portique de tête', 'The hoist and the head frame'),
   description: l(
     'Le treuil en plan, de face et de côté. Les cotes sans marque sont celles que publie le constructeur du treuil de référence : longueur le long du tambour, écart des pieds, quatre trous de Ø34 pour des boulons M30. Le diamètre du tambour, le rapport et les poulies n’y sont pas : ce sont des estimations du lab. Les points rouges sont les brins du câble.',

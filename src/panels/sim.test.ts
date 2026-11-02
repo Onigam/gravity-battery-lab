@@ -4,8 +4,10 @@ import type { AppContext } from '@onigam/lab-kit/ui';
 import { GravitySim } from '../sim/engine';
 import { isoLine, LADDER_BOX, RUNGS } from '../sim/ladder';
 import { PRESET_IDS, SCENARIO_IDS } from '../sim/presets';
+import { FIG } from '../data/figures';
 import {
   axisThroughZero,
+  carbonKg,
   dayChartData,
   etaChartData,
   isoMarks,
@@ -23,6 +25,7 @@ import {
   scaledPower,
   SCENARIO_KEYS,
   statusOf,
+  towerCostRange,
 } from './model';
 import { SimPanel } from './sim';
 import { st, type SimKey } from './strings';
@@ -138,7 +141,92 @@ describe('what the panel offers', () => {
   });
 });
 
+describe('what the comparison says', () => {
+  it('prints the farm tower’s figures as the sheets and lessons do, in each language’s way', () => {
+    const fr = open('fr').root.textContent;
+    expect(fr).toMatch(/100\s000–230\s000\s€/);
+    expect(fr).toMatch(/55–165 kg CO₂/);
+    expect(fr).toMatch(/2,2–3,2 t CO₂/);
+    const en = open('en').root.textContent;
+    expect(en).toMatch(/€100,000–230,000/);
+    expect(en).toMatch(/55–165 kg CO₂/);
+    expect(en).toMatch(/€231 /);
+    expect(en).toMatch(/CHF 100 /);
+  });
+  it('leaves 20 t unmarked, as everywhere else: it is the hoist’s published rating', () => {
+    const fr = open('fr').root.textContent;
+    expect(fr).toMatch(/Masse 20 t /);
+    expect(fr).not.toMatch(/Masse 20 t ?\*/);
+  });
+  it('prints no price and no carbon for a tower nobody priced, and never a zero', () => {
+    for (const id of ['garden', 'leith', 'swiss', 'shaft'] as const) {
+      const sim = new GravitySim();
+      sim.applyPreset(id);
+      const { root } = open('en', sim);
+      const tower = root.find('.loss-legend').find((e) => e.textContent.startsWith(str('rowEnergy', 'en')));
+      expect(tower?.textContent, id).not.toContain(str('rowCost', 'en'));
+      expect(tower?.textContent, id).not.toContain(str('rowCarbon', 'en'));
+      expect(root.textContent, id).not.toMatch(/0–0/);
+      expect(tower?.textContent, id).toMatch(/\*/);
+    }
+  });
+  it('rounds a module’s carbon as the research does, and keeps a decimal for what is too small for that', () => {
+    expect(carbonKg(54.5)).toEqual({ value: 55, digits: 0 });
+    expect(carbonKg(163.5)).toEqual({ value: 165, digits: 0 });
+    expect(carbonKg(0.82).digits).toBe(1);
+  });
+  it('takes the tower’s price from the figures of the texts, for that machine only', () => {
+    expect(towerCostRange({ energy: 1090 })).toEqual({ min: FIG.costKwhLow.v, max: FIG.costKwhHigh.v });
+    expect(towerCostRange({ energy: 2040 })).toBeNull();
+  });
+});
+
 describe('what a click does', () => {
+  it('says that the picture stays the farm tower, for every other machine and only then', () => {
+    for (const lang of ['fr', 'en'] as const) {
+      const said = str('presetKeepsTower', lang);
+      expect(open(lang).root.textContent).not.toContain(said);
+      for (const id of PRESET_IDS.filter((p) => p !== 'farm')) {
+        const sim = new GravitySim();
+        sim.applyPreset(id);
+        expect(open(lang, sim).root.textContent, id).toContain(said);
+      }
+    }
+    const { sim, root } = open();
+    const select = root.find('select')[0];
+    select.value = 'shaft';
+    select.dispatch('change', { target: select });
+    expect(root.textContent).toContain(str('presetKeepsTower'));
+    button(root, str('scenarioKettle')).click();
+    expect(sim.params.machine).toBe('farm');
+    expect(root.textContent).not.toContain(str('presetKeepsTower'));
+  });
+  it('explains what the hint promises: at the bottom, “Lower” only says the store is empty', () => {
+    const sim = new GravitySim();
+    sim.set({ control: 'lower' });
+    for (let i = 0; i < 90; i++) sim.step(1 / 30);
+    expect(sim.state.z).toBe(0);
+    expect(sim.state.alarms).toContain('storeEmpty');
+    // French typography: the kit puts no-break spaces inside the quotation marks
+    const hint = str('controlHint').replace(/[\u00a0\u202f]/g, ' ');
+    expect(hint).toContain(`« ${str('controlLower')} »`);
+    expect(hint).toContain(`« ${str('alarmEmpty')} »`);
+    expect(str('controlHint', 'en')).toContain(`“${str('controlLower', 'en')}”`);
+    expect(str('controlHint', 'en')).toContain(`“${str('alarmEmpty', 'en')}”`);
+    expect(open().root.textContent).toContain(str('controlHint'));
+  });
+  it('writes a fall stopped by the wedges in centimetres, as every sheet does', () => {
+    for (const [lang, drop] of [
+      ['fr', '9,5 cm'],
+      ['en', '9.5 cm'],
+    ] as const) {
+      const sim = new GravitySim();
+      sim.applyScenario('overspeed');
+      const { root, panel } = open(lang, sim);
+      run(panel, sim, 20);
+      expect(root.textContent).toContain(`${str('fallDrop', lang)} ${drop}`);
+    }
+  });
   it('a preset replaces the machine, and the panel drops what it does not have', () => {
     const { sim, root, panel } = open();
     const select = root.find('select')[0];
@@ -316,6 +404,32 @@ describe('what the panel plots', () => {
 });
 
 describe('the strip', () => {
+  it('says in words who pays, with no sign to explain, in both languages', () => {
+    const meter = (sim: GravitySim) => stripValues(sim)[1];
+    for (const lang of ['fr', 'en'] as const) {
+      setLang(lang);
+      const raising = new GravitySim();
+      raising.set({ control: 'raise', raiseSpeed: 4 });
+      for (let i = 0; i < 90; i++) raising.step(1 / 30);
+      expect(raising.state.chain.meter).toBeGreaterThan(0);
+      expect(meter(raising).label).toBe(st('stripMeterPays'));
+      expect(meter(raising).value).not.toMatch(/[-−]/);
+      const lowering = new GravitySim();
+      lowering.set({ control: 'lower', lowerPower: 13080 });
+      lowering.state.z = 20;
+      for (let i = 0; i < 90; i++) lowering.step(1 / 30);
+      expect(lowering.state.chain.meter).toBeLessThan(0);
+      expect(meter(lowering).label).toBe(st('stripMeterGets'));
+      expect(meter(lowering).value).not.toMatch(/[-−]/);
+    }
+  });
+  it('keeps the bare word when nothing flows through the meter', () => {
+    const sim = new GravitySim();
+    sim.applyPreset('nant');
+    sim.step(1 / 30);
+    expect(sim.state.chain.meter).toBe(0);
+    expect(stripValues(sim)[1].label).toBe(st('stripMeter'));
+  });
   it('shows four live values, the time of the day and the alarms, in both languages', () => {
     for (const lang of ['fr', 'en'] as const) {
       setLang(lang);
