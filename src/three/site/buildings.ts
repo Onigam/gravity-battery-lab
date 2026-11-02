@@ -272,7 +272,8 @@ export function buildHouse(): House {
   // gutters
   for (const s of [-1, 1]) cylinderX(g, MAT.zinc(), h.w + 0.84, 0.05, 0, h.eaves - 0.03, s * (h.d / 2 + 0.37));
   const anchor = new THREE.Object3D();
-  anchor.position.set(0, h.ridge + 1.2, 0);
+  // at the ridge's left end: from there the name still fits a phone's width in French (« Farmhouse » is cut by about 20 px there)
+  anchor.position.set(-h.w / 2 + 0.5, h.ridge + 1.2, 0);
   anchor.userData.keep = true;
   g.add(anchor);
   return { group: g, panes, light, lineIn: V(h.x - h.w / 2 - 0.1, 4.2, h.z + 1), anchor };

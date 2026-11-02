@@ -184,14 +184,15 @@ export function createPowerroomScene(): PowerroomScene {
   at('lfp-module', SHELF.x - 0.1, SHELF.y + SHELF.t + MODULE.h + 0.04, MODULE.d);
   at(
     'motor-inverter',
-    D.motorInverter.x - 0.15,
+    D.motorInverter.x - 0.05,
     D.motorInverter.y + D.motorInverter.h - 0.12,
     D.motorInverter.d + 0.03,
   );
   at('dc-link', D.dcLink.x - 0.15, 1.55, D.dcLink.d + 0.03);
-  at('regen-supply', D.regenSupply.x - 0.15, 1.12, D.regenSupply.d + 0.03);
-  at('ac-panel', D.acPanel.x - 0.2, D.acPanel.y + 0.72, D.acPanel.d);
-  at('pv-inverter', D.pvInverter.x - 0.1, D.pvInverter.y + D.pvInverter.h - 0.1, D.pvInverter.d + 0.02);
+  // the panel high and the solar inverter low, each still on its device: at 768 and 390 the room is a strip, and their names ran over each other and the link's
+  at('regen-supply', D.regenSupply.x + 0.1, 1.12, D.regenSupply.d + 0.03);
+  at('ac-panel', D.acPanel.x - 0.34, D.acPanel.y + 1.05, D.acPanel.d);
+  at('pv-inverter', D.pvInverter.x - 0.1, D.pvInverter.y + 0.35, D.pvInverter.d + 0.02);
   at('brake-resistor', D.brakeResistor.x - 0.2, D.brakeResistor.y + 0.42, D.brakeResistor.d + 0.05);
   at('energy-meter', D.energyMeter.x, D.energyMeter.y + 0.07, D.energyMeter.d + 0.02);
   at('brake-chopper', D.brakeChopper.x - 0.1, D.brakeChopper.y + 0.14, D.brakeChopper.d + 0.02);
