@@ -154,6 +154,15 @@ const ALONG_THE_FALLS = [
   [-5, 180],
 ].map(([e, b]) => viewFrom(e!, b!));
 
+/** The safety gear rides at both sides of the sling, low: seen square on, or from above when the weight sits on its buffers, or along the rails. */
+const ALONG_THE_GEAR = [
+  [20, 0],
+  [35, 0],
+  [0, 0],
+  [8, 90],
+  [0, 90],
+].map(([e, b]) => viewFrom(e!, b!));
+
 /** What rides on the weight, whose line of sight changes with the height (`rig/sight.ts`), and what else it tries. */
 const RIDING: Partial<Record<TowerId, THREE.Vector3[]>> = {
   'hook-block': ROUND_THE_SHAFT,
@@ -161,7 +170,7 @@ const RIDING: Partial<Record<TowerId, THREE.Vector3[]>> = {
   'concrete-block': SQUARE_ON,
   'stack-tie': SQUARE_ON,
   'guide-shoe': SQUARE_ON,
-  'safety-gear': SQUARE_ON,
+  'safety-gear': ALONG_THE_GEAR,
 };
 
 /** The camera's half field of view, as the kit has it (`fov` 40°), and the paddings the sight is tested at: the app's frame and the voice's. */
@@ -219,7 +228,8 @@ export function createTowerScene(): TowerScene {
   // the labels of what is low are spread over the height of the sling: at the overview they cannot all be side by side
   // near the top of the stroke the block, the rope and the head frame's names all come together: 1.6 m apart they keep to their rows at the overview
   at('head-frame', -1.5, TOWER.eavesY + 0.4, TOWER.legX);
-  at('hook-block', 0.3, SADDLE_Y0 - 0.25, 0.25);
+  // on the hook's bowl (`update` lowers it at the top of the stroke, to keep its row)
+  at('hook-block', 0.1, SADDLE_Y0 + 0.08, 0.06);
   // moved every frame: on fall 1, above the hook block, then on the drum (`update`)
   at('hoist-rope', -0.18, 14, 0.18);
   at('concrete-block', BLOCK.length / 2, SADDLE_Y0 - 2.0, BLOCK.length / 2);
@@ -283,9 +293,9 @@ export function createTowerScene(): TowerScene {
   for (const id of Object.keys(RIDING) as TowerId[]) {
     const dirs = [FRAMING[id].viewDir!, ...RIDING[id]!];
     const steel = steelFor(id);
-    const points = partPoints(registry.get(id)!.meshes, id === 'hook-block' || id === 'safety-gear' ? 16 : 10);
-    // the hook block is small and in the open: all of it or another side. The safety gear rides inside the sling, and half of it is all there is to see
-    const clear = id === 'hook-block' ? 0.85 : id === 'safety-gear' ? 0.5 : 0.7;
+    const points = partPoints(registry.get(id)!.meshes, id === 'safety-gear' ? 24 : id === 'hook-block' ? 16 : 10);
+    // the hook block is small and in the open: all of it or another side. The safety gear rides inside the sling, and not quite half of it is all there is to see
+    const clear = id === 'hook-block' ? 0.85 : id === 'safety-gear' ? 0.45 : 0.7;
     askedWhenFramed(id, () => {
       const box = registry.frameBounds(id);
       return clearestDir(box.getCenter(new THREE.Vector3()), points(), dirs, distancesFor(box), steel, clear);
@@ -366,6 +376,8 @@ export function createTowerScene(): TowerScene {
         dot.set(f1.a.x + 0.12, axis.y + DRUM_R, axis.z);
       } else
         dot.lerpVectors(f1.b, f1.a, Math.min(LEG_TOP - 0.2 - hookY, ROPE_DOT_UP) / Math.max(f1.a.y - f1.b.y, 1e-6));
+      // at the top of the stroke the block's name steps down to the crosshead: its row at the overview is under the rope's, on the drum
+      anchors['hook-block']!.position.y = inSight.high ? SADDLE_Y0 - 0.25 : SADDLE_Y0 + 0.08;
       // the rail's name stays on the rail, and out of the way of the names going by
       const riding = [SADDLE_Y0 - 2 + machine.drawn.lift, SADDLE_Y0 + machine.drawn.lift, dot.y];
       const clear = (y: number) => riding.every((r) => Math.abs(r - y) > RAIL_ROW_GAP);
