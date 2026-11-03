@@ -1,7 +1,7 @@
 # Narration scripts (French and English)
 
 `fr.json` and `en.json` follow `lab-kit/docs/narration.md`: **57 segments each** (`intro`, 4 worlds, 52 parts: site 10, tower 15, hoist 13, power room 14), ids `intro`, `scene-<world>`,
-`part-<id>`, no lesson segments. **No audio exists yet.** The lab's guide is in the **local voice** (`--engine voicebox`, profiles `Onigam narrateur FR` and `EN`, no credit), and only the lead generates.
+`part-<id>`, no lesson segments. **The audio exists in both languages, in the local voice, checked by transcription and not yet by a human ear.** The lab's guide is in the **local voice** (`--engine voicebox`, profiles `Onigam narrateur FR` and `EN`, no credit), and only the lead generates.
 
 Check the plan without generating anything (`HOME=<empty dir>` keeps the tool from even opening a key file):
 `HOME=$(mktemp -d) node <lab-kit>/tools/narration/generate.mjs --src narration/fr.json --out public/audio/fr --dry-run --engine voicebox`.

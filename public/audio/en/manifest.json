@@ -1,0 +1,3040 @@
+{
+  "lang": "en",
+  "model": "qwen3-tts-1.7B",
+  "generatedAt": "2026-11-03T12:09:37.049Z",
+  "voiceLabel": {
+    "fr": "Voix de synthèse",
+    "en": "Synthetic voice"
+  },
+  "totalSeconds": 1198.66,
+  "segments": [
+    {
+      "id": "intro",
+      "scope": "intro",
+      "title": "About the lab",
+      "scene": "site",
+      "file": "intro.mp3",
+      "duration": 127.02,
+      "chars": 2221,
+      "hash": "8d44bb17deeb8378",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.34,
+          "text": "Picture a farm, on a plain as flat as a table."
+        },
+        {
+          "t0": 3.34,
+          "t1": 5.16,
+          "text": "No hill, no lake."
+        },
+        {
+          "t0": 5.16,
+          "t1": 10.24,
+          "text": "At midday, the barn roof has sun to spare, and in the evening, the house is short of it."
+        },
+        {
+          "t0": 10.24,
+          "t1": 11.94,
+          "text": "How do you keep a little midday for tonight?"
+        },
+        {
+          "t0": 11.94,
+          "t1": 12.84,
+          "text": "With a tower…"
+        },
+        {
+          "t0": 12.84,
+          "t1": 14.36,
+          "text": "and a twenty-tonne weight."
+        },
+        {
+          "t0": 14.36,
+          "t1": 16.18,
+          "text": "What you lift, you can let back down."
+        },
+        {
+          "t0": 16.18,
+          "t1": 18.5,
+          "text": "Let’s follow one small ray of sunlight."
+        },
+        {
+          "t0": 18.5,
+          "t1": 20.72,
+          "text": "It lands on the roof, and now it is current."
+        },
+        {
+          "t0": 20.72,
+          "t1": 23.2,
+          "text": "It runs under the yard, to the foot of the tower."
+        },
+        {
+          "t0": 23.2,
+          "t1": 26.64,
+          "text": "Right at the top, it wakes a motor that spins very fast."
+        },
+        {
+          "t0": 26.64,
+          "t1": 32.16,
+          "text": "The gearbox turns that speed into force, and the drum reels in its rope, ever so gently."
+        },
+        {
+          "t0": 32.16,
+          "t1": 35.84,
+          "text": "Down there, twenty tonnes start to rise, at four metres a minute."
+        },
+        {
+          "t0": 35.84,
+          "t1": 39.86,
+          "text": "Our ray of sunlight has become height, and it waits up there, without wearing out."
+        },
+        {
+          "t0": 39.86,
+          "t1": 41.78,
+          "text": "In the evening, the weight comes down."
+        },
+        {
+          "t0": 41.78,
+          "t1": 46.3,
+          "text": "The motor becomes a generator, and the current comes back through the meter."
+        },
+        {
+          "t0": 46.3,
+          "t1": 49.36,
+          "text": "Back at the farm, where the house has been waiting."
+        },
+        {
+          "t0": 49.36,
+          "t1": 53.92,
+          "text": "That is the whole story: a ray of sunlight, twenty tonnes, twenty metres…"
+        },
+        {
+          "t0": 53.92,
+          "t1": 55.5,
+          "text": "and one lit window."
+        },
+        {
+          "t0": 55.5,
+          "t1": 57.2,
+          "text": "Now for the figure that says it all."
+        },
+        {
+          "t0": 57.2,
+          "t1": 62.4,
+          "text": "One kilowatt-hour is one tonne raised three hundred and sixty-seven metres."
+        },
+        {
+          "t0": 62.4,
+          "t1": 67.58,
+          "text": "How wonderful: a little current, and a tonne goes higher than any cathedral!"
+        },
+        {
+          "t0": 67.58,
+          "t1": 71.72,
+          "text": "And how disappointing: all that for one kettle, for half an hour."
+        },
+        {
+          "t0": 71.72,
+          "t1": 74.92,
+          "text": "Our tower holds one point zero nine kilowatt-hours."
+        },
+        {
+          "t0": 74.92,
+          "t1": 78.12,
+          "text": "And on a shelf in this room, a small box is waiting for you."
+        },
+        {
+          "t0": 78.12,
+          "t1": 82.38,
+          "text": "This battery module, forty kilos, holds as much as four point four towers."
+        },
+        {
+          "t0": 82.38,
+          "t1": 85.46,
+          "text": "Let’s say it plainly: at this scale, the battery wins."
+        },
+        {
+          "t0": 85.46,
+          "t1": 88.28,
+          "text": "That is not a defeat: that is where it gets interesting!"
+        },
+        {
+          "t0": 88.28,
+          "t1": 90.92,
+          "text": "A few landmarks, for the investigation."
+        },
+        {
+          "t0": 90.92,
+          "t1": 95.22,
+          "text": "Four views: the farm, the tower, the hoist and the power room."
+        },
+        {
+          "t0": 95.22,
+          "t1": 99.44,
+          "text": "Click on a part: its sheet opens, and you can listen to its story."
+        },
+        {
+          "t0": 99.44,
+          "t1": 101.76,
+          "text": "The assembly guide tells how the tower goes up."
+        },
+        {
+          "t0": 101.76,
+          "t1": 104.3,
+          "text": "The installation guide goes from the yard to the power room."
+        },
+        {
+          "t0": 104.3,
+          "t1": 108.36,
+          "text": "The simulation lets you change the weight and the height, and run ten scenarios."
+        },
+        {
+          "t0": 108.36,
+          "t1": 111.16,
+          "text": "Six lessons, with quizzes, explain the physics."
+        },
+        {
+          "t0": 111.16,
+          "t1": 113.22,
+          "text": "The plans gather the drawings."
+        },
+        {
+          "t0": 113.22,
+          "t1": 116.74,
+          "text": "One last thing: this lab is an educational reconstruction."
+        },
+        {
+          "t0": 116.74,
+          "t1": 119.5,
+          "text": "The machine is generic, and nobody sells it."
+        },
+        {
+          "t0": 119.5,
+          "t1": 122.18,
+          "text": "The figures come from published sources or from our model."
+        },
+        {
+          "t0": 122.18,
+          "t1": 126.36,
+          "text": "The video I sometimes quote, a home builder in his courtyard, is in the Sources."
+        },
+        {
+          "t0": 126.36,
+          "t1": 127.02,
+          "text": "Over to you!"
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 11.94,
+          "do": {
+            "frame": [
+              "machine-tower"
+            ]
+          }
+        },
+        {
+          "t": 18.5,
+          "do": {
+            "frame": [
+              "barn-solar-roof"
+            ]
+          }
+        },
+        {
+          "t": 20.72,
+          "do": {
+            "frame": [
+              "cable-trench"
+            ]
+          }
+        },
+        {
+          "t": 23.2,
+          "do": {
+            "scene": "hoist"
+          }
+        },
+        {
+          "t": 26.64,
+          "do": {
+            "frame": [
+              "hoist-gearbox"
+            ]
+          }
+        },
+        {
+          "t": 28.9,
+          "do": {
+            "frame": [
+              "rope-drum"
+            ]
+          }
+        },
+        {
+          "t": 32.16,
+          "do": {
+            "scene": "tower"
+          }
+        },
+        {
+          "t": 35.84,
+          "do": {
+            "frame": [
+              "concrete-block"
+            ]
+          }
+        },
+        {
+          "t": 39.86,
+          "do": {
+            "scene": "power-room"
+          }
+        },
+        {
+          "t": 43.64,
+          "do": {
+            "frame": [
+              "energy-meter"
+            ]
+          }
+        },
+        {
+          "t": 46.3,
+          "do": {
+            "scene": "site"
+          }
+        },
+        {
+          "t": 49.36,
+          "do": {
+            "frame": [
+              "farmhouse"
+            ]
+          }
+        },
+        {
+          "t": 55.5,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 71.72,
+          "do": {
+            "frame": [
+              "machine-tower"
+            ]
+          }
+        },
+        {
+          "t": 74.92,
+          "do": {
+            "scene": "power-room"
+          }
+        },
+        {
+          "t": 78.12,
+          "do": {
+            "frame": [
+              "lfp-module"
+            ]
+          }
+        },
+        {
+          "t": 88.28,
+          "do": {
+            "scene": "site"
+          }
+        },
+        {
+          "t": 99.44,
+          "do": {
+            "mode": "assembly"
+          }
+        },
+        {
+          "t": 101.76,
+          "do": {
+            "mode": "install"
+          }
+        },
+        {
+          "t": 104.3,
+          "do": {
+            "mode": "sim"
+          }
+        },
+        {
+          "t": 108.36,
+          "do": {
+            "mode": "lessons"
+          }
+        },
+        {
+          "t": 111.16,
+          "do": {
+            "mode": "plans"
+          }
+        },
+        {
+          "t": 113.22,
+          "do": {
+            "mode": "explore"
+          }
+        },
+        {
+          "t": 116.74,
+          "do": {
+            "scene": "site"
+          }
+        },
+        {
+          "t": 126.36,
+          "do": {
+            "select": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-site",
+      "scope": "scene:site",
+      "title": "A farm, a tower, one kilowatt-hour",
+      "scene": "site",
+      "file": "scene-site.mp3",
+      "duration": 45.92,
+      "chars": 786,
+      "hash": "c9155529171132bd",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.5,
+          "text": "Welcome to the farm: a yard that is flat on purpose."
+        },
+        {
+          "t0": 3.5,
+          "t1": 7.78,
+          "text": "With no hill and no lake, there is no pumping water uphill here."
+        },
+        {
+          "t0": 7.78,
+          "t1": 10.52,
+          "text": "The barn roof gives up its midday surplus."
+        },
+        {
+          "t0": 10.52,
+          "t1": 14.92,
+          "text": "The current goes through the power shed, then dives into the trench, under the yard."
+        },
+        {
+          "t0": 14.92,
+          "t1": 19.32,
+          "text": "And the tower turns it into height: twenty tonnes, twenty metres."
+        },
+        {
+          "t0": 19.32,
+          "t1": 21.78,
+          "text": "In the evening, the house asks for it back."
+        },
+        {
+          "t0": 21.78,
+          "t1": 24.14,
+          "text": "The grid connection gives the current somewhere to go."
+        },
+        {
+          "t0": 24.14,
+          "t1": 30.54,
+          "text": "Around the tower, a fence keeps a wide circle empty, and its gate stops everything the moment it opens."
+        },
+        {
+          "t0": 30.54,
+          "t1": 34.1,
+          "text": "The mast, meanwhile, watches the wind across the plain."
+        },
+        {
+          "t0": 34.1,
+          "t1": 36.68,
+          "text": "And those copper-coloured blocks on the meadow?"
+        },
+        {
+          "t0": 36.68,
+          "t1": 39.82,
+          "text": "A ghost stack: the concrete a night of three kilowatt-hours would take."
+        },
+        {
+          "t0": 39.82,
+          "t1": 42.34,
+          "text": "About one hundred and twenty-eight tonnes!"
+        },
+        {
+          "t0": 42.34,
+          "t1": 45.92,
+          "text": "For seven kilowatt-hours, more than fourteen towers."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 7.78,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 7.78,
+          "do": {
+            "frame": [
+              "barn-solar-roof"
+            ]
+          }
+        },
+        {
+          "t": 10.52,
+          "do": {
+            "frame": [
+              "power-shed"
+            ]
+          }
+        },
+        {
+          "t": 12.4,
+          "do": {
+            "frame": [
+              "cable-trench"
+            ]
+          }
+        },
+        {
+          "t": 14.92,
+          "do": {
+            "frame": [
+              "machine-tower"
+            ]
+          }
+        },
+        {
+          "t": 19.32,
+          "do": {
+            "frame": [
+              "farmhouse"
+            ]
+          }
+        },
+        {
+          "t": 21.78,
+          "do": {
+            "frame": [
+              "grid-connection"
+            ]
+          }
+        },
+        {
+          "t": 24.14,
+          "do": {
+            "frame": [
+              "exclusion-fence"
+            ]
+          }
+        },
+        {
+          "t": 27.12,
+          "do": {
+            "frame": [
+              "interlocked-gate"
+            ]
+          }
+        },
+        {
+          "t": 30.54,
+          "do": {
+            "frame": [
+              "wind-mast"
+            ]
+          }
+        },
+        {
+          "t": 34.1,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 45.92,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-tower",
+      "scope": "scene:tower",
+      "title": "The tower and its weight",
+      "scene": "tower",
+      "file": "scene-tower.mp3",
+      "duration": 39.92,
+      "chars": 705,
+      "hash": "2be2169bcb0f2828",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.74,
+          "text": "Here is the machine, and you can see right through it."
+        },
+        {
+          "t0": 2.74,
+          "t1": 6.62,
+          "text": "It all starts at the ground, with this big foundation pad."
+        },
+        {
+          "t0": 6.62,
+          "t1": 12.22,
+          "text": "Four legs and their diagonals climb all the way up, to the head frame that carries the whole hoist."
+        },
+        {
+          "t0": 12.22,
+          "t1": 14.72,
+          "text": "In the shaft, two rails guide the load."
+        },
+        {
+          "t0": 14.72,
+          "t1": 18.4,
+          "text": "The carrier and its eight blocks: there are your twenty tonnes."
+        },
+        {
+          "t0": 18.4,
+          "t1": 21.76,
+          "text": "Four falls of rope hold the hook block, and they carry everything."
+        },
+        {
+          "t0": 21.76,
+          "t1": 24.7,
+          "text": "In reserve, the safety gear waits to bite the rails."
+        },
+        {
+          "t0": 24.7,
+          "t1": 27.84,
+          "text": "Let’s pull the blocks apart, to see how it all stacks up…"
+        },
+        {
+          "t0": 27.84,
+          "t1": 30.02,
+          "text": "and the rope stays on its sheaves."
+        },
+        {
+          "t0": 30.02,
+          "t1": 32.28,
+          "text": "One serious word, just one."
+        },
+        {
+          "t0": 32.28,
+          "t1": 34.1,
+          "text": "Never stand under a suspended load."
+        },
+        {
+          "t0": 34.1,
+          "t1": 37.86,
+          "text": "And never build one without a structural engineer and a lifting inspector."
+        },
+        {
+          "t0": 37.86,
+          "t1": 39.92,
+          "text": "Even a home-sized version can kill."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 2.74,
+          "do": {
+            "frame": [
+              "foundation-pad"
+            ]
+          }
+        },
+        {
+          "t": 6.62,
+          "do": {
+            "frame": [
+              "tower-leg",
+              "tower-bracing"
+            ]
+          }
+        },
+        {
+          "t": 9.52,
+          "do": {
+            "frame": [
+              "head-frame"
+            ]
+          }
+        },
+        {
+          "t": 12.22,
+          "do": {
+            "frame": [
+              "guide-rail"
+            ]
+          }
+        },
+        {
+          "t": 14.72,
+          "do": {
+            "frame": [
+              "weight-carrier"
+            ]
+          }
+        },
+        {
+          "t": 18.4,
+          "do": {
+            "frame": [
+              "hook-block"
+            ]
+          }
+        },
+        {
+          "t": 18.4,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 21.76,
+          "do": {
+            "flows": false
+          }
+        },
+        {
+          "t": 21.76,
+          "do": {
+            "frame": [
+              "safety-gear"
+            ]
+          }
+        },
+        {
+          "t": 21.76,
+          "do": {
+            "xray": true
+          }
+        },
+        {
+          "t": 24.7,
+          "do": {
+            "xray": false
+          }
+        },
+        {
+          "t": 24.7,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 24.7,
+          "do": {
+            "explode": 0.6
+          }
+        },
+        {
+          "t": 30.02,
+          "do": {
+            "explode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-hoist",
+      "scope": "scene:hoist",
+      "title": "The hoist, at the top of the tower",
+      "scene": "hoist",
+      "file": "scene-hoist.mp3",
+      "duration": 40.16,
+      "chars": 690,
+      "hash": "02984ff8dd958f27",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.16,
+          "text": "Let’s climb to the very top: here, the force reads in order."
+        },
+        {
+          "t0": 4.16,
+          "t1": 7.88,
+          "text": "The motor turns at about two thousand nine hundred revolutions a minute."
+        },
+        {
+          "t0": 7.88,
+          "t1": 12.22,
+          "text": "Its brake, clamped by springs, only opens when the current flows."
+        },
+        {
+          "t0": 12.22,
+          "t1": 18.3,
+          "text": "The gearbox turns that speed into torque, all the way to the drum, which makes about fifteen turns."
+        },
+        {
+          "t0": 18.3,
+          "t1": 22.16,
+          "text": "The second brake keeps watch on this side, right by the load."
+        },
+        {
+          "t0": 22.16,
+          "t1": 27.52,
+          "text": "Let’s cut it all down the middle: here are the gears, the rotor, the inside of the drum."
+        },
+        {
+          "t0": 27.52,
+          "t1": 33.24,
+          "text": "Follow the torque: about forty-eight newton-metres at the motor, eight thousand five hundred at the drum!"
+        },
+        {
+          "t0": 33.24,
+          "t1": 35.74,
+          "text": "Let’s pull the parts apart, to see what holds what…"
+        },
+        {
+          "t0": 35.74,
+          "t1": 40.16,
+          "text": "This hoist comes from a published catalogue, but nobody sells it to store energy."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 4.16,
+          "do": {
+            "frame": [
+              "hoist-motor"
+            ]
+          }
+        },
+        {
+          "t": 7.88,
+          "do": {
+            "frame": [
+              "service-brake",
+              "motor-encoder"
+            ]
+          }
+        },
+        {
+          "t": 12.22,
+          "do": {
+            "frame": [
+              "hoist-gearbox"
+            ]
+          }
+        },
+        {
+          "t": 14.58,
+          "do": {
+            "frame": [
+              "rope-drum"
+            ]
+          }
+        },
+        {
+          "t": 18.3,
+          "do": {
+            "frame": [
+              "drum-brake"
+            ]
+          }
+        },
+        {
+          "t": 22.16,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 22.16,
+          "do": {
+            "cutaway": true
+          }
+        },
+        {
+          "t": 33.24,
+          "do": {
+            "cutaway": false
+          }
+        },
+        {
+          "t": 33.24,
+          "do": {
+            "explode": 0.6
+          }
+        },
+        {
+          "t": 35.74,
+          "do": {
+            "explode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-power-room",
+      "scope": "scene:power-room",
+      "title": "The power room, in the order the current flows",
+      "scene": "power-room",
+      "file": "scene-power-room.mp3",
+      "duration": 39.12,
+      "chars": 706,
+      "hash": "a09b309a07549a91",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.3,
+          "text": "Along this wall, the current reads from left to right."
+        },
+        {
+          "t0": 3.3,
+          "t1": 8.6,
+          "text": "Our ray of sunlight comes in through the solar inverter, and the meter measures it on the way past."
+        },
+        {
+          "t0": 8.6,
+          "t1": 10.56,
+          "text": "Then the main panel shares it out."
+        },
+        {
+          "t0": 10.56,
+          "t1": 15.48,
+          "text": "Regenerative supply, direct-current link, hoist inverter: these three cabinets lift the weight."
+        },
+        {
+          "t0": 15.48,
+          "t1": 18.06,
+          "text": "On the way down, the current turns around."
+        },
+        {
+          "t0": 18.06,
+          "t1": 21.94,
+          "text": "If the grid goes, the chopper and the resistor take over, for a few seconds."
+        },
+        {
+          "t0": 21.94,
+          "t1": 24.66,
+          "text": "The safety controller and the emergency stop keep watch."
+        },
+        {
+          "t0": 24.66,
+          "t1": 26.44,
+          "text": "And here is the surprise of the room."
+        },
+        {
+          "t0": 26.44,
+          "t1": 31.16,
+          "text": "Below one point nine kilowatts at the hook, nothing comes out: the weight comes down,"
+        },
+        {
+          "t0": 31.32,
+          "t1": 33.38,
+          "text": "and it all goes in losses."
+        },
+        {
+          "t0": 33.38,
+          "t1": 36.06,
+          "text": "A hundred-watt fridge?"
+        },
+        {
+          "t0": 36.06,
+          "t1": 39.12,
+          "text": "The tower can serve it, but it costs about two kilowatts at the hook!"
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "home": true
+          }
+        },
+        {
+          "t": 3.3,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 3.3,
+          "do": {
+            "frame": [
+              "pv-inverter"
+            ]
+          }
+        },
+        {
+          "t": 6.44,
+          "do": {
+            "frame": [
+              "energy-meter"
+            ]
+          }
+        },
+        {
+          "t": 8.6,
+          "do": {
+            "frame": [
+              "ac-panel"
+            ]
+          }
+        },
+        {
+          "t": 10.56,
+          "do": {
+            "frame": [
+              "regen-supply",
+              "dc-link",
+              "motor-inverter"
+            ]
+          }
+        },
+        {
+          "t": 18.06,
+          "do": {
+            "flows": false
+          }
+        },
+        {
+          "t": 18.06,
+          "do": {
+            "frame": [
+              "brake-chopper",
+              "brake-resistor"
+            ]
+          }
+        },
+        {
+          "t": 21.94,
+          "do": {
+            "frame": [
+              "safety-controller"
+            ]
+          }
+        },
+        {
+          "t": 24.66,
+          "do": {
+            "home": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-barn-solar-roof",
+      "scope": "part:barn-solar-roof",
+      "title": "Barn solar roof",
+      "scene": "site",
+      "file": "part-barn-solar-roof.mp3",
+      "duration": 17.36,
+      "chars": 289,
+      "hash": "af324ca7cd248191",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.04,
+          "text": "The whole story starts here: a roof with too much current at midday, and none in the evening."
+        },
+        {
+          "t0": 6.04,
+          "t1": 10.78,
+          "text": "At full speed, the hoist takes about seventeen point six kilowatts at the meter."
+        },
+        {
+          "t0": 10.78,
+          "t1": 13.72,
+          "text": "So we wait for enough sun, then climb in one go."
+        },
+        {
+          "t0": 13.72,
+          "t1": 17.36,
+          "text": "Crawling, the same climb would keep barely thirty-seven per cent."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-farmhouse",
+      "scope": "part:farmhouse",
+      "title": "Farmhouse",
+      "scene": "site",
+      "file": "part-farmhouse.mp3",
+      "duration": 15.52,
+      "chars": 275,
+      "hash": "6667a462a38ed73d",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.52,
+          "text": "The evening’s customer: a fridge, a few lights, a kettle."
+        },
+        {
+          "t0": 3.52,
+          "t1": 7.72,
+          "text": "It asks for little, but for a long time: the very opposite of what the tower likes."
+        },
+        {
+          "t0": 7.72,
+          "t1": 9.94,
+          "text": "Nobody publishes a household’s night."
+        },
+        {
+          "t0": 9.94,
+          "t1": 15.52,
+          "text": "So read your meter, morning and evening, for a week: it is the only figure that is truly yours."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-machine-tower",
+      "scope": "part:machine-tower",
+      "title": "Storage tower",
+      "scene": "site",
+      "file": "part-machine-tower.mp3",
+      "duration": 17.2,
+      "chars": 300,
+      "hash": "58e8adf031a5c021",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.06,
+          "text": "Twenty tonnes, twenty metres: enough to run a kettle for half an hour."
+        },
+        {
+          "t0": 4.06,
+          "t1": 6.72,
+          "text": "And for that, twenty-eight metres of lattice."
+        },
+        {
+          "t0": 6.72,
+          "t1": 11.52,
+          "text": "In energy, it is the size of the only demonstrator of its kind built in Europe."
+        },
+        {
+          "t0": 11.52,
+          "t1": 17.2,
+          "text": "Its price, as an order of magnitude: from one hundred thousand to two hundred and fifty thousand euros."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-power-shed",
+      "scope": "part:power-shed",
+      "title": "Power shed",
+      "scene": "site",
+      "file": "part-power-shed.mp3",
+      "duration": 14.56,
+      "chars": 252,
+      "hash": "fbbe3365f601d685",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.18,
+          "text": "The little building where the current changes direction."
+        },
+        {
+          "t0": 3.18,
+          "t1": 8.3,
+          "text": "Everything that talks to the hoist lives here, under cover, out of the fall zone."
+        },
+        {
+          "t0": 8.3,
+          "t1": 12.46,
+          "text": "One lockout key per person: whoever climbs the tower keeps theirs in a pocket,"
+        },
+        {
+          "t0": 12.46,
+          "t1": 14.56,
+          "text": "and nothing restarts without them."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-cable-trench",
+      "scope": "part:cable-trench",
+      "title": "Cable trench",
+      "scene": "site",
+      "file": "part-cable-trench.mp3",
+      "duration": 15.12,
+      "chars": 267,
+      "hash": "734c205b91e38db7",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.82,
+          "text": "The secret path of the current, under the yard."
+        },
+        {
+          "t0": 2.82,
+          "t1": 9.46,
+          "text": "Power and signals travel in separate ducts, because an inverter chops the voltage, and its cable radiates."
+        },
+        {
+          "t0": 9.46,
+          "t1": 12.64,
+          "text": "Above them, a warning mesh waits for the next person who digs."
+        },
+        {
+          "t0": 12.64,
+          "t1": 15.12,
+          "text": "It comes up in the bucket, before the cable does!"
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-grid-connection",
+      "scope": "part:grid-connection",
+      "title": "Grid connection",
+      "scene": "site",
+      "file": "part-grid-connection.mp3",
+      "duration": 14.4,
+      "chars": 245,
+      "hash": "cda1b1dd3621380e",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.5,
+          "text": "A motor braking a load makes current, and that current has to go somewhere."
+        },
+        {
+          "t0": 4.5,
+          "t1": 9.18,
+          "text": "The farm’s grid takes it: about nine point four kilowatts, at full descent."
+        },
+        {
+          "t0": 9.18,
+          "t1": 14.4,
+          "text": "A protection cuts everything if the grid goes: nobody must work on a line that is still live."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-exclusion-fence",
+      "scope": "part:exclusion-fence",
+      "title": "Exclusion fence",
+      "scene": "site",
+      "file": "part-exclusion-fence.mp3",
+      "duration": 17.12,
+      "chars": 295,
+      "hash": "93c99682a188ad43",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.38,
+          "text": "How wide a circle should you keep around such a tower?"
+        },
+        {
+          "t0": 3.38,
+          "t1": 4.76,
+          "text": "We found no rule."
+        },
+        {
+          "t0": 4.76,
+          "t1": 9.78,
+          "text": "This lab takes its height, twenty-eight metres: that is where it would land if it fell."
+        },
+        {
+          "t0": 9.78,
+          "t1": 12.98,
+          "text": "The fence stops no weight, it keeps people away."
+        },
+        {
+          "t0": 12.98,
+          "t1": 17.12,
+          "text": "Before you park a trailer here, ask yourself whether you would park it under a crane."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-interlocked-gate",
+      "scope": "part:interlocked-gate",
+      "title": "Interlocked gate",
+      "scene": "site",
+      "file": "part-interlocked-gate.mp3",
+      "duration": 17.52,
+      "chars": 284,
+      "hash": "9ac690bec7c9ca85",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4,
+          "text": "A gate stops nobody from walking in, but it can tell the machine."
+        },
+        {
+          "t0": 4,
+          "t1": 7.24,
+          "text": "Open it, and everything stops, brakes closed."
+        },
+        {
+          "t0": 7.24,
+          "t1": 12.66,
+          "text": "Two channels link it to the safety controller: if one breaks, the other still cuts."
+        },
+        {
+          "t0": 12.66,
+          "t1": 17.52,
+          "text": "When it closes, nothing restarts by itself: it takes a deliberate gesture, from outside."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-wind-mast",
+      "scope": "part:wind-mast",
+      "title": "Wind mast",
+      "scene": "site",
+      "file": "part-wind-mast.mp3",
+      "duration": 17.36,
+      "chars": 278,
+      "hash": "f341da3a01e21e90",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.42,
+          "text": "Block towers are blamed for the wind swinging the load."
+        },
+        {
+          "t0": 3.42,
+          "t1": 7.94,
+          "text": "Here, the weight runs between rails, and the wind adds almost nothing."
+        },
+        {
+          "t0": 7.94,
+          "t1": 9.88,
+          "text": "So what is this mast for?"
+        },
+        {
+          "t0": 9.88,
+          "t1": 12.86,
+          "text": "To protect the tower, and the people who work on it."
+        },
+        {
+          "t0": 12.86,
+          "t1": 17.36,
+          "text": "Above eighteen metres a second, the limit chosen here, everything stops."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-block-yard",
+      "scope": "part:block-yard",
+      "title": "Block yard",
+      "scene": "site",
+      "file": "part-block-yard.mp3",
+      "duration": 17.92,
+      "chars": 284,
+      "hash": "a652c1df3d5e7220",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.46,
+          "text": "The mass is nothing sophisticated, and that is its charm: no chemistry, no rare earths."
+        },
+        {
+          "t0": 6.46,
+          "t1": 11.24,
+          "text": "Each block, about two point four tonnes, arrives by mobile crane, in good weather."
+        },
+        {
+          "t0": 11.24,
+          "t1": 13.4,
+          "text": "New, they weigh heavily in carbon."
+        },
+        {
+          "t0": 13.4,
+          "t1": 17.92,
+          "text": "But scrap blocks change the whole sum: that is gravity’s most honest argument."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-foundation-pad",
+      "scope": "part:foundation-pad",
+      "title": "Foundation pad",
+      "scene": "tower",
+      "file": "part-foundation-pad.mp3",
+      "duration": 17.68,
+      "chars": 304,
+      "hash": "5bf7c7389b0fb2a7",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.24,
+          "text": "It is not the weight that sizes this pad, it is the wind: a tower this narrow levers on its feet."
+        },
+        {
+          "t0": 6.24,
+          "t1": 12.24,
+          "text": "We estimate about seventy-three cubic metres of reinforced concrete, ten times the concrete in the stack!"
+        },
+        {
+          "t0": 12.24,
+          "t1": 13.92,
+          "text": "And it holds no energy at all."
+        },
+        {
+          "t0": 13.92,
+          "t1": 17.68,
+          "text": "In the video, a home builder sees his base lifting, and adds a block."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-tower-leg",
+      "scope": "part:tower-leg",
+      "title": "Tower leg",
+      "scene": "tower",
+      "file": "part-tower-leg.mp3",
+      "duration": 17.76,
+      "chars": 300,
+      "hash": "ea23ee1c4b34fb21",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.72,
+          "text": "Four corner columns, bolted in sections, by crane."
+        },
+        {
+          "t0": 2.72,
+          "t1": 7.28,
+          "text": "And here is a curiosity: as the weight climbs, their load does not change,"
+        },
+        {
+          "t0": 7.28,
+          "t1": 9.92,
+          "text": "because it always hangs from the same point."
+        },
+        {
+          "t0": 9.92,
+          "t1": 12.92,
+          "text": "It changes all at once when it settles on the buffer."
+        },
+        {
+          "t0": 12.92,
+          "t1": 17.76,
+          "text": "Of these twenty-five metres, only the twenty of the stroke hold any energy."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-tower-bracing",
+      "scope": "part:tower-bracing",
+      "title": "Bracing",
+      "scene": "tower",
+      "file": "part-tower-bracing.mp3",
+      "duration": 14.4,
+      "chars": 240,
+      "hash": "31e7ed41235f2c7b",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.12,
+          "text": "Push a square of hinged bars: it lies down."
+        },
+        {
+          "t0": 3.12,
+          "t1": 5.82,
+          "text": "Add a diagonal: it locks into triangles."
+        },
+        {
+          "t0": 5.82,
+          "t1": 7.84,
+          "text": "That is the whole secret of a lattice."
+        },
+        {
+          "t0": 7.84,
+          "t1": 11.06,
+          "text": "With every gust, each diagonal pulls, then pushes."
+        },
+        {
+          "t0": 11.06,
+          "t1": 14.4,
+          "text": "And a clatter in a strong wind is nearly always a loose diagonal."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-head-frame",
+      "scope": "part:head-frame",
+      "title": "Head frame",
+      "scene": "tower",
+      "file": "part-head-frame.mp3",
+      "duration": 14.88,
+      "chars": 268,
+      "hash": "bbd1d4b52ed55bc5",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.94,
+          "text": "The whole machine hangs from this steel deck."
+        },
+        {
+          "t0": 2.94,
+          "t1": 5.06,
+          "text": "It takes the hoist, more than a tonne."
+        },
+        {
+          "t0": 5.06,
+          "t1": 10.08,
+          "text": "It must stay stiff: if the drum and the sheave drift out of line, the rope jumps from its grooves."
+        },
+        {
+          "t0": 10.08,
+          "t1": 14.88,
+          "text": "And leave no tool on the grating: up here, whatever falls, falls twenty-five metres."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-guide-rail",
+      "scope": "part:guide-rail",
+      "title": "Guide rail",
+      "scene": "tower",
+      "file": "part-guide-rail.mp3",
+      "duration": 15.28,
+      "chars": 251,
+      "hash": "b3a31fb0ceab15d0",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.18,
+          "text": "A hanging load swings: crane towers are rightly blamed for it."
+        },
+        {
+          "t0": 4.18,
+          "t1": 10.1,
+          "text": "Here, the carrier runs between two rails, like a lift car, and no gust can give it any momentum."
+        },
+        {
+          "t0": 10.1,
+          "t1": 15.28,
+          "text": "This is also where the wedges of the safety gear bite: a joint is dressed with a fine file."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-end-buffer",
+      "scope": "part:end-buffer",
+      "title": "End buffer",
+      "scene": "tower",
+      "file": "part-end-buffer.mp3",
+      "duration": 15.56,
+      "chars": 260,
+      "hash": "aa00b9f038467a85",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.13,
+          "text": "Twenty tonnes at four metres a minute: it sounds enormous."
+        },
+        {
+          "t0": 3.13,
+          "t1": 6.9,
+          "text": "Forty-four joules of moving energy, next to nothing!"
+        },
+        {
+          "t0": 6.9,
+          "t1": 9.44,
+          "text": "The energy is in the height, not in the speed."
+        },
+        {
+          "t0": 9.44,
+          "t1": 12.8,
+          "text": "So the buffer waits for a small error, not for a fall."
+        },
+        {
+          "t0": 12.8,
+          "t1": 15.56,
+          "text": "The weight also rests on it during long stops."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-weight-carrier",
+      "scope": "part:weight-carrier",
+      "title": "Weight carrier",
+      "scene": "tower",
+      "file": "part-weight-carrier.mp3",
+      "duration": 16.88,
+      "chars": 307,
+      "hash": "fa0abf03fc2ebaf3",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.54,
+          "text": "Without this carrier, a pile of blocks would be just a pile."
+        },
+        {
+          "t0": 3.54,
+          "t1": 6.72,
+          "text": "It holds the concrete, the shoes and the safety gear."
+        },
+        {
+          "t0": 6.72,
+          "t1": 11.02,
+          "text": "With the spreader beam and the hook block, we assume about three point two tonnes."
+        },
+        {
+          "t0": 11.02,
+          "t1": 16.88,
+          "text": "And at full speed, the machine stops paying below about two point seven tonnes: just under this empty weight."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-concrete-block",
+      "scope": "part:concrete-block",
+      "title": "Concrete block",
+      "scene": "tower",
+      "file": "part-concrete-block.mp3",
+      "duration": 19.28,
+      "chars": 334,
+      "hash": "13d8729baef5660d",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.6,
+          "text": "No trick here: plain concrete, the blocks people stack for storage walls."
+        },
+        {
+          "t0": 4.6,
+          "t1": 8.22,
+          "text": "Let’s pull them apart: nothing in there makes a battery!"
+        },
+        {
+          "t0": 8.22,
+          "t1": 13.6,
+          "text": "Gravity looks only at mass and height: iron or water would give as much, tonne for tonne."
+        },
+        {
+          "t0": 13.6,
+          "t1": 15.55,
+          "text": "One block, raised twenty metres,"
+        },
+        {
+          "t0": 15.62,
+          "t1": 19.28,
+          "text": "keeps about one hundred and thirty-one watt-hours: under four minutes of kettle."
+        }
+      ],
+      "cues": [
+        {
+          "t": 4.6,
+          "do": {
+            "explode": 0.5
+          }
+        },
+        {
+          "t": 8.22,
+          "do": {
+            "explode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-stack-tie",
+      "scope": "part:stack-tie",
+      "title": "Stack tie",
+      "scene": "tower",
+      "file": "part-stack-tie.mp3",
+      "duration": 13.36,
+      "chars": 263,
+      "hash": "f470e6d9f1a02aba",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.22,
+          "text": "With enough small jolts, a loose stack ends up walking."
+        },
+        {
+          "t0": 3.22,
+          "t1": 5.48,
+          "text": "So these steel rods clamp it to its plate."
+        },
+        {
+          "t0": 5.48,
+          "t1": 9.62,
+          "text": "They carry almost nothing, except on the day the safety gear stops the load dead."
+        },
+        {
+          "t0": 9.62,
+          "t1": 13.36,
+          "text": "And they come undone with a spanner, because you must be able to take a block out."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-guide-shoe",
+      "scope": "part:guide-shoe",
+      "title": "Guide shoe",
+      "scene": "tower",
+      "file": "part-guide-shoe.mp3",
+      "duration": 15.92,
+      "chars": 259,
+      "hash": "c518304efe76b354",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.94,
+          "text": "Where the carrier meets its rails: a simple lining of hard plastic."
+        },
+        {
+          "t0": 3.94,
+          "t1": 6.66,
+          "text": "At four metres a minute, sliding is enough."
+        },
+        {
+          "t0": 6.66,
+          "t1": 11.94,
+          "text": "It needs a little play: too much, and the load rattles; too little, and it rubs."
+        },
+        {
+          "t0": 11.94,
+          "t1": 15.92,
+          "text": "This setting is not drawn: it is found by hand, on the real tower."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-safety-gear",
+      "scope": "part:safety-gear",
+      "title": "Safety gear",
+      "scene": "tower",
+      "file": "part-safety-gear.mp3",
+      "duration": 20,
+      "chars": 390,
+      "hash": "88fd84e96282a0b3",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 1.38,
+          "text": "And if everything else let go?"
+        },
+        {
+          "t0": 1.38,
+          "t1": 5.22,
+          "text": "In the carrier, steel wedges wait, a few millimetres from the rails."
+        },
+        {
+          "t0": 5.22,
+          "t1": 7.34,
+          "text": "A shaft breaks, the load speeds up."
+        },
+        {
+          "t0": 7.34,
+          "t1": 12.76,
+          "text": "Past about thirty centimetres a second, the wedges bite, and it all stops within about ten centimetres."
+        },
+        {
+          "t0": 12.76,
+          "t1": 16.18,
+          "text": "Nobody has published a test at this size: these are our assumptions."
+        },
+        {
+          "t0": 16.18,
+          "t1": 20,
+          "text": "In the video, a badly screwed cover drops a bag of rocks, and nothing catches it."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "xray": true
+          }
+        },
+        {
+          "t": 12.76,
+          "do": {
+            "xray": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-hook-block",
+      "scope": "part:hook-block",
+      "title": "Hook block",
+      "scene": "tower",
+      "file": "part-hook-block.mp3",
+      "duration": 21.6,
+      "chars": 349,
+      "hash": "f726d5ff50406ff6",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.48,
+          "text": "A twenty-millimetre rope, alone, would not hold twenty tonnes with a decent margin."
+        },
+        {
+          "t0": 5.48,
+          "t1": 10.18,
+          "text": "So it goes there and back: drum, hook block, sheave, hook block, anchor."
+        },
+        {
+          "t0": 10.18,
+          "t1": 14.1,
+          "text": "Four falls share the load: five tonnes each, on paper."
+        },
+        {
+          "t0": 14.1,
+          "t1": 18.5,
+          "text": "In exchange, the drum reels in sixteen metres of rope a minute, for four at the hook."
+        },
+        {
+          "t0": 18.5,
+          "t1": 21.6,
+          "text": "The force changes, the speed too, the energy never."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 18.5,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-hoist-rope",
+      "scope": "part:hoist-rope",
+      "title": "Hoist rope",
+      "scene": "tower",
+      "file": "part-hoist-rope.mp3",
+      "duration": 16.96,
+      "chars": 284,
+      "hash": "7e901a6ae36f9b7c",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.3,
+          "text": "A steel rope is not a rod: its wires slide over one another, at every sheave."
+        },
+        {
+          "t0": 5.3,
+          "t1": 8.64,
+          "text": "This one breaks at three hundred and fifteen kilonewtons at least."
+        },
+        {
+          "t0": 8.64,
+          "t1": 13.24,
+          "text": "But it dies of bending far more than of its load, sometimes without warning."
+        },
+        {
+          "t0": 13.24,
+          "t1": 16.96,
+          "text": "No repair is possible: at the discard criterion, it comes off."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 5.3,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-service-ladder",
+      "scope": "part:service-ladder",
+      "title": "Ladder and fall arrest",
+      "scene": "tower",
+      "file": "part-service-ladder.mp3",
+      "duration": 14.72,
+      "chars": 255,
+      "hash": "30c4523bc3402ed9",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 1.72,
+          "text": "A machine with no upkeep?"
+        },
+        {
+          "t0": 1.72,
+          "t1": 7.64,
+          "text": "Yet someone has to climb up to check the bolts, the rope and the brakes, right at the top of the tower."
+        },
+        {
+          "t0": 7.64,
+          "t1": 11.9,
+          "text": "Two people, never one, and a plan to bring an injured person down."
+        },
+        {
+          "t0": 11.9,
+          "t1": 14.72,
+          "text": "A battery, on the other hand, gets changed with a trolley!"
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-height-scale",
+      "scope": "part:height-scale",
+      "title": "Kilowatt-hour scale",
+      "scene": "tower",
+      "file": "part-height-scale.mp3",
+      "duration": 20.32,
+      "chars": 337,
+      "hash": "b00dc69fd5c9aac3",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.52,
+          "text": "This part exists on no real machine: it is this lab’s gift to you."
+        },
+        {
+          "t0": 4.52,
+          "t1": 8.22,
+          "text": "A ruler, with metres on one side and watt-hours on the other."
+        },
+        {
+          "t0": 8.22,
+          "t1": 14.22,
+          "text": "Each metre is worth fifty-four and a half watt-hours: half an hour of fridge, with no losses at all."
+        },
+        {
+          "t0": 14.22,
+          "t1": 20.32,
+          "text": "And here is the finest part: a battery shows a percentage, a tower shows its charge to anyone who looks up."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-hoist-motor",
+      "scope": "part:hoist-motor",
+      "title": "Motor-generator",
+      "scene": "hoist",
+      "file": "part-hoist-motor.mp3",
+      "duration": 19.84,
+      "chars": 336,
+      "hash": "aaa58d9b28ee8b02",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.1,
+          "text": "Two trades, one machine: a fifteen-kilowatt motor on the way up, a generator on the way down."
+        },
+        {
+          "t0": 6.1,
+          "t1": 9.56,
+          "text": "But its copper losses follow the torque, not the speed."
+        },
+        {
+          "t0": 9.56,
+          "t1": 15,
+          "text": "Even at the threshold where nothing comes out, it still loses about five hundred and sixty-nine watts."
+        },
+        {
+          "t0": 15,
+          "t1": 19.84,
+          "text": "A motor likes to spin fast, a weight must come down slowly: reconciling them costs."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "cutaway": true
+          }
+        },
+        {
+          "t": 9.56,
+          "do": {
+            "cutaway": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-motor-encoder",
+      "scope": "part:motor-encoder",
+      "title": "Encoder",
+      "scene": "hoist",
+      "file": "part-motor-encoder.mp3",
+      "duration": 17.2,
+      "chars": 300,
+      "hash": "32ad5b12ac755659",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.56,
+          "text": "Holding twenty tonnes almost at rest, then moving off smoothly: the inverter must know where the rotor is."
+        },
+        {
+          "t0": 6.56,
+          "t1": 7.94,
+          "text": "The encoder tells it."
+        },
+        {
+          "t0": 7.94,
+          "t1": 11.9,
+          "text": "One turn of the motor, and the hook moves barely a millimetre and a half."
+        },
+        {
+          "t0": 11.9,
+          "t1": 17.2,
+          "text": "But it only sees the motor: if a shaft breaks after the gearbox, it still reports a normal speed."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-service-brake",
+      "scope": "part:service-brake",
+      "title": "Service brake",
+      "scene": "hoist",
+      "file": "part-service-brake.mp3",
+      "duration": 15.12,
+      "chars": 262,
+      "hash": "0d14d0ad66428257",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.66,
+          "text": "What do we want to happen when everything stops?"
+        },
+        {
+          "t0": 2.66,
+          "t1": 8.28,
+          "text": "Springs clamp two discs all the time, and a coil frees them only while the weight is moving."
+        },
+        {
+          "t0": 8.28,
+          "t1": 10.4,
+          "text": "A power cut, and the brake closes."
+        },
+        {
+          "t0": 10.4,
+          "t1": 12.66,
+          "text": "Its weakness: it acts before the gearbox."
+        },
+        {
+          "t0": 12.66,
+          "t1": 15.12,
+          "text": "And never touch the springs to gain torque."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "xray": true
+          }
+        },
+        {
+          "t": 10.4,
+          "do": {
+            "xray": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-hoist-gearbox",
+      "scope": "part:hoist-gearbox",
+      "title": "Gearbox",
+      "scene": "hoist",
+      "file": "part-hoist-gearbox.mp3",
+      "duration": 20.24,
+      "chars": 367,
+      "hash": "6f861142496eb60c",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.48,
+          "text": "The motor turns at about two thousand nine hundred revolutions a minute, the drum at about fifteen."
+        },
+        {
+          "t0": 5.48,
+          "t1": 10.54,
+          "text": "Hence a ratio of about one hundred and eighty-eight to one, which the maker does not publish."
+        },
+        {
+          "t0": 10.54,
+          "t1": 12.46,
+          "text": "A worm gear would lock itself."
+        },
+        {
+          "t0": 12.46,
+          "t1": 16.28,
+          "text": "These helical teeth, though, let themselves be driven backwards."
+        },
+        {
+          "t0": 16.28,
+          "t1": 20.24,
+          "text": "In the video, with a printed gearbox, twelve kilos will not come down at all!"
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "cutaway": true
+          }
+        },
+        {
+          "t": 10.54,
+          "do": {
+            "cutaway": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-rope-drum",
+      "scope": "part:rope-drum",
+      "title": "Rope drum",
+      "scene": "hoist",
+      "file": "part-rope-drum.mp3",
+      "duration": 18.08,
+      "chars": 301,
+      "hash": "75943ce8f147b429",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.74,
+          "text": "A surprisingly long cylinder, where the rope coils in a single layer: that way, it never crushes itself."
+        },
+        {
+          "t0": 6.74,
+          "t1": 11.28,
+          "text": "Its diameter is not published: this lab takes thirty-three centimetres."
+        },
+        {
+          "t0": 11.28,
+          "t1": 14.9,
+          "text": "That choice changes the speeds of the shafts, but no energy at all."
+        },
+        {
+          "t0": 14.9,
+          "t1": 18.08,
+          "text": "A few turns always stay on the drum, to ease the anchor."
+        }
+      ],
+      "cues": [
+        {
+          "t": 6.74,
+          "do": {
+            "cutaway": true
+          }
+        },
+        {
+          "t": 14.9,
+          "do": {
+            "cutaway": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-drum-brake",
+      "scope": "part:drum-brake",
+      "title": "Drum brake",
+      "scene": "hoist",
+      "file": "part-drum-brake.mp3",
+      "duration": 15.44,
+      "chars": 259,
+      "hash": "aef64218ce9084da",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.6,
+          "text": "The second brake, on the load side: it holds even if the gearbox has given way."
+        },
+        {
+          "t0": 4.6,
+          "t1": 8.3,
+          "text": "It closes a moment after the other, which spares its linings."
+        },
+        {
+          "t0": 8.3,
+          "t1": 11.22,
+          "text": "Belt and braces, in a word."
+        },
+        {
+          "t0": 11.22,
+          "t1": 15.44,
+          "text": "And it has its price: about one hundred and fifty watts, as long as the weight is moving."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-rope-guide",
+      "scope": "part:rope-guide",
+      "title": "Rope guide",
+      "scene": "hoist",
+      "file": "part-rope-guide.mp3",
+      "duration": 16.64,
+      "chars": 280,
+      "hash": "5498f46b746f61b4",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.6,
+          "text": "When the weight settles, the rope goes slack, and that is when a turn can jump out of its groove."
+        },
+        {
+          "t0": 5.6,
+          "t1": 9.54,
+          "text": "This ring travels with the winding, and presses it back into place."
+        },
+        {
+          "t0": 9.54,
+          "t1": 14.58,
+          "text": "A modest part, and it spares the rope the worst: one turn riding on its neighbour."
+        },
+        {
+          "t0": 14.58,
+          "t1": 16.64,
+          "text": "A clack on starting: look here."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-rope-anchor",
+      "scope": "part:rope-anchor",
+      "title": "Rope anchor",
+      "scene": "hoist",
+      "file": "part-rope-anchor.mp3",
+      "duration": 14,
+      "chars": 249,
+      "hash": "82107d34ada21ed8",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 1.16,
+          "text": "Where the rope ends."
+        },
+        {
+          "t0": 1.16,
+          "t1": 5.6,
+          "text": "A wedge socket holds it: the harder the rope pulls, the tighter the wedge grips,"
+        },
+        {
+          "t0": 5.6,
+          "t1": 8.28,
+          "text": "with no spring and no extra clamping."
+        },
+        {
+          "t0": 8.28,
+          "t1": 14,
+          "text": "To keep an eye on it, an instrument that never breaks down: a line of paint on the rope, right at the socket."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-return-sheave",
+      "scope": "part:return-sheave",
+      "title": "Return sheave",
+      "scene": "hoist",
+      "file": "part-return-sheave.mp3",
+      "duration": 16.96,
+      "chars": 270,
+      "hash": "f723b86f3e2d253d",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.62,
+          "text": "To make four falls out of one rope, you need a fixed sheave: here it is."
+        },
+        {
+          "t0": 4.62,
+          "t1": 6.52,
+          "text": "It bends the rope once more."
+        },
+        {
+          "t0": 6.52,
+          "t1": 12.42,
+          "text": "Hence a published rule: at least eighteen times its diameter, so thirty-six centimetres."
+        },
+        {
+          "t0": 12.42,
+          "t1": 16.96,
+          "text": "In the video, a printed pulley does not hold: always look for the weakest part."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-overload-cell",
+      "scope": "part:overload-cell",
+      "title": "Overload cell",
+      "scene": "hoist",
+      "file": "part-overload-cell.mp3",
+      "duration": 15.84,
+      "chars": 267,
+      "hash": "6fc13267fc0e46d8",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 6.6,
+          "text": "This part weighs the load all the time, and refuses to lift more than ten per cent above its normal value."
+        },
+        {
+          "t0": 6.6,
+          "t1": 12.12,
+          "text": "An overload would come from an added block, a jammed rail, or a half-engaged safety wedge."
+        },
+        {
+          "t0": 12.12,
+          "t1": 15.84,
+          "text": "Gravity storage is honest by construction: its charge can be weighed."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-limit-switch",
+      "scope": "part:limit-switch",
+      "title": "Limit switch",
+      "scene": "hoist",
+      "file": "part-limit-switch.mp3",
+      "duration": 16.72,
+      "chars": 275,
+      "hash": "3707dd4e83b63ad9",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.18,
+          "text": "The hook must never touch the hoist."
+        },
+        {
+          "t0": 2.18,
+          "t1": 6.06,
+          "text": "Cams, driven by the drum, slow the motor and then stop it."
+        },
+        {
+          "t0": 6.06,
+          "t1": 8.5,
+          "text": "A second contact cuts as a last resort."
+        },
+        {
+          "t0": 8.5,
+          "t1": 13.14,
+          "text": "Gaining a decimetre would bring in five and a half watt-hours, at best."
+        },
+        {
+          "t0": 13.14,
+          "t1": 16.72,
+          "text": "In the video, a sensor simply reads a black paint mark on the rope."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-overspeed-governor",
+      "scope": "part:overspeed-governor",
+      "title": "Overspeed governor",
+      "scene": "hoist",
+      "file": "part-overspeed-governor.mp3",
+      "duration": 16.72,
+      "chars": 274,
+      "hash": "9e6623b723c65cc0",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.14,
+          "text": "A safety device must not share its faults with what it watches."
+        },
+        {
+          "t0": 4.14,
+          "t1": 9.94,
+          "text": "No current, no computer: a small separate rope drives flyweights, which spread apart with the speed."
+        },
+        {
+          "t0": 9.94,
+          "t1": 15.24,
+          "text": "Past about thirty centimetres a second, they lock the pulley, and it all kicks in."
+        },
+        {
+          "t0": 15.24,
+          "t1": 16.72,
+          "text": "The idea comes from lifts."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-hoist-base",
+      "scope": "part:hoist-base",
+      "title": "Hoist base",
+      "scene": "hoist",
+      "file": "part-hoist-base.mp3",
+      "duration": 18,
+      "chars": 310,
+      "hash": "0719ac232a6b2c1a",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.72,
+          "text": "The whole hoist sits here: one thousand three hundred and twenty-one kilos,"
+        },
+        {
+          "t0": 3.72,
+          "t1": 6.9,
+          "text": "on four big thirty-millimetre bolts."
+        },
+        {
+          "t0": 6.9,
+          "t1": 12.54,
+          "text": "Here runs the border between a hoist you can buy and a tower we made up: these dimensions are published."
+        },
+        {
+          "t0": 12.54,
+          "t1": 16.14,
+          "text": "One foot that does not bear, and the frame twists as you tighten."
+        },
+        {
+          "t0": 16.14,
+          "t1": 18,
+          "text": "Shim first, tighten after."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-pv-inverter",
+      "scope": "part:pv-inverter",
+      "title": "Solar inverter",
+      "scene": "power-room",
+      "file": "part-pv-inverter.mp3",
+      "duration": 17.44,
+      "chars": 289,
+      "hash": "54048d6493c2a989",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.02,
+          "text": "First in the order of the current: this is where our ray of sunlight enters the farm."
+        },
+        {
+          "t0": 5.02,
+          "t1": 10.15,
+          "text": "A roof gives direct current, a farm lives on alternating, and this device converts,"
+        },
+        {
+          "t0": 10.36,
+          "t1": 11.94,
+          "text": "knowing nothing of the tower."
+        },
+        {
+          "t0": 11.94,
+          "t1": 14.72,
+          "text": "A surprise: if the grid goes, it stops."
+        },
+        {
+          "t0": 14.72,
+          "t1": 17.44,
+          "text": "No climbing during a power cut, even in full sun."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-energy-meter",
+      "scope": "part:energy-meter",
+      "title": "Energy meter",
+      "scene": "power-room",
+      "file": "part-energy-meter.mp3",
+      "duration": 24.48,
+      "chars": 420,
+      "hash": "9555709397b7808c",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.78,
+          "text": "The referee: it counts what goes up and what comes down, separately."
+        },
+        {
+          "t0": 3.78,
+          "t1": 6.64,
+          "text": "There and back, at full speed: fifty-three per cent."
+        },
+        {
+          "t0": 6.64,
+          "t1": 9.56,
+          "text": "That is what our model finds."
+        },
+        {
+          "t0": 9.56,
+          "t1": 13.24,
+          "text": "The makers claim more, but those are claims, at quite another scale."
+        },
+        {
+          "t0": 13.24,
+          "t1": 14.54,
+          "text": "And over a real day?"
+        },
+        {
+          "t0": 14.54,
+          "t1": 15.52,
+          "text": "About seven per cent."
+        },
+        {
+          "t0": 15.52,
+          "t1": 20.86,
+          "text": "The controls alone, an estimate, draw about as much each day as the weight holds."
+        },
+        {
+          "t0": 20.86,
+          "t1": 24.48,
+          "text": "No machine like this one has been measured: this meter would be the first."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-ac-panel",
+      "scope": "part:ac-panel",
+      "title": "Main AC panel",
+      "scene": "power-room",
+      "file": "part-ac-panel.mp3",
+      "duration": 16.56,
+      "chars": 302,
+      "hash": "fdb7dbd4d2aa4f61",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.44,
+          "text": "The crossroads: the sun, the grid, the house and the machine all meet here."
+        },
+        {
+          "t0": 4.44,
+          "t1": 10.24,
+          "text": "The current changes direction with the hours, with no trouble at all: a busbar does not know who is pushing."
+        },
+        {
+          "t0": 10.24,
+          "t1": 14.76,
+          "text": "One rule stands: when you open this panel, not everything inside is necessarily off,"
+        },
+        {
+          "t0": 14.88,
+          "t1": 16.56,
+          "text": "because several sources feed it."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-regen-supply",
+      "scope": "part:regen-supply",
+      "title": "Regenerative supply",
+      "scene": "power-room",
+      "file": "part-regen-supply.mp3",
+      "duration": 23.84,
+      "chars": 375,
+      "hash": "c47daec7cf1dea89",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 1.9,
+          "text": "This is our addition."
+        },
+        {
+          "t0": 1.9,
+          "t1": 5.16,
+          "text": "An ordinary hoist burns its descent in a resistor."
+        },
+        {
+          "t0": 5.16,
+          "t1": 10.82,
+          "text": "To make a battery of it, this lab adds this supply, which sends the power back to the grid."
+        },
+        {
+          "t0": 10.82,
+          "t1": 13.72,
+          "text": "Without it, the machine would make no sense."
+        },
+        {
+          "t0": 13.72,
+          "t1": 15.98,
+          "text": "One setting decides the bill."
+        },
+        {
+          "t0": 15.98,
+          "t1": 19.82,
+          "text": "Ready to answer, the machine draws about two hundred and eighty-four watts."
+        },
+        {
+          "t0": 19.82,
+          "t1": 23.84,
+          "text": "Per day, that is more than six times what the weight holds."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 13.72,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-dc-link",
+      "scope": "part:dc-link",
+      "title": "DC link",
+      "scene": "power-room",
+      "file": "part-dc-link.mp3",
+      "duration": 18.4,
+      "chars": 316,
+      "hash": "fb6253101492cd7c",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.24,
+          "text": "Between the grid and the motor, a direct-current link, at about six hundred volts."
+        },
+        {
+          "t0": 5.24,
+          "t1": 10.22,
+          "text": "The supply fills it, the inverter empties it, and on the way down it is the reverse."
+        },
+        {
+          "t0": 10.22,
+          "t1": 12.82,
+          "text": "But that energy stays there when everything is off."
+        },
+        {
+          "t0": 12.82,
+          "t1": 16.66,
+          "text": "Some twenty seconds after a cut, nearly six hundred volts remain."
+        },
+        {
+          "t0": 16.66,
+          "t1": 18.4,
+          "text": "So you wait, then you measure."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-motor-inverter",
+      "scope": "part:motor-inverter",
+      "title": "Hoist inverter",
+      "scene": "power-room",
+      "file": "part-motor-inverter.mp3",
+      "duration": 18.88,
+      "chars": 334,
+      "hash": "906101cadda0de64",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.98,
+          "text": "It makes the voltage and the frequency that hold the weight for the motor, at any speed, in both directions."
+        },
+        {
+          "t0": 5.98,
+          "t1": 10.5,
+          "text": "But even at a crawl, twenty tonnes weigh just as much on the motor."
+        },
+        {
+          "t0": 10.5,
+          "t1": 14.72,
+          "text": "And do you know what the rotor weighs, seen from the hook, through all those ratios?"
+        },
+        {
+          "t0": 14.72,
+          "t1": 17.22,
+          "text": "About two thousand and seventy-five tonnes!"
+        },
+        {
+          "t0": 17.22,
+          "t1": 18.88,
+          "text": "Hence a ramp of two seconds."
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 5.98,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-brake-chopper",
+      "scope": "part:brake-chopper",
+      "title": "Brake chopper",
+      "scene": "power-room",
+      "file": "part-brake-chopper.mp3",
+      "duration": 16.08,
+      "chars": 270,
+      "hash": "774e22b237fcf7b8",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 5.44,
+          "text": "If the grid goes at full descent, the energy has nowhere to go, and the link climbs."
+        },
+        {
+          "t0": 5.44,
+          "t1": 9.76,
+          "text": "At about seven hundred and fifty volts, this transistor brings in the resistor."
+        },
+        {
+          "t0": 9.76,
+          "t1": 16.08,
+          "text": "A peak of about fourteen kilowatts, for three and a half watt-hours burnt: a matter of power, not energy."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-brake-resistor",
+      "scope": "part:brake-resistor",
+      "title": "Brake resistor",
+      "scene": "power-room",
+      "file": "part-brake-resistor.mp3",
+      "duration": 16.4,
+      "chars": 282,
+      "hash": "d1204a241f187331",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.46,
+          "text": "A resistor does what it knows how to do: it gets hot."
+        },
+        {
+          "t0": 3.46,
+          "t1": 5.78,
+          "text": "No software, no moving part."
+        },
+        {
+          "t0": 5.78,
+          "t1": 9.34,
+          "text": "On a building-site hoist, the whole descent goes out through here."
+        },
+        {
+          "t0": 9.34,
+          "t1": 14.46,
+          "text": "On this machine, almost nothing, a few watt-hours per power cut: that is all the difference."
+        },
+        {
+          "t0": 14.46,
+          "t1": 16.4,
+          "text": "Its ventilated box is never covered up."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-motor-cable",
+      "scope": "part:motor-cable",
+      "title": "Motor cable",
+      "scene": "power-room",
+      "file": "part-motor-cable.mp3",
+      "duration": 19.52,
+      "chars": 353,
+      "hash": "89c7494f591b9b74",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.56,
+          "text": "From the room to the hoist, about fifty-five metres of cable."
+        },
+        {
+          "t0": 3.56,
+          "t1": 6.84,
+          "text": "About one hundred and sixty-six watts lost at full descent."
+        },
+        {
+          "t0": 6.84,
+          "t1": 11.4,
+          "text": "And at the threshold where nothing comes out, still one hundred and sixty-seven!"
+        },
+        {
+          "t0": 11.4,
+          "t1": 14.06,
+          "text": "The weight is the same, so the current is too."
+        },
+        {
+          "t0": 14.06,
+          "t1": 19.52,
+          "text": "And the inverter stays in the room: a tower suits neither electronics nor whoever comes to repair them."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-safety-controller",
+      "scope": "part:safety-controller",
+      "title": "Safety controller",
+      "scene": "power-room",
+      "file": "part-safety-controller.mp3",
+      "duration": 18.72,
+      "chars": 302,
+      "hash": "b5b207d7171bb4c6",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.29,
+          "text": "The gate, the limits, the governor, the wind: it all goes through here,"
+        },
+        {
+          "t0": 4.38,
+          "t1": 6.84,
+          "text": "often in two channels that it compares."
+        },
+        {
+          "t0": 6.84,
+          "t1": 11.28,
+          "text": "One disagreement, and it cuts the inverter, then the brakes close."
+        },
+        {
+          "t0": 11.28,
+          "t1": 14.52,
+          "text": "A safety device never asks the opinion of what it stops."
+        },
+        {
+          "t0": 14.52,
+          "t1": 18.72,
+          "text": "Test each input, one by one, on a fixed date, from a written list."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-emergency-stop",
+      "scope": "part:emergency-stop",
+      "title": "Emergency stop",
+      "scene": "power-room",
+      "file": "part-emergency-stop.mp3",
+      "duration": 16,
+      "chars": 289,
+      "hash": "9025ef5501be3585",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 4.08,
+          "text": "One punch, and both brakes close, without waiting for the ramp to end."
+        },
+        {
+          "t0": 4.08,
+          "t1": 6.78,
+          "text": "But remember this: the button isolates nothing."
+        },
+        {
+          "t0": 6.78,
+          "t1": 10.46,
+          "text": "The link stays charged, the grid stays on the panel, the load stays in the air."
+        },
+        {
+          "t0": 10.46,
+          "t1": 16,
+          "text": "And try it on a fixed date: with a detached contact, the button goes in and opens nothing."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-control-ups",
+      "scope": "part:control-ups",
+      "title": "Control UPS",
+      "scene": "power-room",
+      "file": "part-control-ups.mp3",
+      "duration": 17.52,
+      "chars": 289,
+      "hash": "a2e8fa5382ff4040",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 3.46,
+          "text": "A battery, for the safety of a store with no battery!"
+        },
+        {
+          "t0": 3.46,
+          "t1": 8.64,
+          "text": "When the grid goes, the springs hold the weight, but an awake witness is still needed."
+        },
+        {
+          "t0": 8.64,
+          "t1": 12.7,
+          "text": "This little backup keeps the controller, the sensors and the log alive."
+        },
+        {
+          "t0": 12.7,
+          "t1": 17.52,
+          "text": "Cut its supply once a quarter: an old battery shows full, and holds nothing."
+        }
+      ],
+      "cues": []
+    },
+    {
+      "id": "part-battery-inverter",
+      "scope": "part:battery-inverter",
+      "title": "Battery inverter",
+      "scene": "power-room",
+      "file": "part-battery-inverter.mp3",
+      "duration": 19.04,
+      "chars": 345,
+      "hash": "b59352048a230486",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.88,
+          "text": "Straight from the tower, a fridge is very expensive."
+        },
+        {
+          "t0": 2.88,
+          "t1": 4.96,
+          "text": "So we change the rules of the game."
+        },
+        {
+          "t0": 4.96,
+          "t1": 6.74,
+          "text": "The battery follows the house."
+        },
+        {
+          "t0": 6.74,
+          "t1": 12.66,
+          "text": "When its charge falls to thirty per cent, the tower empties into it all at once, at its best pace."
+        },
+        {
+          "t0": 12.66,
+          "t1": 17.12,
+          "text": "About four hundred and thirty watt-hours then reach the fridge, instead of fifty-four."
+        },
+        {
+          "t0": 17.12,
+          "t1": 19.04,
+          "text": "Eight times more, from the same weight!"
+        }
+      ],
+      "cues": [
+        {
+          "t": 0,
+          "do": {
+            "flows": true
+          }
+        },
+        {
+          "t": 19.04,
+          "do": {
+            "flows": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "part-lfp-module",
+      "scope": "part:lfp-module",
+      "title": "LFP module",
+      "scene": "power-room",
+      "file": "part-lfp-module.mp3",
+      "duration": 24.16,
+      "chars": 408,
+      "hash": "0b62569e31a025ae",
+      "captions": [
+        {
+          "t0": 0,
+          "t1": 2.96,
+          "text": "Forty kilos: two people can carry it."
+        },
+        {
+          "t0": 2.96,
+          "t1": 7.64,
+          "text": "Per kilo, this module holds about two thousand two hundred times more than the tower."
+        },
+        {
+          "t0": 7.64,
+          "t1": 9.5,
+          "text": "So what is left for gravity?"
+        },
+        {
+          "t0": 9.5,
+          "t1": 14.58,
+          "text": "Power that does not depend on energy, no chemical wear, a mass that can be anything heavy."
+        },
+        {
+          "t0": 14.58,
+          "t1": 17.98,
+          "text": "That counts in a shaft already dug, at very large scale."
+        },
+        {
+          "t0": 17.98,
+          "t1": 24.16,
+          "text": "Run “The race”: at one kilowatt, the tower lasts about twenty-one minutes, the module more than four hours."
+        }
+      ],
+      "cues": []
+    }
+  ]
+}

@@ -13,7 +13,7 @@ It is part of a series of energy labs that started with [Pelton Lab](https://git
 - **Six lessons with 15 quiz questions**, each opening on a scenario of the simulation: what a kilowatt-hour weighs, where the energy goes, power is not energy, why the weight will not come down, what holds 20 tonnes up, who wins and where.
 - **A simulation** (pure, unit-tested TypeScript): the whole energy chain from the meter to the hook and back, ten scenarios, nine presets from a weight-driven lamp to an Alpine pumped-storage plant, a chart of real machines by mass and height, a ghost stack that grows on the yard with your night.
 - **Eight A3 sheets** generated from the same dimensions as the 3D model and from the simulation, each marked "not for construction" in its title block.
-- **A spoken guide**, its scripts written in both languages (`narration/`); the audio is still to come.
+- **A spoken guide**, in both languages: the scripts in `narration/`, the audio in `public/audio/`, in a local voice.
 
 ## What the lab finds
 
