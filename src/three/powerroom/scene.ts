@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { group, mesh, PartRegistry, clamp, MAT } from '@onigam/lab-kit/three';
-import type { SceneModule } from '@onigam/lab-kit/three';
+import type { PartFraming, SceneModule } from '@onigam/lab-kit/three';
 import { DC_LINK_V } from '../../sim/machine';
 import type { GravityState } from '../../sim/types';
 import { paperFloor, FlowDots } from '../common';
@@ -8,7 +8,7 @@ import { contactShadow } from '../detail';
 import { DEVICE, ESTOP, MODULE, SHED, SHELF } from '../dims';
 import { mergeStatic } from '../merge';
 import { box, rounded, sweep } from '../rig/shapes';
-import { anchor, hotspots, workshopScene, type HotspotDef } from '../world';
+import { anchor, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
 import { POWER_PARTS, buildPowerParts, buildTray, type PowerId, type PowerPieces } from './parts';
 import { buildShedShell } from './room';
 
@@ -51,6 +51,49 @@ export const EXPLODE: Record<PowerId, [number, number, number]> = {
   'lfp-module': [0, 0, 1.2],
 };
 
+const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+const zone = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number) =>
+  new THREE.Box3(V(x0, y0, z0), V(x1, y1, z1));
+/** A device on the wall with a little to spare: its box, without the conduit that runs up to the tray. */
+const onWall = (d: { x: number; y: number; w: number; h: number; d: number }, floor = false) =>
+  zone(d.x - d.w / 2 - 0.04, d.x + d.w / 2 + 0.04, floor ? 0 : d.y - 0.03, d.y + d.h + 0.03, 0, d.d + 0.05);
+/** The way the home view looks at the wall. */
+const HOME_DIR = V(-0.3 - 0.28, 1.75 - 1.12, 6.4 - 0.6).normalize();
+
+/**
+ * What selecting a device brings the camera to (kit 0.6.0), and the voice too: the device, not what it stands on nor its conduit up to the tray (review D45). The module is 442 mm on a rack a metre
+ * wide, the button 6 cm on a conduit a metre long. All from the home direction but what is on the door's wall, seen across the room. The envelope and a part shown alone keep the whole part.
+ */
+export const FRAMING: Record<PowerId, PartFraming> = {
+  'pv-inverter': { frame: onWall(DEVICE.pvInverter), viewDir: HOME_DIR },
+  'energy-meter': { frame: onWall(DEVICE.energyMeter), viewDir: HOME_DIR },
+  'ac-panel': { frame: onWall(DEVICE.acPanel), viewDir: HOME_DIR },
+  'regen-supply': { frame: onWall(DEVICE.regenSupply, true), viewDir: HOME_DIR },
+  'dc-link': { frame: onWall(DEVICE.dcLink, true), viewDir: HOME_DIR },
+  'motor-inverter': { frame: onWall(DEVICE.motorInverter, true), viewDir: HOME_DIR },
+  'brake-chopper': { frame: onWall(DEVICE.brakeChopper), viewDir: HOME_DIR },
+  'brake-resistor': { frame: onWall(DEVICE.brakeResistor), viewDir: HOME_DIR },
+  'motor-cable': { viewDir: viewFrom(32, -8) },
+  'safety-controller': { frame: onWall(DEVICE.safetyController), viewDir: HOME_DIR },
+  'emergency-stop': {
+    frame: zone(SHED.w / 2 - 0.1, SHED.w / 2, ESTOP.y - 0.1, ESTOP.y + 0.1, ESTOP.z - 0.07, ESTOP.z + 0.07),
+    viewDir: viewFrom(10, -62),
+  },
+  'control-ups': { frame: onWall(DEVICE.controlUps, true), viewDir: HOME_DIR },
+  'battery-inverter': { frame: onWall(DEVICE.batteryInverter), viewDir: HOME_DIR },
+  'lfp-module': {
+    frame: zone(
+      SHELF.x - MODULE.w / 2 - 0.03,
+      SHELF.x + MODULE.w / 2 + 0.03,
+      SHELF.y + SHELF.t,
+      SHELF.y + SHELF.t + MODULE.h,
+      0.03,
+      0.03 + MODULE.d + 0.03,
+    ),
+    viewDir: viewFrom(14, -12),
+  },
+};
+
 export interface PowerroomScene extends SceneModule<GravityState> {
   pieces: PowerPieces;
   flows: FlowDots;
@@ -58,7 +101,6 @@ export interface PowerroomScene extends SceneModule<GravityState> {
   drawn: { meterPhase: number };
 }
 
-const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const FLOWS_W = 2000;
 
 export function createPowerroomScene(): PowerroomScene {
@@ -86,7 +128,7 @@ export function createPowerroomScene(): PowerroomScene {
   const tray = buildTray();
   scene.add(tray);
 
-  // near detail, scenery: a lamp, a board, a stool, a drum of cable, a fire extinguisher, floor markings
+  // near detail, scenery: a drum of cable, a fire extinguisher, floor markings. No ceiling in this world, so no ceiling lamp (it hung in the air, review D44)
   const props = group('props');
   scene.add(props);
   // the floor's marking: the clear zone in front of the three cabinets, closed against the back wall and the shelf
@@ -97,13 +139,6 @@ export function createPowerroomScene(): PowerroomScene {
   box(props, floorEdge, zoneX[1] - zoneX[0], 0.003, tape, (zoneX[0] + zoneX[1]) / 2, 0.0015, zoneZ);
   box(props, floorEdge, tape, 0.003, zoneZ, zoneX[0], 0.0015, zoneZ / 2);
   box(props, floorEdge, tape, 0.003, zoneZ - SHELF.d, zoneX[1], 0.0015, (zoneZ + SHELF.d) / 2);
-  const lampMat = new THREE.MeshStandardMaterial({
-    color: 0xd8d2c4,
-    roughness: 0.3,
-    emissive: 0xd8cdb0,
-    emissiveIntensity: 0.6,
-  });
-  box(props, lampMat, 1.1, 0.06, 0.12, -0.4, SHED.h - 0.04, 1.2);
   // a fire extinguisher on the floor by the wall: a shouldered red bottle on a black foot, a valve with its lever and gauge, a hose down to a nozzle clipped on its side
   const ext = group('extinguisher', [-2.75, 0, 1.05]);
   const bottle = new THREE.LatheGeometry(
@@ -202,7 +237,7 @@ export function createPowerroomScene(): PowerroomScene {
   at('control-ups', D.controlUps.x - 0.05, D.controlUps.y + 0.38, D.controlUps.d + 0.01);
   at('battery-inverter', D.batteryInverter.x - 0.15, D.batteryInverter.y + 0.34, D.batteryInverter.d + 0.02);
 
-  for (const id of POWER_PARTS) registry.add(id, roots[id], V(...EXPLODE[id]));
+  for (const id of POWER_PARTS) registry.add(id, roots[id], V(...EXPLODE[id]), undefined, FRAMING[id]);
 
   // under X-ray the cabinets' skins go and what they hide stays (the metal family, not the paint)
   const inner = (['regen-supply', 'dc-link', 'motor-inverter'] as PowerId[]).map((id) => ({

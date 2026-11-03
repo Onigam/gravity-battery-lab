@@ -4,7 +4,7 @@ import { DC_LINK_V } from '../../sim/machine';
 import { DEVICE, MODULE, SHED, SHELF } from '../dims';
 import { boxOf, drawStats, finiteTree, stateWith, view } from '../test-utils';
 import { POWER_PARTS } from './parts';
-import { createPowerroomScene } from './scene';
+import { FRAMING, createPowerroomScene } from './scene';
 
 const mod = createPowerroomScene();
 mod.update(stateWith(), 1 / 60, view());
@@ -118,4 +118,50 @@ it('budget and sanity of the room', () => {
   expect(st.triangles).toBeLessThan(60000);
   expect(finiteTree(mod.scene)).toBe(true);
   expect(new THREE.Vector3().length()).toBe(0);
+});
+
+describe('selecting a device brings the device, not what it stands on (review D44, D45)', () => {
+  it('no lamp hangs in the air: the room has no ceiling, and nothing of its props stands above the tray', () => {
+    const props = mod.scenery()[2]!;
+    expect(boxOf(props).max.y).toBeLessThan(1);
+  });
+
+  it('every device says what is framed and from where: a click never inherits the direction of the part before it', () => {
+    for (const id of POWER_PARTS) expect(mod.registry.get(id)!.viewDir, id).toBeDefined();
+  });
+
+  it('the module’s frame is the module at the data sheet’s size, on its shelf', () => {
+    const f = mod.registry.get('lfp-module')!.frame!;
+    const size = f.getSize(new THREE.Vector3());
+    expect(size.x).toBeCloseTo(MODULE.w + 0.06, 3);
+    expect(size.y).toBeCloseTo(MODULE.h, 3);
+    expect(f.min.y).toBeCloseTo(SHELF.y + SHELF.t, 3);
+    expect(f.intersectsBox(boxOf(mod.registry.get('lfp-module')!.object))).toBe(true);
+  });
+
+  it('what is framed lies inside the part, and is far smaller than its box when the box holds a shelf or a conduit', () => {
+    const sphere = (b: THREE.Box3) => b.getBoundingSphere(new THREE.Sphere()).radius;
+    for (const id of POWER_PARTS) {
+      const framing = FRAMING[id];
+      if (!framing.frame) continue;
+      const whole = boxOf(mod.registry.get(id)!.object);
+      expect(whole.clone().expandByScalar(0.1).containsBox(framing.frame), id).toBe(true);
+    }
+    const r = (id: (typeof POWER_PARTS)[number]) =>
+      sphere(FRAMING[id].frame!) / sphere(boxOf(mod.registry.get(id)!.object));
+    expect(r('lfp-module')).toBeLessThan(0.5);
+    expect(r('safety-controller')).toBeLessThan(0.5);
+    expect(r('emergency-stop')).toBeLessThan(0.2);
+  });
+
+  it('from the padding of the world, each is framed far nearer than the room seen from its home', () => {
+    const homeD = mod.home.position.distanceTo(mod.home.target);
+    const S = Math.sin((20 * Math.PI) / 180);
+    const radius = (id: (typeof POWER_PARTS)[number]) =>
+      mod.registry.frameBounds(id).getBoundingSphere(new THREE.Sphere()).radius;
+    expect((radius('lfp-module') * 1.8) / S).toBeLessThan(0.4 * homeD);
+    expect((radius('safety-controller') * 1.8) / S).toBeLessThan(0.5 * homeD);
+    expect((radius('control-ups') * 1.8) / S).toBeLessThan(0.5 * homeD);
+    expect((radius('emergency-stop') * 1.8) / S).toBeLessThan(0.2 * homeD);
+  });
 });
