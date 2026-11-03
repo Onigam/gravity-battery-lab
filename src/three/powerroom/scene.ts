@@ -8,7 +8,8 @@ import { contactShadow } from '../detail';
 import { DEVICE, ESTOP, MODULE, SHED, SHELF } from '../dims';
 import { mergeStatic } from '../merge';
 import { box, rounded, sweep } from '../rig/shapes';
-import { anchor, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
+import { l } from '@onigam/lab-kit/i18n';
+import { anchor, holdLabel, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
 import { POWER_PARTS, buildPowerParts, buildTray, type PowerId, type PowerPieces } from './parts';
 import { buildShedShell } from './room';
 
@@ -50,6 +51,13 @@ export const EXPLODE: Record<PowerId, [number, number, number]> = {
   'battery-inverter': [0.05, 0.1, 0.75],
   'lfp-module': [0, 0, 1.2],
 };
+
+/** At 768 and 390 px the room's right end is at the view's edge, and these names ran off it (review D12). */
+const NARROW_NAMES = {
+  'lfp-module': { full: l('Module LFP', 'LFP module'), short: l('Module', 'Module') },
+  'motor-inverter': { full: l('Variateur de levage', 'Hoist inverter'), short: l('Variateur', 'Inverter') },
+  'regen-supply': { full: l('Alimentation réversible', 'Regenerative supply'), short: l('Alimentation', 'Supply') },
+} as const;
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const zone = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number) =>
@@ -216,7 +224,7 @@ export function createPowerroomScene(): PowerroomScene {
     anchors[id].userData.keep = true;
   };
   const D = DEVICE;
-  at('lfp-module', SHELF.x - 0.1, SHELF.y + SHELF.t + MODULE.h + 0.04, MODULE.d);
+  at('lfp-module', SHELF.x - MODULE.w / 2 + 0.04, SHELF.y + SHELF.t + MODULE.h + 0.04, MODULE.d);
   at(
     'motor-inverter',
     D.motorInverter.x - 0.05,
@@ -274,6 +282,9 @@ export function createPowerroomScene(): PowerroomScene {
     declutter: true,
     homePadding: 0.78,
     update(s, dt, view) {
+      holdLabel(anchors['lfp-module']!, NARROW_NAMES['lfp-module']);
+      holdLabel(anchors['motor-inverter']!, NARROW_NAMES['motor-inverter']);
+      holdLabel(anchors['regen-supply']!, NARROW_NAMES['regen-supply']);
       let solids = 0;
       for (const id of registry.ids()) if (registry.get(id)!.display === 'solid') solids++;
       if (solids > 1)

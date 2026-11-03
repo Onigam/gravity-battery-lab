@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { l } from '@onigam/lab-kit/i18n';
+import { l, tr, type L } from '@onigam/lab-kit/i18n';
 import { PAPER_STUDIO, type Hotspot } from '@onigam/lab-kit/three';
 
 // What the two worlds share: the lighting of a workshop world (paper, soft shadows, like the other labs of the series), the
@@ -84,6 +84,30 @@ export function hotspots(defs: HotspotDef[], anchors: Record<string, THREE.Objec
     minor: d.minor,
     goto: d.goto,
   }));
+}
+
+/** Below this width of the page the 3D view is too narrow for a label's whole name to the right of its dot: a tablet or a phone, with the panel beside the view or the sheet under it. */
+const NARROW_LABEL = 1100;
+
+/**
+ * A label that a narrow view would cut, kept whole (kit request 19 is the real answer: a label's side). `left`: it reads to the left of its anchor, its right end at the part. `short`: a shorter name.
+ * `at`: where its dot stands on the part, by the width.
+ * The kit writes a label's text when the display changes, not every frame, so this is written each frame, and only if it differs. No DOM under vitest: nothing happens there.
+ */
+export function holdLabel(
+  a: THREE.Object3D,
+  o: { left?: boolean; full?: L; short?: L; at?: { wide: THREE.Vector3; narrow: THREE.Vector3 } },
+): void {
+  const css = a.children[0] as (THREE.Object3D & { element?: HTMLElement; center?: THREE.Vector2 }) | undefined;
+  if (!css?.element) return;
+  const narrow = css.element.ownerDocument.documentElement.clientWidth < NARROW_LABEL;
+  if (o.left && css.center) css.center.x = narrow ? 1 : 0;
+  if (o.at) a.position.copy(narrow ? o.at.narrow : o.at.wide);
+  if (o.short && o.full) {
+    const text = css.element.querySelector<HTMLElement>('.hotspot__text');
+    const want = tr(narrow ? o.short : o.full);
+    if (text && text.textContent !== want) text.textContent = want;
+  }
 }
 
 /** Meshes of a sub-tree whose position is not finite: the tests and the animation share this guard. */

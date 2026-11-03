@@ -29,14 +29,14 @@ export function pointsInSight(eye: THREE.Vector3, points: THREE.Vector3[], obsta
 }
 
 /**
- * The first of `dirs` from which at least `clear` of `points` can be seen from `dist` away from `centre`; failing that, the one that sees the most, the earlier one in a tie. A bolt in front of
- * a corner is no reason to fly round the tower, so `clear` is less than all.
+ * The first of `dirs` from which at least `clear` of `points` can be seen at every one of `dists` from `centre`; failing that, the one that sees the most, the earlier one in a tie. A bolt in front
+ * of a corner is no reason to fly round the tower, so `clear` is less than all.
  */
 export function clearestDir(
   centre: THREE.Vector3,
   points: THREE.Vector3[],
   dirs: readonly THREE.Vector3[],
-  dist: number,
+  dists: readonly number[],
   obstacles: THREE.Mesh[],
   clear = 0.7,
 ): THREE.Vector3 {
@@ -44,7 +44,11 @@ export function clearestDir(
   let most = -1;
   const eye = new THREE.Vector3();
   for (const d of dirs) {
-    const seen = pointsInSight(eye.copy(centre).addScaledVector(d, dist), points, obstacles);
+    let seen = points.length;
+    for (const dist of dists) {
+      seen = Math.min(seen, pointsInSight(eye.copy(centre).addScaledVector(d, dist), points, obstacles));
+      if (seen < clear * points.length && seen <= most) break;
+    }
     if (seen >= clear * points.length) return d;
     if (seen > most) {
       most = seen;

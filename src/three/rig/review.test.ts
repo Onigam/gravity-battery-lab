@@ -4,6 +4,7 @@ import { GravitySim } from '../../sim/engine';
 import { G } from '../../sim/machine';
 import {
   DECK_TOP,
+  DRUM_R,
   DRUM_Z,
   GEARS,
   HOIST,
@@ -556,11 +557,13 @@ describe('D42. What is named can be seen, wherever the weight is', () => {
       t.update(stateWith({ zFraction: z }), 1 / 60, view());
       t.scene.updateMatrixWorld(true);
       const p = world(dot);
-      const R = HOOK_BLOCK.sheaveR;
-      const [f1, f2, f3] = t.machine.rope.ends;
+      const [f1] = t.machine.rope.ends;
+      const axis = t.machine.drumAxisInRoot();
       const onFall1 = new THREE.Line3(f1.a, f1.b).closestPointToPoint(p, true, new THREE.Vector3()).distanceTo(p);
-      const overSheave = Math.abs(p.distanceTo(f2.b.clone().add(f3.a).multiplyScalar(0.5)) - R);
-      expect(Math.min(onFall1, overSheave), `at ${z}`).toBeLessThan(0.03);
+      const onTheDrum = Math.abs(Math.hypot(p.y - axis.y, p.z - axis.z) - DRUM_R);
+      expect(Math.min(onFall1, onTheDrum), `at ${z}`).toBeLessThan(0.03);
+      // and on what is drawn: on the winding, beyond where the rope leaves the drum
+      if (onFall1 > 0.03) expect(p.x, `at ${z}`).toBeGreaterThan(f1.a.x);
     }
   });
 
@@ -672,5 +675,42 @@ describe('D7. The ruler carries its figures, and they stay true to the model', (
     const b = boxOf(m.parts['height-scale']);
     expect(b.max.x).toBeLessThan(TOWER.legX - TOWER.legSide / 2);
     expect(b.min.z).toBeGreaterThan(0.876 + 0.3);
+  });
+});
+
+describe('D57. The paint line the rope anchor’s sheet tells of', () => {
+  it('stands on the rope at the socket’s mouth, a little thicker than the rope, a hand long, in the exploded view too', () => {
+    const m = buildMachine();
+    m.update(stateWith({ zFraction: 0.4 }), 1 / 60, view());
+    m.root.updateMatrixWorld(true);
+    const b = boxOf(m.rope.paintLine);
+    const mouth = world(m.hoist.anchorMouth);
+    expect(b.clone().expandByScalar(0.002).containsPoint(mouth)).toBe(true);
+    const size = b.getSize(new THREE.Vector3());
+    expect(size.y).toBeGreaterThan(0.05);
+    expect(size.y).toBeLessThan(0.12);
+    expect(size.x).toBeGreaterThan(2 * ROPE_R);
+    const t = createTowerScene();
+    t.registry.setAllFactors(1);
+    t.update(stateWith({ zFraction: 0.4 }), 1 / 60, view());
+    t.scene.updateMatrixWorld(true);
+    expect(
+      boxOf(t.machine.rope.paintLine).clone().expandByScalar(0.002).containsPoint(world(t.machine.hoist.anchorMouth)),
+    ).toBe(true);
+  });
+});
+
+describe('D56. The pad and the head frame read when selected', () => {
+  it('each frames a part of itself, nearer than its whole box allows', () => {
+    const t = createTowerScene();
+    t.update(stateWith({ zFraction: 0.2 }), 1 / 60, view());
+    t.scene.updateMatrixWorld(true);
+    for (const id of ['foundation-pad', 'head-frame']) {
+      const e = t.registry.get(id)!;
+      const r = e.frame!.getBoundingSphere(new THREE.Sphere()).radius;
+      const whole = boxOf(e.object).getBoundingSphere(new THREE.Sphere()).radius;
+      expect(r, id).toBeLessThan(0.75 * whole);
+      expect(boxOf(e.object).intersectsBox(e.frame!), id).toBe(true);
+    }
   });
 });

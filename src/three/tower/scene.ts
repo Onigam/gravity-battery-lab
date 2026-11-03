@@ -7,10 +7,10 @@ import { contactShadow } from '../detail';
 import {
   BLOCK,
   CARRIER,
-  CROSSHEAD_Y0,
   CROSSHEAD_TOP_Y0,
   DECK_TOP,
-  HOOK_BLOCK,
+  DECK_Y0,
+  DRUM_R,
   LADDER,
   LEG_TOP,
   PAD,
@@ -28,7 +28,8 @@ import { buildMachine, holdScenery, partsNow, TOWER_PARTS, type Machine, type To
 import type { FallEnds } from '../rig/rope';
 import { RopeFlows } from '../rig/rope-flows';
 import { clearestDir, partPoints } from '../rig/sight';
-import { anchor, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
+import { l } from '@onigam/lab-kit/i18n';
+import { anchor, holdLabel, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
 
 // The `tower` world: the machine and its weight, standing on the drafting table, on its pad. A lattice one can see through, so no section; the exploded view lifts the blocks
 // apart, takes the head frame and the hoist up, pulls the lattice open, and the rope stays on its sheaves. "Flows" shows the rope running: 4 v on fall 1, 2 v on falls 2 and 3,
@@ -82,7 +83,7 @@ export const FRAMING: Record<TowerId, PartFraming> = {
     viewDir: viewFrom(24, 28),
   },
   // the deck and what stands on it, not the roof over it
-  'head-frame': { frame: zone(-1.9, 1.9, LEG_TOP, DECK_TOP + 1.3, -1.9, 1.9), viewDir: viewFrom(16, 25) },
+  'head-frame': { frame: zone(-1.2, 1.3, LEG_TOP, DECK_TOP + 1, -1.2, 1.2), viewDir: viewFrom(16, 25) },
   'end-buffer': { viewDir: HOME_DIR },
   'tower-leg': { frame: zone(L - 0.5, L + 0.5, PAD_TOP, levelY(1), L - 0.5, L + 0.5), viewDir: viewFrom(20, 30) },
   'tower-bracing': { frame: zone(-L, L, levelY(2), levelY(3), L - 0.2, L + 0.2), viewDir: viewFrom(8, 15) },
@@ -174,6 +175,14 @@ const THIN_TO_THE_EYE: TowerId[] = [
   'service-ladder',
   'hook-block',
 ];
+/** On a phone the ruler's whole name runs off the view (review D12). */
+const RULER_NAME = {
+  full: l('Échelle des kilowattheures', 'Kilowatt-hour scale'),
+  short: l('Échelle des kWh', 'kWh scale'),
+};
+/** Where the rail's name may stand, m, and how far from a name riding on the weight: at the overview it takes about 1.6 m of height. */
+const RAIL_ROWS = [10.5, 17, 6.5, 21];
+const RAIL_ROW_GAP = 1.8;
 /** How much of the falls the rope's frame holds above the hook block's axle, and how far above it its name's dot stands, m. */
 const ROPE_FRAME_UP = 2.2;
 const ROPE_DOT_UP = 3;
@@ -208,23 +217,24 @@ export function createTowerScene(): TowerScene {
   };
   // the labels of what is low are spread over the height of the sling: at the overview they cannot all be side by side
   // near the top of the stroke the block, the rope and the head frame's names all come together: 1.6 m apart they keep to their rows at the overview
-  at('head-frame', 1.1, TOWER.eavesY + 0.4, TOWER.legX);
-  at('hook-block', 0.3, SADDLE_Y0, 0.25);
-  // moved every frame: on fall 1, above the hook block, then on the return sheave (`update`)
+  at('head-frame', -1.5, TOWER.eavesY + 0.4, TOWER.legX);
+  at('hook-block', 0.3, SADDLE_Y0 - 0.25, 0.25);
+  // moved every frame: on fall 1, above the hook block, then on the drum (`update`)
   at('hoist-rope', -0.18, 14, 0.18);
-  at('concrete-block', BLOCK.length / 2, SADDLE_Y0 - 1.6, BLOCK.length / 2);
-  at('guide-rail', -RAIL.x, 10.5, 0);
+  at('concrete-block', BLOCK.length / 2, SADDLE_Y0 - 2.0, BLOCK.length / 2);
+  // moved by `update`, to where no name that rides on the weight is passing
+  at('guide-rail', -RAIL.x, RAIL_ROWS[0]!, 0);
   // on the pad's near edge, left of the corner: the toolbar covers what is lower, and the label reads to the right of its dot
   at('foundation-pad', -1.2, PAD_TOP, PAD.side / 2 - 0.15);
-  at('weight-carrier', 1.04, 2.45, 0);
-  at('stack-tie', -0.83, CROSSHEAD_TOP_Y0 - 0.25, 0.83);
-  // on the upper left shoe, under the hook's name
-  at('guide-shoe', -(CARRIER.uprightX + 0.15), CROSSHEAD_Y0 - SHOE.topGap - SHOE.h / 2, SHOE.w / 2);
+  at('weight-carrier', CARRIER.deckSide / 2, DECK_Y0 - 0.1, CARRIER.beamZ);
+  at('stack-tie', -0.83, CROSSHEAD_TOP_Y0 - 1, 0.83);
+  // on the lower left shoe: on the upper one it stood in the hook's row
+  at('guide-shoe', -(CARRIER.uprightX + 0.15), DECK_Y0 + 0.2, SHOE.w / 2);
   at('safety-gear', 1.1, 1.2, 0);
   at('end-buffer', -0.6, 0.3, 0.6);
   at('tower-leg', -TOWER.legX, 20, TOWER.legX);
-  at('tower-bracing', TOWER.legX, 17, 0.3);
-  at('service-ladder', LADDER.x, 12.4, LADDER.z);
+  at('tower-bracing', 0.6, levelY(2) + 2.37, TOWER.legX);
+  at('service-ladder', LADDER.x + 0.2, 12.4, LADDER.z);
   at('height-scale', SCALE.x, RULER_ZERO + 10.6, SCALE.z);
 
   const registry = new PartRegistry();
@@ -335,11 +345,12 @@ export function createTowerScene(): TowerScene {
     homePadding: 1.2,
     declutter: true,
     update(s, dt, view) {
+      holdLabel(anchors['height-scale']!, RULER_NAME);
       machine.blurAllowed.fan = machine.blurAllowed.gears = registry.get('head-frame')!.display !== 'hidden';
       machine.update(s, dt, view);
       holdScenery(machine, registry);
       // two metres and a half of the falls, just above the hook block, as long as they are under the head frame; then the drum, where the rope has gone
-      const [f1, f2, f3, f4] = machine.rope.ends as [FallEnds, FallEnds, FallEnds, FallEnds];
+      const [f1, , , f4] = machine.rope.ends as [FallEnds, FallEnds, FallEnds, FallEnds];
       const hookY = (f1.b.y + f4.a.y) / 2;
       inSight.high = hookY + ROPE_FRAME_UP > LEG_TOP;
       if (inSight.high) ropeFrame.copy(ROPE_ON_DRUM.frame);
@@ -347,10 +358,18 @@ export function createTowerScene(): TowerScene {
         ropeFrame.min.set(-0.5, hookY - 0.3, -0.35);
         ropeFrame.max.set(0.5, hookY + ROPE_FRAME_UP, 0.35);
       }
-      // its name stays on the rope: on fall 1, three metres above the hook block, or over the return sheave
+      // its name stays on the rope: on fall 1, three metres above the hook block, or on the drum's last turns, a little along from where fall 1 leaves
       const dot = anchors['hoist-rope']!.position;
-      if (inSight.high) dot.set((f2.b.x + f3.a.x) / 2, f2.b.y + HOOK_BLOCK.sheaveR + 0.02, f2.b.z);
-      else dot.lerpVectors(f1.b, f1.a, Math.min(LEG_TOP - 0.2 - hookY, ROPE_DOT_UP) / Math.max(f1.a.y - f1.b.y, 1e-6));
+      if (inSight.high) {
+        const axis = machine.drumAxisInRoot();
+        dot.set(f1.a.x + 0.12, axis.y + DRUM_R, axis.z);
+      } else
+        dot.lerpVectors(f1.b, f1.a, Math.min(LEG_TOP - 0.2 - hookY, ROPE_DOT_UP) / Math.max(f1.a.y - f1.b.y, 1e-6));
+      // the rail's name stays on the rail, and out of the way of the names going by
+      const riding = [SADDLE_Y0 - 2 + machine.drawn.lift, SADDLE_Y0 + machine.drawn.lift, dot.y];
+      const clear = (y: number) => riding.every((r) => Math.abs(r - y) > RAIL_ROW_GAP);
+      const rail = anchors['guide-rail']!.position;
+      if (!clear(rail.y)) rail.y = RAIL_ROWS.find(clear) ?? rail.y;
       flows.update(s, dt, view.schematic && !partsNow(registry).hidden);
     },
   };

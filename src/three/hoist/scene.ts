@@ -60,12 +60,26 @@ export const FRAMING: Record<HoistId, PartFraming> = {
   'drum-brake': { viewDir: viewFrom(20, 0) },
   'service-brake': { viewDir: viewFrom(8, 0) },
   'rope-guide': { viewDir: viewFrom(55, 0) },
-  'overload-cell': { viewDir: viewFrom(30, 160) },
+  // the cell at the anchor's root, not its signal wire along the frame
+  'overload-cell': {
+    frame: new THREE.Box3(
+      new THREE.Vector3(HOOK_BLOCK.sheaveX - 0.2, DECK_TOP + 0.05, -0.12),
+      new THREE.Vector3(HOOK_BLOCK.sheaveX + 0.2, DECK_TOP + 0.3, 0.24),
+    ),
+    viewDir: viewFrom(30, 160),
+  },
   'hoist-base': { viewDir: HOME_DIR },
   'rope-drum': { viewDir: HOME_DIR },
   'hoist-gearbox': { viewDir: HOME_DIR },
   'hoist-motor': { viewDir: HOME_DIR },
-  'motor-encoder': { viewDir: HOME_DIR },
+  // the encoder on the fan's hood, not its wire along the motor
+  'motor-encoder': {
+    frame: new THREE.Box3(
+      new THREE.Vector3(HOIST_X(1.2), DECK_TOP + 0.02, MOTOR_Z - 0.13),
+      new THREE.Vector3(HOIST_X(1.33), DECK_TOP + 0.22 + HOIST.axisY - 0.1, MOTOR_Z + 0.13),
+    ),
+    viewDir: HOME_DIR,
+  },
   'limit-switch': { viewDir: HOME_DIR },
   'return-sheave': { viewDir: HOME_DIR },
   'overspeed-governor': { viewDir: HOME_DIR },
@@ -103,17 +117,18 @@ export function createHoistScene(): HoistScene {
   // the home view looks down from the motor's side, and labels read to the right of their dots: motor and brake on their near flanks, the drum further along, so that each has its row
   at('hoist-motor', HOIST_X(0.62), A + 0.05, MOTOR_Z + 0.185);
   at('hoist-gearbox', HOIST_X(0.05), A + 0.25, DRUM_Z);
-  at('rope-drum', HOIST_X(1.62), A + 0.17, DRUM_Z - 0.1);
+  at('rope-drum', HOIST_X(1.62), A + 0.25, DRUM_Z + 0.03);
   at('service-brake', HOIST_X(1.1), A - 0.06, MOTOR_Z + 0.15);
   at('drum-brake', HOIST_X(HOIST.discAt), A + 0.34, DRUM_Z + 0.12);
   at('return-sheave', -0.2, A + 0.22, -HOOK_BLOCK.sheaveR);
-  at('motor-encoder', HOIST_X(1.3), A - 0.03, MOTOR_Z + 0.04);
-  at('rope-guide', HOIST_X(1.85), A + 0.22, DRUM_Z - 0.12);
-  at('rope-anchor', HOOK_BLOCK.sheaveX + 0.05, 0.2, 0.0);
+  at('motor-encoder', HOIST_X(1.31), A + 0.1, MOTOR_Z - 0.06);
+  at('rope-guide', HOIST_X(1.85), A + 0.02, DRUM_Z - 0.4);
+  at('rope-anchor', HOOK_BLOCK.sheaveX, 0.1, 0.1);
   at('overload-cell', HOOK_BLOCK.sheaveX, HOIST.beamTop + 0.15, 0.06);
-  at('limit-switch', HOIST_X(2.52), A - 0.05, DRUM_Z - 0.12);
+  at('limit-switch', HOIST_X(2.4), A - 0.05, DRUM_Z - 0.12);
   at('overspeed-governor', GOVERNOR.x, GOVERNOR.topY + 0.34, GOVERNOR.z);
-  at('hoist-base', FOOT_X[1], 0.05, FRAME_FRONT);
+  // on the frame's front rail, half way: at an end its name ran off a phone or under another
+  at('hoist-base', (FOOT_X[0] + FOOT_X[1]) / 2, 0.05, FRAME_FRONT);
 
   const cut = new HoistCut();
   for (const id of HOIST_PARTS) cut.attach(id, parts[id], machine.hoist.cuts[id]);
