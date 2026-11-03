@@ -18,7 +18,6 @@ import {
   SCALE,
   STROKE,
   TOWER,
-  WH100_M,
   levelY,
 } from '../dims';
 import type { MachineLook } from './look';
@@ -329,44 +328,13 @@ export function buildLadder(look: MachineLook): THREE.Group {
   return g;
 }
 
-/** The ruler: a strip on stand-offs near the +X +Z leg, one band a metre on its left half, one a hundred watt-hours on its right half; no writing, the names are the labels'. */
+/** The ruler: a strip on stand-offs near the +X +Z leg, its foot on the pad. What it says is in `ruler.ts`, drawn from the state: the machine adds it here. */
 export function buildScale(look: MachineLook): THREE.Group {
   const g = group('height-scale');
   const y0 = levelY(0) + 0.4;
   const zFace = SCALE.z;
   const len = STROKE + 2.2;
   box(g, look.galvanisedDark, SCALE.w + 0.02, len, SCALE.thick, SCALE.x, y0 + len / 2, zFace - SCALE.thick / 2);
-  // bands of the metre scale, the fifth a longer one
-  const zFront = zFace + 0.002;
-  const halfW = SCALE.w / 2;
-  for (let m = 0; m <= STROKE; m++) {
-    const y = y0 + 1.1 + m;
-    const major = m % 5 === 0;
-    box(
-      g,
-      major ? look.scaleDark : look.scaleLight,
-      major ? halfW : halfW * 0.72,
-      major ? 0.09 : 0.05,
-      0.004,
-      SCALE.x - halfW / 2 - (major ? 0 : 0.012),
-      y,
-      zFront,
-    );
-  }
-  // bands of the watt-hour scale: copper, one per 100 Wh
-  for (let h = 0, k = 0; h <= STROKE + 1e-6; h += WH100_M, k++) {
-    const y = y0 + 1.1 + h;
-    box(
-      g,
-      look.scaleCopper,
-      k % 5 === 0 ? halfW : halfW * 0.72,
-      k % 5 === 0 ? 0.09 : 0.05,
-      0.004,
-      SCALE.x + halfW / 2 + (k % 5 === 0 ? 0 : 0.012),
-      y,
-      zFront,
-    );
-  }
   // stand-offs out to the struts of the +Z face
   const zStrut = L - (TOWER.strutD * 0.8) / 2;
   for (let i = 1; i < TOWER.panels; i++) {

@@ -8,6 +8,7 @@ import { mergeStatic } from '../merge';
 import { buildHoist, HOIST_PARTS, type Hoist, type HoistId } from './hoist';
 import { machineLook, type MachineLook } from './look';
 import { Rope, shortestTurn } from './rope';
+import { RulerMarks } from './ruler';
 import { aimSegment, box, boxFromTo, cyl, sweep, unitSegment, webX, latheX } from './shapes';
 import {
   buildBracing,
@@ -93,6 +94,8 @@ export interface Machine {
   /** The moving group: its y is the lift. */
   weight: THREE.Group;
   rope: Rope;
+  /** What the ruler says, from the state. */
+  ruler: RulerMarks;
   governorRope: THREE.Group;
   riser: THREE.Group;
   /** Explode offsets of the `tower` world's parts, and the custom motions (a leg each way, a block each way). */
@@ -161,6 +164,9 @@ export function buildMachine(o: MachineOptions = {}): Machine {
   const buffers = buildBuffers(look);
   const ladder = buildLadder(look);
   const scale = buildScale(look);
+  // what the ruler says follows the model: never baked
+  const ruler = new RulerMarks(look);
+  scale.add(ruler.root);
   const headFrame = buildHeadFrame(look);
   const head = headFrame.root;
 
@@ -442,6 +448,7 @@ export function buildMachine(o: MachineOptions = {}): Machine {
     const lift = liftAt(s.zFraction);
     drawn.lift = lift;
     weight.position.y = lift;
+    ruler.update(s);
 
     // ---- blocks and ties: how many, from the state
     if (s.blocks !== drawn.blocks || s.halves !== drawn.halves) {
@@ -544,6 +551,7 @@ export function buildMachine(o: MachineOptions = {}): Machine {
     hoist,
     weight,
     rope,
+    ruler,
     governorRope,
     riser,
     explode,

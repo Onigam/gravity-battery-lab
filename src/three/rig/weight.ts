@@ -14,6 +14,7 @@ import {
   HOOK_BLOCK,
   RAIL,
   RAIL_TIP,
+  RULER_ZERO,
   SADDLE_Y0,
   SAFETY,
   SCALE,
@@ -273,17 +274,17 @@ export function buildCarrier(look: MachineLook): { root: THREE.Group; link: THRE
   g.add(link);
   // tell-tale arm to the ruler
   const arm = mesh(
-    sweep([V(uX + c.uprightW / 2, DECK_Y0 + 0.06, 0.05), V(SCALE.x - 0.1, DECK_Y0 + 0.06, SCALE.z - 0.12)], 0.012, 6),
+    sweep([V(uX + c.uprightW / 2, RULER_ZERO, 0.05), V(SCALE.x - 0.1, RULER_ZERO, SCALE.z - 0.12)], 0.012, 6),
     look.yellow,
   );
   g.add(arm);
   // the index at its end, in front of the strip
-  box(g, look.red, 0.2, 0.025, 0.02, SCALE.x, DECK_Y0 + 0.06, SCALE.z + 0.012);
+  box(g, look.red, 0.2, 0.025, 0.02, SCALE.x, RULER_ZERO, SCALE.z + 0.012);
   boxFromTo(
     g,
     look.yellow,
-    [SCALE.x - 0.1, DECK_Y0 + 0.05, SCALE.z - 0.12],
-    [SCALE.x - 0.09, DECK_Y0 + 0.07, SCALE.z + 0.016],
+    [SCALE.x - 0.1, RULER_ZERO - 0.01, SCALE.z - 0.12],
+    [SCALE.x - 0.09, RULER_ZERO + 0.01, SCALE.z + 0.016],
   );
   return { root: g, link };
 }

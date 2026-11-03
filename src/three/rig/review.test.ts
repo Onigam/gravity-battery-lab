@@ -1,7 +1,22 @@
 import * as THREE from 'three';
 import { describe, expect, it } from 'vitest';
 import { GravitySim } from '../../sim/engine';
-import { DECK_TOP, DRUM_Z, GEARS, HOIST, HOOK_BLOCK, MOTOR_Z, ROPE_R, SITE, TOWER } from '../dims';
+import { G } from '../../sim/machine';
+import {
+  DECK_TOP,
+  DRUM_Z,
+  GEARS,
+  HOIST,
+  HOOK_BLOCK,
+  MOTOR_Z,
+  ROPE_R,
+  RULER_ZERO,
+  SCALE,
+  SITE,
+  STROKE,
+  TOWER,
+  liftAt,
+} from '../dims';
 import { createHoistScene, FRAMING as HOIST_FRAMING } from '../hoist/scene';
 import { SITE_MACHINE, createSiteScene, ghostLabel } from '../site/scene';
 import { planVegetation } from '../site/vegetation';
@@ -10,6 +25,8 @@ import { createTowerScene, FRAMING as TOWER_FRAMING, TOWER_CAMERA, TOWER_FOG } f
 import { WORLD } from '../index';
 import { CAP_LIFT, STAGE_CAP, type CutRect } from './hoist';
 import { buildMachine, type Machine } from './machine';
+import { modelOf, rulerPlan } from './ruler';
+import { partPoints } from './sight';
 
 // What the independent review found (docs/qa.md), held by tests so that it stays fixed: nothing standing in the void under isolate or exploded, the roof's posts gone with the roof, the
 // groove drawn, the rope clear of the guide, a fog that spares the machine, a farm that stays on the ground, the rope's flows in the hoist world, gears that read in section.
@@ -499,12 +516,8 @@ describe('D42. What is named can be seen, wherever the weight is', () => {
       t.scene.updateMatrixWorld(true);
       for (const padding of [2.4, 1.9]) {
         const { eye } = eyeOf('hook-block', padding);
-        const points = boxOf(t.machine.parts['hook-block']);
-        const c = points.getCenter(new THREE.Vector3());
-        expect(
-          seen('hook-block', eye, [c, points.min.clone().lerp(c, 0.6), points.max.clone().lerp(c, 0.6)]),
-          `${z} ${padding}`,
-        ).toBeGreaterThan(0.6);
+        const points = partPoints(t.registry.get('hook-block')!.meshes, 30)();
+        expect(seen('hook-block', eye, points), `${z} ${padding}`).toBeGreaterThan(0.6);
       }
       expect(t.registry.get('hook-block')!.viewDir!.y, 'the camera cannot go lower').toBeGreaterThan(-0.1);
     }
@@ -570,5 +583,94 @@ describe('D43. A click never inherits the direction of the part before it', () =
     const w = make();
     w.update(stateWith({ zFraction: 0.3 }), 1 / 60, view());
     for (const id of w.registry.ids()) expect(w.registry.get(id)!.viewDir, id).toBeDefined();
+  });
+});
+
+describe('D7. The ruler carries its figures, and they stay true to the model', () => {
+  const plan = (mass: number, stroke: number) => rulerPlan(stroke, (mass * G * stroke) / 3600);
+
+  it('the farm: metres every 5 m, watt-hours every 200 Wh, and what the sheet says at the top', () => {
+    const p = plan(20000, 20);
+    expect(p.metres.map((f) => f.text)).toEqual(['0', '5', '10', '15', '20']);
+    expect(p.energy.map((f) => f.text)).toEqual(['0', '200', '400', '600', '800', '1000', '1090']);
+    expect(new Set(p.metres.map((f) => f.unit))).toEqual(new Set(['m']));
+    expect(new Set(p.energy.map((f) => f.unit))).toEqual(new Set(['Wh†']));
+    // a metre band a metre, one band for 100 Wh
+    expect(p.metreBands.length).toBe(21);
+    expect(p.energyBands.length).toBe(11);
+  });
+
+  it('each figure stands where the model has that height and that energy', () => {
+    for (const [mass, stroke] of [
+      [20000, 20],
+      [10000, 20],
+      [20000, 7],
+      [1000, 6],
+      [12.5, 1.8],
+      [34100, 42],
+      [500000, 500],
+      [367e6, 100],
+      [25e9, 294],
+    ] as const) {
+      const p = plan(mass, stroke);
+      for (const f of p.metres) expect(Number(f.text), `${mass} ${stroke}`).toBeCloseTo(f.f * stroke, 3);
+      const full = (mass * G * stroke) / 3600;
+      const unit = { 'mWh†': 1e-3, 'Wh†': 1, 'kWh†': 1e3, 'MWh†': 1e6, 'GWh†': 1e9 }[p.energy[0]!.unit]!;
+      for (const f of p.energy)
+        expect(Math.abs(Number(f.text) * unit - f.f * full), `${mass} ${stroke}`).toBeLessThan(0.5 * unit + 1e-9);
+      // whole numbers only, at every machine: no decimal mark to get wrong in either language
+      for (const f of [...p.metres, ...p.energy]) expect(f.text, `${mass} ${stroke}`).toMatch(/^\d+$/);
+      expect(p.energy.length).toBeGreaterThanOrEqual(2);
+      expect(p.metres.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('it reads the state: another mass or another stroke, another ruler, and the index on the carrier reads the height and the energy', () => {
+    const m = buildMachine();
+    const sim = new GravitySim();
+    for (let i = 0; i < 6; i++) sim.step(1 / 60);
+    m.update(sim.state, 1 / 60, view());
+    expect(m.ruler.plan.energy.map((f) => f.text)).toContain('1090');
+    sim.set({ mass: 10000 });
+    for (let i = 0; i < 6; i++) sim.step(1 / 60);
+    m.update(sim.state, 1 / 60, view());
+    expect(m.ruler.plan.energy.map((f) => f.text)).toContain('500');
+    expect(m.ruler.plan.energy.map((f) => f.text)).not.toContain('1090');
+
+    const known = { mass: 20000 };
+    expect(
+      modelOf({ z: 0, fallLength: 20.83, storedWh: 0, ghostTonnes: 128, ghostTowers: 6.4 }, known).fullWh,
+    ).toBeCloseTo(1090, 0);
+    expect(
+      modelOf({ z: 10, fallLength: 10.83, storedWh: 272.5, ghostTonnes: 0, ghostTowers: 0 }, known).fullWh,
+    ).toBeCloseTo(545, 0);
+    expect(modelOf({ z: 0, fallLength: 6.83, storedWh: 0, ghostTonnes: 0, ghostTowers: 0 }, known).strokeM).toBeCloseTo(
+      6,
+      6,
+    );
+  });
+
+  it('the index on the carrier stands on the zero at the bottom and on the last figure at the top', () => {
+    const m = buildMachine();
+    const tip = (z: number) => {
+      m.update(stateWith({ zFraction: z }), 1 / 60, view());
+      m.root.updateMatrixWorld(true);
+      return liftAt(z) + RULER_ZERO;
+    };
+    expect(tip(0)).toBeCloseTo(RULER_ZERO, 6);
+    expect(tip(1)).toBeCloseTo(RULER_ZERO + STROKE, 6);
+    const carrier = boxOf(m.parts['weight-carrier']);
+    const ruler = boxOf(m.parts['height-scale']);
+    expect(ruler.max.y).toBeGreaterThan(RULER_ZERO + STROKE);
+    expect(ruler.min.y).toBeLessThan(RULER_ZERO);
+    expect(carrier.max.z).toBeGreaterThan(SCALE.z);
+  });
+
+  it('no figure stands behind the leg, nor reaches the shaft where the carrier runs', () => {
+    const m = buildMachine();
+    m.update(stateWith({ zFraction: 0.5 }), 1 / 60, view());
+    const b = boxOf(m.parts['height-scale']);
+    expect(b.max.x).toBeLessThan(TOWER.legX - TOWER.legSide / 2);
+    expect(b.min.z).toBeGreaterThan(0.876 + 0.3);
   });
 });

@@ -306,7 +306,10 @@ export const GOVERNOR = {
 } as const;
 
 /** Lifting ruler, on stand-offs off the lattice near the leg (research §4, estimate of place). One mark a metre, one a hundred watt-hours. */
-export const SCALE = { x: 1.38, z: 1.62, w: 0.16, thick: 0.012, band: 1, whBand: 0.1 } as const;
+export const SCALE = { x: 1.25, z: 1.62, w: 0.16, thick: 0.012, band: 1, whBand: 0.1 } as const;
+/** Where the ruler's zero stands: the height of the index on the carrier at the bottom of the stroke, m (derived). */
+export const RULER_INDEX_ABOVE_DECK = 0.06;
+export const RULER_ZERO = DECK_Y0 + RULER_INDEX_ABOVE_DECK;
 /** Metres of lift for 100 Wh at 20 t (derived: m·g·h, K1). */
 export const WH100_M = (100 * 3600) / (FARM_MASS * G);
 

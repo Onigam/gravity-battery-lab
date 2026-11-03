@@ -17,6 +17,7 @@ import {
   PAD_BOTTOM,
   PAD_TOP,
   RAIL,
+  RULER_ZERO,
   SADDLE_Y0,
   SCALE,
   SHOE,
@@ -94,8 +95,9 @@ export const FRAMING: Record<TowerId, PartFraming> = {
     viewDir: viewFrom(8, 200),
   },
   'height-scale': {
-    frame: zone(SCALE.x - 0.25, SCALE.x + 0.25, 6.8, 9, SCALE.z - 0.1, SCALE.z + 0.1),
-    viewDir: viewFrom(8, 15),
+    // a stretch with a figure of each kind: 10 m and 600 Wh, at the farm's figures
+    frame: zone(SCALE.x - 0.72, SCALE.x + 0.36, RULER_ZERO + 9.8, RULER_ZERO + 11.5, SCALE.z - 0.05, SCALE.z + 0.05),
+    viewDir: viewFrom(6, -10),
   },
   'hoist-rope': { frame: zone(-0.5, 0.5, 5, 7.4, -0.35, 0.35), viewDir: viewFrom(15, 0) },
   'hook-block': { viewDir: viewFrom(8, 30) },
@@ -160,9 +162,9 @@ const RIDING: Partial<Record<TowerId, THREE.Vector3[]>> = {
   'safety-gear': SQUARE_ON,
 };
 
-/** The camera's half field of view, as the kit has it (`fov` 40°), and the padding the sight is tested at: the app's and the voice's frames, 2.4 and 1.9 of the world, lie around it. */
+/** The camera's half field of view, as the kit has it (`fov` 40°), and the paddings the sight is tested at: the app's frame and the voice's. */
 const SIN_HALF_FOV = Math.sin((20 * Math.PI) / 180);
-const SIGHT_PADDING = 2.2;
+const SIGHT_PADDINGS = [2.4, 1.9] as const;
 /** What is not tested for the sight: thin, far from the line of sight, or the head frame, which comes in by its own steel. */
 const THIN_TO_THE_EYE: TowerId[] = [
   'head-frame',
@@ -170,7 +172,6 @@ const THIN_TO_THE_EYE: TowerId[] = [
   'foundation-pad',
   'end-buffer',
   'service-ladder',
-  'height-scale',
   'hook-block',
 ];
 /** How much of the falls the rope's frame holds above the hook block's axle, and how far above it its name's dot stands, m. */
@@ -224,7 +225,7 @@ export function createTowerScene(): TowerScene {
   at('tower-leg', -TOWER.legX, 20, TOWER.legX);
   at('tower-bracing', TOWER.legX, 17, 0.3);
   at('service-ladder', LADDER.x, 12.4, LADDER.z);
-  at('height-scale', SCALE.x, 8.9, SCALE.z);
+  at('height-scale', SCALE.x, RULER_ZERO + 10.6, SCALE.z);
 
   const registry = new PartRegistry();
   for (const id of TOWER_PARTS)
@@ -252,8 +253,10 @@ export function createTowerScene(): TowerScene {
     }
     return out;
   };
-  const distanceFor = (box: THREE.Box3): number =>
-    (box.getBoundingSphere(new THREE.Sphere()).radius * SIGHT_PADDING) / SIN_HALF_FOV;
+  const distancesFor = (box: THREE.Box3): number[] => {
+    const r = box.getBoundingSphere(new THREE.Sphere()).radius;
+    return SIGHT_PADDINGS.map((p) => (r * p) / SIN_HALF_FOV);
+  };
   /** The kit reads a part's `viewDir` when it frames it, and only then: from here on it is worked out at that moment, for the height the weight is at. */
   const askedWhenFramed = (id: TowerId, read: () => THREE.Vector3): void => {
     let forced: THREE.Vector3 | undefined;
@@ -269,12 +272,12 @@ export function createTowerScene(): TowerScene {
   for (const id of Object.keys(RIDING) as TowerId[]) {
     const dirs = [FRAMING[id].viewDir!, ...RIDING[id]!];
     const steel = steelFor(id);
-    const points = partPoints(registry.get(id)!.meshes, 10);
+    const points = partPoints(registry.get(id)!.meshes, id === 'hook-block' ? 16 : 10);
     // the hook block is small and in the open: all of it or another side. The safety gear rides inside the sling, and half of it is all there is to see
     const clear = id === 'hook-block' ? 0.85 : id === 'safety-gear' ? 0.45 : 0.7;
     askedWhenFramed(id, () => {
       const box = registry.frameBounds(id);
-      return clearestDir(box.getCenter(new THREE.Vector3()), points(), dirs, distanceFor(box), steel, clear);
+      return clearestDir(box.getCenter(new THREE.Vector3()), points(), dirs, distancesFor(box), steel, clear);
     });
   }
 
@@ -294,7 +297,7 @@ export function createTowerScene(): TowerScene {
       const span = high.y - low.y;
       for (const up of [0.8, 1.6]) points.push(low.clone().lerp(high, Math.min(1, up / Math.max(span, 1e-6))));
     }
-    return clearestDir(ropeFrame.getCenter(new THREE.Vector3()), points, ropeDirs, distanceFor(ropeFrame), ropeSteel);
+    return clearestDir(ropeFrame.getCenter(new THREE.Vector3()), points, ropeDirs, distancesFor(ropeFrame), ropeSteel);
   });
 
   // ---- "Flows": the rope running, in dots
