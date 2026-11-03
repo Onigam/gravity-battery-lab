@@ -125,21 +125,21 @@ const GRID_W = 4;
 const GRID_H = 6;
 const GAP = 1.3;
 /** Figures' height, m, the unit's, the width of a stroke at each, and the plate's height. Read from about 7 m when selected. */
-const FIGURE_H = 0.12;
-const UNIT_H = 0.085;
-const FIGURE_STROKE = 0.016;
-const UNIT_STROKE = 0.012;
-const PLATE_H = 0.17;
-const PLATE_PAD = 0.02;
+const FIGURE_H = 0.14;
+const UNIT_H = 0.099;
+const FIGURE_STROKE = 0.018;
+const UNIT_STROKE = 0.013;
+const PLATE_H = 0.195;
+const PLATE_PAD = 0.015;
 /** Air between a figure and its unit, m. */
-const UNIT_AIR = 0.025;
+const UNIT_AIR = 0.02;
 /** How far in front of the strip's face the bands and the plates' faces stand. */
 const FACE = 0.004;
 
 /** The mark rides high and small, like a mark in the texts, with a little air before it: written like a letter, « Wh† » read as « Wht ». */
 const MARK = '†';
-const MARK_H = 0.062;
-const MARK_STROKE = 0.009;
+const MARK_H = 0.07;
+const MARK_STROKE = 0.01;
 const MARK_AIR = 0.018;
 
 const widthOf = (t: string, h: number): number => (t.length * (GRID_W + GAP) - GAP) * (h / GRID_H);
@@ -148,6 +148,33 @@ const unitWidth = (unit: string): number => {
   const name = unit.replace(MARK, '');
   return widthOf(name, UNIT_H) + (unit.includes(MARK) ? MARK_AIR + widthOf(MARK, MARK_H) : 0);
 };
+
+/** The share of the stroke from which a figure is the last one. */
+const LAST_ROW = 0.985;
+/**
+ * The two figures of the top of the stroke sit just under their bands: level with them, the plate of the metres stood behind the joint of the +X +Z leg (the gusset's foot is 6 cm over the band), and
+ * the weight stays up there from the fifth minute (review D59). The bands themselves, and the index, stay true.
+ */
+const LAST_ROW_DROP = 0.21;
+const bandY = (f: number): number => RULER_ZERO + f * STROKE;
+const plateY = (f: number): number => bandY(f) - (f >= LAST_ROW ? LAST_ROW_DROP : 0);
+const figureWidth = (f: RulerFigure): number => widthOf(f.text, FIGURE_H) + UNIT_AIR + unitWidth(f.unit);
+/** How far from the strip's axis the plates start, m. */
+const PLATE_FROM_AXIS = SCALE.w / 2 + 0.01;
+
+/** The nearest figure to a share of the stroke. */
+const nearest = (list: RulerFigure[], f: number): RulerFigure =>
+  list.reduce((a, b) => (Math.abs(b.f - f) < Math.abs(a.f - f) ? b : a));
+
+/** What can be read at a height: a figure of each kind, the nearest to the index and the nearest to that one, with their bands. */
+export interface RulerReading {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+  /** Points of the two plates' faces, for the sight. */
+  points: THREE.Vector3[];
+}
 
 class Tris {
   readonly pos: number[] = [];
@@ -251,6 +278,32 @@ export class RulerMarks {
     this.draw(this.plan);
   }
 
+  /** What to frame to read the ruler with the weight at this share of the stroke. */
+  reading(f: number, withPoints = false): RulerReading {
+    const metre = nearest(this.plan.metres, f);
+    const energy = nearest(this.plan.energy, metre.f);
+    const ys = [plateY(metre.f), plateY(energy.f)];
+    const bands = [bandY(metre.f), bandY(energy.f)];
+    const r: RulerReading = {
+      x0: SCALE.x - PLATE_FROM_AXIS - figureWidth(energy) - 2 * PLATE_PAD - 0.02,
+      x1: SCALE.x + PLATE_FROM_AXIS + figureWidth(metre) + 2 * PLATE_PAD + 0.02,
+      y0: Math.min(...ys, ...bands) - PLATE_H / 2 - 0.06,
+      y1: Math.max(...ys, ...bands) + PLATE_H / 2 + 0.06,
+      points: [],
+    };
+    if (withPoints) {
+      const row = (x0: number, x1: number, y: number): void => {
+        for (const u of [0.1, 0.3, 0.5, 0.7, 0.9])
+          for (const v of [-0.3, 0.3])
+            r.points.push(new THREE.Vector3(x0 + (x1 - x0) * u, y + v * PLATE_H, SCALE.z + FACE));
+      };
+      const inner = PLATE_FROM_AXIS;
+      row(SCALE.x + inner, SCALE.x + inner + figureWidth(metre) + 2 * PLATE_PAD, ys[0]!);
+      row(SCALE.x - inner - figureWidth(energy) - 2 * PLATE_PAD, SCALE.x - inner, ys[1]!);
+    }
+    return r;
+  }
+
   private draw(plan: RulerPlan): void {
     const pale = new Tris();
     const dark = new Tris();
@@ -258,29 +311,28 @@ export class RulerMarks {
     const zBack = SCALE.z - SCALE.thick;
     const zFace = SCALE.z + FACE;
     const halfW = SCALE.w / 2;
-    const yOf = (f: number): number => RULER_ZERO + f * STROKE;
     // the metres on the strip's right half, the watt-hours on its left: the names run out to the sides, and the leg is on the right
     for (const b of plan.metreBands) {
       const w = b.major ? halfW : halfW * 0.72;
       const h = b.major ? 0.045 : 0.025;
-      pale.box(SCALE.x, SCALE.x + w, yOf(b.f) - h, yOf(b.f) + h, SCALE.z, zFace);
+      pale.box(SCALE.x, SCALE.x + w, bandY(b.f) - h, bandY(b.f) + h, SCALE.z, zFace);
     }
     for (const b of plan.energyBands) {
       const w = b.major ? halfW : halfW * 0.72;
       const h = b.major ? 0.045 : 0.025;
-      copper.box(SCALE.x - w, SCALE.x, yOf(b.f) - h, yOf(b.f) + h, SCALE.z, zFace);
+      copper.box(SCALE.x - w, SCALE.x, bandY(b.f) - h, bandY(b.f) + h, SCALE.z, zFace);
     }
-    const edge = halfW + 0.01;
+    const edge = PLATE_FROM_AXIS;
     for (const f of plan.metres) {
-      const y = yOf(f.f);
-      const wide = widthOf(f.text, FIGURE_H) + UNIT_AIR + unitWidth(f.unit);
+      const y = plateY(f.f);
+      const wide = figureWidth(f);
       const x0 = SCALE.x + edge;
       pale.box(x0, x0 + wide + 2 * PLATE_PAD, y - PLATE_H / 2, y + PLATE_H / 2, zBack, zFace);
       writeFigure(dark, f, x0 + PLATE_PAD, y, zFace + 0.002);
     }
     for (const f of plan.energy) {
-      const y = yOf(f.f);
-      const wide = widthOf(f.text, FIGURE_H) + UNIT_AIR + unitWidth(f.unit);
+      const y = plateY(f.f);
+      const wide = figureWidth(f);
       const x1 = SCALE.x - edge;
       copper.box(x1 - wide - 2 * PLATE_PAD, x1, y - PLATE_H / 2, y + PLATE_H / 2, zBack, zFace);
       writeFigure(pale, f, x1 - PLATE_PAD - wide, y, zFace + 0.002);

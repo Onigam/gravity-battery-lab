@@ -22,6 +22,7 @@ import { createHoistScene, FRAMING as HOIST_FRAMING } from '../hoist/scene';
 import { SITE_MACHINE, createSiteScene, ghostLabel } from '../site/scene';
 import { planVegetation } from '../site/vegetation';
 import { boxOf, isolateOne, stateWith, view, world } from '../test-utils';
+import { fitTangent } from '../world';
 import { createTowerScene, FRAMING as TOWER_FRAMING, TOWER_CAMERA, TOWER_FOG } from '../tower/scene';
 import { WORLD } from '../index';
 import { CAP_LIFT, STAGE_CAP, type CutRect } from './hoist';
@@ -711,6 +712,115 @@ describe('D56. The pad and the head frame read when selected', () => {
       const whole = boxOf(e.object).getBoundingSphere(new THREE.Sphere()).radius;
       expect(r, id).toBeLessThan(0.75 * whole);
       expect(boxOf(e.object).intersectsBox(e.frame!), id).toBe(true);
+    }
+  });
+});
+
+describe('The recheck of 3 November: D59, D60, D61, D63', () => {
+  /** Rays from `eye` to `points`, stopped by anything shown but the part itself; everything counts, the hoist too. */
+  const seenFrom = (
+    t: ReturnType<typeof createTowerScene>,
+    id: string,
+    eye: THREE.Vector3,
+    points: THREE.Vector3[],
+  ) => {
+    t.scene.updateMatrixWorld(true);
+    const own = new Set<THREE.Object3D>(t.registry.get(id)!.meshes);
+    const solids: THREE.Object3D[] = [];
+    t.scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh || own.has(m)) return;
+      for (let q: THREE.Object3D | null = m; q; q = q.parent) if (!q.visible) return;
+      if ((m.material as THREE.Material).transparent) return;
+      solids.push(m);
+    });
+    const rc = new THREE.Raycaster();
+    let n = 0;
+    for (const p of points) {
+      const dir = p.clone().sub(eye);
+      const dist = dir.length();
+      rc.set(eye, dir.normalize());
+      rc.far = dist - 0.03;
+      if (rc.intersectObjects(solids, false).length === 0) n++;
+    }
+    return n / points.length;
+  };
+  /** A camera with a panel 310 px wide beside a view of 690 × 902, the 768 × 1024 layout. */
+  const narrowCamera = () => {
+    const c = new THREE.PerspectiveCamera(40, 690 / 902);
+    c.setViewOffset(690, 902, 155, 0, 690, 902);
+    return c;
+  };
+  const eyeFor = (t: ReturnType<typeof createTowerScene>, id: string, tan: number, padding: number) => {
+    const box = t.registry.frameBounds(id);
+    const r = box.getBoundingSphere(new THREE.Sphere()).radius;
+    return box
+      .getCenter(new THREE.Vector3())
+      .addScaledVector(t.registry.get(id)!.viewDir!.clone().normalize(), (r * padding) / (tan / Math.hypot(1, tan)));
+  };
+  const TAN = Math.tan((20 * Math.PI) / 180);
+
+  it('D59. With the weight at the top, the 20 m and the 1090 Wh are both in the frame and in sight, at both framings, wide and narrow', () => {
+    const t = createTowerScene();
+    t.update(stateWith({ zFraction: 1 }), 1 / 60, view());
+    t.scene.updateMatrixWorld(true);
+    const reading = t.machine.ruler.reading(1, true);
+    const frame = t.registry.frameBounds('height-scale');
+    for (const p of reading.points) expect(frame.containsPoint(p)).toBe(true);
+    for (const camera of [undefined, narrowCamera()]) {
+      t.sight.camera = camera;
+      const tan = camera ? fitTangent(camera) : TAN;
+      for (const padding of [2.4, 1.9])
+        expect(
+          seenFrom(t, 'height-scale', eyeFor(t, 'height-scale', tan, padding), reading.points),
+        ).toBeGreaterThanOrEqual(0.9);
+    }
+  });
+
+  it('D59. The ruler’s frame goes with the index, whatever the height, and holds a figure of each kind', () => {
+    const t = createTowerScene();
+    for (const z of [0, 0.25, 0.5, 0.75, 1]) {
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      const frame = t.registry.frameBounds('height-scale');
+      const index = RULER_ZERO + z * STROKE;
+      // the index, or at most half the distance between two figures from it
+      expect(Math.min(Math.abs(frame.min.y - index), Math.abs(frame.max.y - index)), `${z}`).toBeLessThan(2.6);
+      const size = frame.getSize(new THREE.Vector3());
+      expect(size.y, `${z}`).toBeLessThan(2);
+      // D63: small enough to be read on a phone
+      expect(frame.getBoundingSphere(new THREE.Sphere()).radius, `${z}`).toBeLessThan(1.1);
+      const dot = world(t.hotspots.find((h) => h.partId === 'height-scale')!.anchor);
+      expect(frame.clone().expandByScalar(0.1).containsPoint(dot), `${z}`).toBe(true);
+    }
+  });
+
+  it('D60. A selected part’s name stands in what is framed', () => {
+    const t = createTowerScene();
+    for (const z of [0, 0.3, 0.6, 1]) {
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      t.scene.updateMatrixWorld(true);
+      for (const id of ['tower-leg', 'service-ladder', 'guide-rail', 'tower-bracing']) {
+        const dot = world(t.hotspots.find((h) => h.partId === id)!.anchor);
+        expect(t.registry.frameBounds(id).clone().expandByScalar(0.1).containsPoint(dot), `${id} at ${z}`).toBe(true);
+      }
+    }
+  });
+
+  it('D61. A narrow view stands more than twice as far: the sight is tested from there', () => {
+    expect(fitTangent(new THREE.PerspectiveCamera(40, 1280 / 800))).toBeCloseTo(TAN, 5);
+    const c = narrowCamera();
+    expect(fitTangent(c) / TAN).toBeCloseTo(380 / 902, 3);
+    const t = createTowerScene();
+    t.sight.camera = c;
+    for (const z of [0, 0.25, 0.5, 0.75, 1]) {
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      t.scene.updateMatrixWorld(true);
+      const points = partPoints(t.registry.get('hook-block')!.meshes, 30)();
+      for (const padding of [2.4, 1.9])
+        expect(
+          seenFrom(t, 'hook-block', eyeFor(t, 'hook-block', fitTangent(c), padding), points),
+          `${z} ${padding}`,
+        ).toBeGreaterThan(0.6);
     }
   });
 });
