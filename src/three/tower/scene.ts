@@ -200,6 +200,10 @@ const THIN_TO_THE_EYE: TowerId[] = [
   'hook-block',
 ];
 /** On a phone the ruler's whole name runs off the view (review D12). */
+const STACK_NAME = {
+  full: l('Blocs de béton', 'Concrete blocks'),
+  short: l('Blocs', 'Blocks'),
+};
 const LADDER_NAME = {
   full: l('Échelle et ligne de vie', 'Ladder and fall arrest'),
   short: l('Échelle', 'Ladder'),
@@ -279,7 +283,8 @@ export function createTowerScene(): TowerScene {
   at('hook-block', 0.1, SADDLE_Y0 + 0.08, 0.06);
   // moved every frame: on fall 1, above the hook block, then on the drum (`update`)
   at('hoist-rope', -0.18, 14, 0.18);
-  at('concrete-block', BLOCK.length / 2, SADDLE_Y0 - 2.2, BLOCK.length / 2);
+  // on the stack's left: on its right the name came over the ruler's watt-hours as the weight went by them (review D63)
+  at('concrete-block', -BLOCK.length / 2, SADDLE_Y0 - 2.2, BLOCK.length / 2);
   // moved by `update`, to where no name that rides on the weight is passing
   at('guide-rail', RAIL.x, RAIL_ROWS[0]!, 0);
   // on the pad, behind the near legs: on its near edge the toolbar of a tablet covered it (review D47), and the label reads to the right of its dot
@@ -442,6 +447,7 @@ export function createTowerScene(): TowerScene {
     update(s, dt, view) {
       holdLabel(anchors['height-scale']!, RULER_NAME);
       holdLabel(anchors['service-ladder']!, LADDER_NAME);
+      holdLabel(anchors['concrete-block']!, STACK_NAME);
       machine.blurAllowed.fan = machine.blurAllowed.gears = registry.get('head-frame')!.display !== 'hidden';
       machine.update(s, dt, view);
       holdScenery(machine, registry);
