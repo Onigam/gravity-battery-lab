@@ -48,13 +48,27 @@ export const EXPLODE: Record<HoistId, [number, number, number]> = {
   'overspeed-governor': [0.55, 0, 1.15],
 };
 
-/** Where to look at a part from when it is selected, where the home direction has something in front of it (kit 0.6.0). The rope anchor is under its beam: it is seen from below the deck. */
-export const FRAMING: Partial<Record<HoistId, PartFraming>> = {
+/** The way the home view looks down at the hoist. */
+const HOME_DIR = new THREE.Vector3(1.4, 5, 2.6).normalize();
+
+/**
+ * Where to look at a part from when it is selected (kit 0.6.0). The rope anchor is under its beam: it is seen from below the deck. What has nothing in front of it from the home direction says so: a
+ * part with no direction of its own keeps the camera's, so the next click after the anchor would look at the gearbox from under the deck (review D43).
+ */
+export const FRAMING: Record<HoistId, PartFraming> = {
   'rope-anchor': { viewDir: viewFrom(-30, 80) },
   'drum-brake': { viewDir: viewFrom(20, 0) },
   'service-brake': { viewDir: viewFrom(8, 0) },
   'rope-guide': { viewDir: viewFrom(55, 0) },
   'overload-cell': { viewDir: viewFrom(30, 160) },
+  'hoist-base': { viewDir: HOME_DIR },
+  'rope-drum': { viewDir: HOME_DIR },
+  'hoist-gearbox': { viewDir: HOME_DIR },
+  'hoist-motor': { viewDir: HOME_DIR },
+  'motor-encoder': { viewDir: HOME_DIR },
+  'limit-switch': { viewDir: HOME_DIR },
+  'return-sheave': { viewDir: HOME_DIR },
+  'overspeed-governor': { viewDir: HOME_DIR },
 };
 
 export interface HoistScene extends SceneModule<GravityState> {

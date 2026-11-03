@@ -429,3 +429,146 @@ describe('D33, D34. What reads as what it is', () => {
     expect(b.max.y).toBeLessThan(DECK_TOP + HOIST.axisY + HOIST.ribR + 0.06);
   });
 });
+
+describe('D42. What is named can be seen, wherever the weight is', () => {
+  const t = createTowerScene();
+  const S = Math.sin((20 * Math.PI) / 180);
+  /** Where the kit puts the camera for this part at this padding. */
+  const eyeOf = (id: string, padding: number): { eye: THREE.Vector3; box: THREE.Box3 } => {
+    const e = t.registry.get(id)!;
+    const box = t.registry.frameBounds(id);
+    const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
+    const eye = box
+      .getCenter(new THREE.Vector3())
+      .addScaledVector(e.viewDir!.clone().normalize(), (radius * padding) / S);
+    return { eye, box };
+  };
+  /** A ray to each point: does anything but the part itself stop it? Everything counts here, the hoist too. */
+  const seen = (id: string, eye: THREE.Vector3, points: THREE.Vector3[]): number => {
+    t.scene.updateMatrixWorld(true);
+    const own = new Set<THREE.Object3D>(t.registry.get(id)!.meshes);
+    const solids: THREE.Object3D[] = [];
+    t.scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh || own.has(m)) return;
+      for (let q: THREE.Object3D | null = m; q; q = q.parent) if (!q.visible) return;
+      if ((m.material as THREE.Material).transparent) return;
+      solids.push(m);
+    });
+    const rc = new THREE.Raycaster();
+    let n = 0;
+    for (const p of points) {
+      const dir = p.clone().sub(eye);
+      const dist = dir.length();
+      rc.set(eye, dir.normalize());
+      rc.far = dist - 0.03;
+      if (rc.intersectObjects(solids, false).length === 0) n++;
+    }
+    return n / points.length;
+  };
+  /** Points along the falls, inside what the frame holds. */
+  const onFalls = (box: THREE.Box3): THREE.Vector3[] => {
+    const out: THREE.Vector3[] = [];
+    for (const f of t.machine.rope.ends)
+      for (let i = 0; i <= 40; i++) {
+        const p = f.a.clone().lerp(f.b, i / 40);
+        if (box.containsPoint(p)) out.push(p);
+      }
+    return out.filter((_, i) => i % 3 === 0);
+  };
+  /** Points along the rope wound on the drum, as far as it is drawn, inside what the frame holds. */
+  const onDrum = (box: THREE.Box3): THREE.Vector3[] => {
+    const w = t.machine.hoist.wound;
+    w.updateWorldMatrix(true, false);
+    const pos = w.geometry.attributes.position as THREE.BufferAttribute;
+    const count = w.geometry.index
+      ? Math.min(pos.count, (w.geometry.drawRange.count * pos.count) / w.geometry.index.count)
+      : pos.count;
+    const out: THREE.Vector3[] = [];
+    for (let i = 0; i < count; i += 37) {
+      const p = new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(w.matrixWorld);
+      if (box.containsPoint(p)) out.push(p);
+    }
+    return out;
+  };
+
+  it('the hook block, from where it is asked for, at every height of the stroke and at both framings', () => {
+    for (let k = 0; k <= 25; k++) {
+      const z = k / 25;
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      t.scene.updateMatrixWorld(true);
+      for (const padding of [2.4, 1.9]) {
+        const { eye } = eyeOf('hook-block', padding);
+        const points = boxOf(t.machine.parts['hook-block']);
+        const c = points.getCenter(new THREE.Vector3());
+        expect(
+          seen('hook-block', eye, [c, points.min.clone().lerp(c, 0.6), points.max.clone().lerp(c, 0.6)]),
+          `${z} ${padding}`,
+        ).toBeGreaterThan(0.6);
+      }
+      expect(t.registry.get('hook-block')!.viewDir!.y, 'the camera cannot go lower').toBeGreaterThan(-0.1);
+    }
+  });
+
+  it('under the head frame, the falls just above the block; above it, the rope on the drum', () => {
+    for (let k = 0; k <= 25; k++) {
+      const z = k / 25;
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      t.scene.updateMatrixWorld(true);
+      const high = z > 0.9;
+      for (const padding of [2.4, 1.9]) {
+        const { eye, box } = eyeOf('hoist-rope', padding);
+        // half of each turn of the rope lies behind the drum: what counts is the half that faces the camera
+        const axis = t.machine.drumAxisInRoot();
+        const facing = (p: THREE.Vector3) => (p.y - axis.y) * (eye.y - axis.y) + (p.z - axis.z) * (eye.z - axis.z) > 0;
+        const points = high ? onDrum(box).filter(facing) : onFalls(box);
+        expect(points.length, `${z}`).toBeGreaterThan(4);
+        expect(seen('hoist-rope', eye, points), `${z} ${padding}`).toBeGreaterThan(0.5);
+      }
+    }
+  });
+
+  it('what is wound on the drum is the rope here: outlined, picked and isolated with it; and only here', () => {
+    const wound = t.machine.hoist.wound;
+    expect(t.registry.get('hoist-rope')!.meshes).toContain(wound);
+    expect(t.registry.get('head-frame')!.meshes).not.toContain(wound);
+    expect(t.registry.partOf(wound)).toBe('hoist-rope');
+    const h = createHoistScene();
+    expect(h.registry.get('rope-drum')!.meshes).toContain(h.machine.hoist.wound);
+  });
+
+  it('the rope’s name stays on the rope, wherever the weight is', () => {
+    const dot = t.hotspots.find((h) => h.partId === 'hoist-rope')!.anchor;
+    for (const z of [0, 0.3, 0.6, 0.85, 0.9, 0.95, 1]) {
+      t.update(stateWith({ zFraction: z }), 1 / 60, view());
+      t.scene.updateMatrixWorld(true);
+      const p = world(dot);
+      const R = HOOK_BLOCK.sheaveR;
+      const [f1, f2, f3] = t.machine.rope.ends;
+      const onFall1 = new THREE.Line3(f1.a, f1.b).closestPointToPoint(p, true, new THREE.Vector3()).distanceTo(p);
+      const overSheave = Math.abs(p.distanceTo(f2.b.clone().add(f3.a).multiplyScalar(0.5)) - R);
+      expect(Math.min(onFall1, overSheave), `at ${z}`).toBeLessThan(0.03);
+    }
+  });
+
+  it('a part keeps its direction when asked to in a page, for a try', () => {
+    const e = t.registry.get('hook-block')!;
+    const before = e.viewDir;
+    e.viewDir = new THREE.Vector3(0, 1, 0);
+    expect(e.viewDir.y).toBe(1);
+    e.viewDir = undefined;
+    expect(e.viewDir).toBeDefined();
+    expect(before).toBeDefined();
+  });
+});
+
+describe('D43. A click never inherits the direction of the part before it', () => {
+  it.each([
+    ['tower', () => createTowerScene()],
+    ['hoist', () => createHoistScene()],
+  ])('every part of the %s world says where it is seen from', (_, make) => {
+    const w = make();
+    w.update(stateWith({ zFraction: 0.3 }), 1 / 60, view());
+    for (const id of w.registry.ids()) expect(w.registry.get(id)!.viewDir, id).toBeDefined();
+  });
+});
