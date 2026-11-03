@@ -89,6 +89,10 @@ export function hotspots(defs: HotspotDef[], anchors: Record<string, THREE.Objec
 /** Below this width of the page the 3D view is too narrow for a label's whole name to the right of its dot: a tablet or a phone, with the panel beside the view or the sheet under it. */
 const NARROW_LABEL = 1100;
 
+/** Is the page narrow (see `NARROW_LABEL`)? Never under vitest, which has no page. */
+export const narrowPage = (): boolean =>
+  typeof document !== 'undefined' && document.documentElement.clientWidth < NARROW_LABEL;
+
 /**
  * A label that a narrow view would cut, kept whole (kit request 19 is the real answer: a label's side). `left`: it reads to the left of its anchor, its right end at the part. `short`: a shorter name.
  * `at`: where its dot stands on the part, by the width.

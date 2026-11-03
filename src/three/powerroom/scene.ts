@@ -9,7 +9,7 @@ import { DEVICE, ESTOP, MODULE, SHED, SHELF } from '../dims';
 import { mergeStatic } from '../merge';
 import { box, rounded, sweep } from '../rig/shapes';
 import { l } from '@onigam/lab-kit/i18n';
-import { anchor, holdLabel, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
+import { anchor, holdLabel, hotspots, narrowPage, viewFrom, workshopScene, type HotspotDef } from '../world';
 import { POWER_PARTS, buildPowerParts, buildTray, type PowerId, type PowerPieces } from './parts';
 import { buildShedShell } from './room';
 
@@ -65,8 +65,12 @@ const zone = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: nu
 /** A device on the wall with a little to spare: its box, without the conduit that runs up to the tray. */
 const onWall = (d: { x: number; y: number; w: number; h: number; d: number }, floor = false) =>
   zone(d.x - d.w / 2 - 0.04, d.x + d.w / 2 + 0.04, floor ? 0 : d.y - 0.03, d.y + d.h + 0.03, 0, d.d + 0.05);
+/** The home view: on the wall, and from higher up where the view is narrow and tall (the kit sets the distance by the width): the floor comes into it, and the room is no longer a strip (review D35). */
+const HOME_TARGET = V(0.28, 1.12, 0.6);
+const HOME_POSITION = V(-0.3, 1.75, 6.4);
+const HOME_NARROW = HOME_TARGET.clone().addScaledVector(viewFrom(26, -6), HOME_POSITION.distanceTo(HOME_TARGET));
 /** The way the home view looks at the wall. */
-const HOME_DIR = V(-0.3 - 0.28, 1.75 - 1.12, 6.4 - 0.6).normalize();
+const HOME_DIR = HOME_POSITION.clone().sub(HOME_TARGET).normalize();
 
 /**
  * What selecting a device brings the camera to (kit 0.6.0), and the voice too: the device, not what it stands on nor its conduit up to the tray (review D45). The module is 442 mm on a rack a metre
@@ -231,9 +235,9 @@ export function createPowerroomScene(): PowerroomScene {
     D.motorInverter.y + D.motorInverter.h - 0.12,
     D.motorInverter.d + 0.03,
   );
-  at('dc-link', D.dcLink.x - 0.15, 1.55, D.dcLink.d + 0.03);
+  at('dc-link', D.dcLink.x - 0.15, 1.47, D.dcLink.d + 0.03);
   // the panel high and the solar inverter low, each still on its device: at 768 and 390 the room is a strip, and their names ran over each other and the link's
-  at('regen-supply', D.regenSupply.x + 0.1, 1.12, D.regenSupply.d + 0.03);
+  at('regen-supply', D.regenSupply.x + 0.1, 0.98, D.regenSupply.d + 0.03);
   at('ac-panel', D.acPanel.x - 0.34, D.acPanel.y + 1.05, D.acPanel.d);
   at('pv-inverter', D.pvInverter.x - 0.1, D.pvInverter.y + 0.35, D.pvInverter.d + 0.02);
   at('brake-resistor', D.brakeResistor.x - 0.2, D.brakeResistor.y + 0.42, D.brakeResistor.d + 0.05);
@@ -276,12 +280,13 @@ export function createPowerroomScene(): PowerroomScene {
     flows,
     drawn,
     scenery: () => [shell.group, tray, props],
-    home: { position: V(-0.3, 1.75, 6.4), target: V(0.28, 1.12, 0.6) },
+    home: { position: (narrowPage() ? HOME_NARROW : HOME_POSITION).clone(), target: HOME_TARGET.clone() },
     minDistance: 0.25,
     maxDistance: 25,
     declutter: true,
     homePadding: 0.78,
     update(s, dt, view) {
+      mod.home.position.copy(narrowPage() ? HOME_NARROW : HOME_POSITION);
       holdLabel(anchors['lfp-module']!, NARROW_NAMES['lfp-module']);
       holdLabel(anchors['motor-inverter']!, NARROW_NAMES['motor-inverter']);
       holdLabel(anchors['regen-supply']!, NARROW_NAMES['regen-supply']);

@@ -101,7 +101,8 @@ export const FRAMING: Record<TowerId, PartFraming> = {
     viewDir: viewFrom(6, -10),
   },
   'hoist-rope': { frame: zone(-0.5, 0.5, 5, 7.4, -0.35, 0.35), viewDir: viewFrom(15, 0) },
-  'hook-block': { viewDir: viewFrom(8, 30) },
+  // from the side away from the ruler: from the other, a plate on the strip stands in front of the block at some heights
+  'hook-block': { viewDir: viewFrom(8, -30) },
   'safety-gear': { viewDir: viewFrom(8, 0) },
   'guide-shoe': { viewDir: viewFrom(8, 0) },
   'stack-tie': { viewDir: viewFrom(8, 80) },
@@ -111,20 +112,20 @@ export const FRAMING: Record<TowerId, PartFraming> = {
 
 /** Where to look from when the first direction is blocked: around the shaft's corners, then level, then from just under (the kit's orbit stops at about 5° under the target). */
 const ROUND_THE_SHAFT = [
-  [8, 60],
   [8, 300],
-  [8, 120],
   [8, 240],
-  [15, 120],
+  [8, 120],
+  [8, 60],
   [15, 240],
-  [0, 60],
+  [15, 120],
   [0, 300],
-  [0, 120],
   [0, 240],
-  [-5, 60],
+  [0, 120],
+  [0, 60],
   [-5, 300],
-  [-5, 120],
   [-5, 240],
+  [-5, 120],
+  [-5, 60],
 ].map(([e, b]) => viewFrom(e!, b!));
 
 /** What is as wide as the shaft is seen square on: from a corner, a leg stands in front of it. */
@@ -282,9 +283,9 @@ export function createTowerScene(): TowerScene {
   for (const id of Object.keys(RIDING) as TowerId[]) {
     const dirs = [FRAMING[id].viewDir!, ...RIDING[id]!];
     const steel = steelFor(id);
-    const points = partPoints(registry.get(id)!.meshes, id === 'hook-block' ? 16 : 10);
+    const points = partPoints(registry.get(id)!.meshes, id === 'hook-block' || id === 'safety-gear' ? 16 : 10);
     // the hook block is small and in the open: all of it or another side. The safety gear rides inside the sling, and half of it is all there is to see
-    const clear = id === 'hook-block' ? 0.85 : id === 'safety-gear' ? 0.45 : 0.7;
+    const clear = id === 'hook-block' ? 0.85 : id === 'safety-gear' ? 0.5 : 0.7;
     askedWhenFramed(id, () => {
       const box = registry.frameBounds(id);
       return clearestDir(box.getCenter(new THREE.Vector3()), points(), dirs, distancesFor(box), steel, clear);
