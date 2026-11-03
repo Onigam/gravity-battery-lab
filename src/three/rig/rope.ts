@@ -8,6 +8,9 @@ import { TAU, aimSegment, sweep, unitSegment } from './shapes';
 // falls: the segments are aimed every frame between markers that belong to the parts they touch, so they stay on their sheaves when a part moves in the exploded view, and
 // their length follows the lift. What lies on a sheave is an arc in the sheave's groove. The turns on the drum are in `hoist.ts`; the short bridge here joins them to fall 1.
 
+/** The paint line's length on the rope, m (estimate: a hand's width, readable from the landing). */
+const PAINT_LENGTH = 0.08;
+
 export interface RopePoints {
   /** Where fall 1 leaves the drum, and where the wound rope's last drawn ring is. */
   departure: THREE.Vector3;
@@ -30,8 +33,11 @@ export class Rope {
   readonly arcA: THREE.Mesh;
   readonly arcB: THREE.Mesh;
   readonly arcReturn: THREE.Mesh;
+  /** The line of paint on the rope at the socket's mouth, told by the rope anchor's sheet: slipping shows between it and the socket. */
+  readonly paintLine: THREE.Mesh;
   /** The two ends of each fall, last placed, in the frame of the machine. */
   readonly ends: FallEnds[];
+  private readonly paintFrom = new THREE.Vector3();
 
   constructor(look: MachineLook) {
     this.root = group('hoist-rope');
@@ -47,6 +53,11 @@ export class Rope {
       this.root.add(m);
       this.falls.push(m);
     }
+    this.paintLine = new THREE.Mesh(seg, look.scaleLight);
+    this.paintLine.name = 'paint-line';
+    this.paintLine.frustumCulled = false;
+    this.paintLine.userData.noShadow = true;
+    this.root.add(this.paintLine);
     this.bridge = new THREE.Mesh(seg, look.ropeWound);
     this.bridge.frustumCulled = false;
     this.bridge.userData.noShadow = true;
@@ -92,6 +103,9 @@ export class Rope {
     set(2, p.axisReturn.x + R, p.axisReturn.y, p.axisReturn.z, p.axisB.x, p.axisB.y, p.axisB.z - R);
     // sheave B's +Z side to the socket
     set(3, p.axisB.x, p.axisB.y, p.axisB.z + R, p.anchor.x, p.anchor.y, p.anchor.z);
+    const f4 = this.ends[3]!;
+    this.paintFrom.copy(f4.b).lerp(f4.a, Math.min(1, PAINT_LENGTH / Math.max(f4.a.distanceTo(f4.b), 1e-6)));
+    aimSegment(this.paintLine, f4.b, this.paintFrom, ROPE_R * 1.15);
     this.arcA.position.copy(p.axisA);
     this.arcB.position.copy(p.axisB);
     this.arcReturn.position.copy(p.axisReturn);
