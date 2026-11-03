@@ -58,10 +58,9 @@ intro's hops, each truth once in its segment, the fridge, the model's word, anon
 the private transcripts (`~/.cache/lab-review/research/gravity-battery-lab/transcript-*.txt`, nothing to compare in CI), same cues in both languages within a quarter of the segment, and,
 once `public/audio/<lang>/manifest.json` exists, the manifest, the audio files and the local voice.
 
-## After generation
+## The audio
 
-`src/lab.ts` already has `narration: { manifest: 'audio/{lang}/manifest.json' }` and the build runs `scripts/check-narration.mjs`; the skipped test wakes up with the first manifest.
-Then back-transcription, rate and subtitles, as `lab-narrator` says. Nobody has listened to anything yet.
+`src/lab.ts` has `narration: { manifest: 'audio/{lang}/manifest.json' }` and the build runs `scripts/check-narration.mjs`. Back-transcription, rate and subtitles are done; three clips were redone on another seed. Nobody has listened to it yet.
 
 ## Words the voice may stumble on
 

@@ -4,7 +4,7 @@ import { registerStrings, tx, type CommonKey } from '@onigam/lab-kit/i18n';
 // add here only what is specific to this lab.
 
 export const LAB_STRINGS = {
-  labTitle: ['LABO DU STOCKAGE PAR GRAVITÉ', 'GRAVITY STORAGE LAB'],
+  labTitle: ['LABO DE LA GRAVITÉ', 'GRAVITY STORAGE LAB'],
   tagline: ['Garder l’énergie en soulevant des poids', 'Keeping energy by lifting weights'],
   sceneSite: ['La ferme', 'The farm'],
   sceneTower: ['La tour', 'The tower'],

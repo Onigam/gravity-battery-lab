@@ -104,7 +104,7 @@ export const lab: LabDefinition<GravitySim> = {
     ],
     intro: strL('plansIntro'),
   },
-  // spoken guide: audio and subtitles generated from narration/<lang>.json (see narration/README.md); until the audio exists the kit shows nothing of it
+  // spoken guide: audio and subtitles generated from narration/<lang>.json (see narration/README.md); without audio the kit shows nothing of it
   narration: { manifest: 'audio/{lang}/manifest.json' },
   simPanel: (ctx: AppContext<GravitySim>) => new SimPanel(ctx),
   strip: { values: stripValues, clock: stripClock, alarms: stripAlarms, speeds: STRIP_SPEEDS },

@@ -226,7 +226,7 @@ export const HOIST_PARTS: PartInfo[] = [
     name: l('Tambour', 'Rope drum'),
     short: l(
       'Un cylindre très long, rainuré, où le câble s’enroule en une seule couche : ainsi il ne s’écrase jamais sur lui-même.',
-      'A very long grooved cylinder where the rope winds in a single layer: so it never crushes itself.',
+      'A very long grooved cylinder where the rope coils in a single layer: so it never crushes itself.',
     ),
     description: lf(
       'Sur ce treuil publié, le tambour occupe l’essentiel des 1,94 m entre les pieds : {ropeM} de câble doivent y tenir en une couche, en environ {drumTurns} au pas de {grooveMm}. Son diamètre n’est pas publié ; le lab prend {drumM}, entre le calcul sur les tours et la règle des 18 fois le câble. Il tourne à {drumRpm} sous {drumTorqueUp} en montée. Et ce choix change bien moins qu’on ne croit : le couple du moteur ne dépend que de la vitesse du crochet et de sa propre vitesse, donc un autre tambour change les vitesses des arbres, mais aucune énergie. Quelques tours restent toujours sur le tambour, {ropeOnDrum} de câble, pour soulager le point d’ancrage.',

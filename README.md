@@ -2,7 +2,7 @@
 
 An interactive 3D lab of a **gravity store on a farm**: a 20-tonne stack of concrete blocks, a 28 m lattice tower, a 15 kW hoist that runs both ways. It asks one question, _can you store energy by lifting weights?_, and answers it with numbers: one tonne raised 367 m is one kilowatt-hour, so this tower holds 1.09 kWh, and a 40 kg battery module beside it holds 4.4 towers.
 
-**▶ https://gravity-battery-lab.vercel.app** · French and English · desktop, tablet and phone
+**▶ https://gravity-battery-lab.onigam.io** · French and English · desktop, tablet and phone
 
 It is part of a series of energy labs that started with [Pelton Lab](https://github.com/Onigam/pelton-lab), built on the same frame, [lab-kit](https://github.com/Onigam/lab-kit). The lab is still being built (`"status": "building"` in `public/lab.json`): it is not released until it meets the bar of the series and its owner says yes.
 
@@ -44,11 +44,11 @@ MIT licence.
 
 **Stockage par gravité : garder l’énergie en soulevant des poids.** Un lab 3D interactif sur un **stockage par gravité à la ferme** : 20 tonnes de blocs de béton, une tour en treillis de 28 m, un treuil de 15 kW qui marche dans les deux sens. Il pose une seule question, _peut-on stocker l’énergie en soulevant des poids ?_, et y répond avec des chiffres : une tonne levée de 367 m garde un kilowattheure, cette tour garde donc 1,09 kWh, et un module de batterie de 40 kg, posé à côté, garde 4,4 tours.
 
-**▶ https://gravity-battery-lab.vercel.app** · français et anglais · ordinateur, tablette et téléphone
+**▶ https://gravity-battery-lab.onigam.io** · français et anglais · ordinateur, tablette et téléphone
 
 Il fait partie d’une série de labs de l’énergie commencée avec [Pelton Lab](https://github.com/Onigam/pelton-lab), sur le même socle, [lab-kit](https://github.com/Onigam/lab-kit). Le lab est encore en construction (`"status": "building"` dans `public/lab.json`) : il n’est pas livré tant qu’il ne tient pas la barre de la série et que son propriétaire n’a pas dit oui.
 
-**Au programme** : quatre mondes 3D (la ferme, la tour, le treuil, le local électrique), 52 fiches de pièces, un guide de montage de 20 étapes et un guide d’installation de 10, expliqués et non prêts à construire, six leçons et 15 questions, une simulation testée (toute la chaîne d’énergie, dix scénarios, neuf points de départ, le graphique des machines réelles, la pile fantôme de votre nuit) et huit planches A3 générées depuis les cotes du modèle 3D, marquées « ne pas construire » dans leur cartouche. Le guide parlé est écrit dans les deux langues (`narration/`) ; sa voix reste à venir.
+**Au programme** : quatre mondes 3D (la ferme, la tour, le treuil, le local électrique), 52 fiches de pièces, un guide de montage de 20 étapes et un guide d’installation de 10, expliqués et non prêts à construire, six leçons et 15 questions, une simulation testée (toute la chaîne d’énergie, dix scénarios, neuf points de départ, le graphique des machines réelles, la pile fantôme de votre nuit) et huit planches A3 générées depuis les cotes du modèle 3D, marquées « ne pas construire » dans leur cartouche. Le guide parlé existe dans les deux langues, dans une voix locale : les scripts dans `narration/`, l’audio dans `public/audio/`.
 
 **Ce que le lab trouve** : la physique est honnête et la machine est petite. Le modèle donne **0,53 d’aller-retour à pleine vitesse** (de 0,40 à 0,66 selon ses hypothèses), là où des fabricants annoncent de 0,75 à 0,90 à bien plus grande échelle. **Rien ne sort sous 1,9 kW au crochet**, et un frigo de 100 W coûte 2 kW au crochet, soit 5 % de rendement. Le contrôle prend 40 W, environ 0,96 kWh par jour, à peu près ce que garde le poids : sur une vraie journée, la machine rend 7 % de ce qu’elle prend. À cette échelle, une batterie gagne, et de loin ; le lab le dit franchement, et montre ce que la gravité offre en échange, et où elle aurait un sens : un puits déjà creusé. Aucune source ne mesure une machine de cette taille : ce sont des résultats du modèle, marqués comme tels.
 
