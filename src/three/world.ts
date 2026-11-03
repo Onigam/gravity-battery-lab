@@ -87,7 +87,18 @@ export function hotspots(defs: HotspotDef[], anchors: Record<string, THREE.Objec
 }
 
 /** Below this width of the page the 3D view is too narrow for a label's whole name to the right of its dot: a tablet or a phone, with the panel beside the view or the sheet under it. */
-const NARROW_LABEL = 1100;
+const NARROW_LABEL = 1180;
+/** Below this one the sheet goes under the view, and the view is a phone's: narrow, but the rows are different again. */
+const PHONE_LABEL = 520;
+
+/** The tangent of the half field of view that the kit fits a framed part in (`Stage.fitFov`), read from the camera: the narrower of the free view's two directions. A panel beside the view shows as the camera's view offset. */
+export function fitTangent(camera: THREE.PerspectiveCamera): number {
+  const half = Math.tan((camera.fov * Math.PI) / 360);
+  const v = camera.view;
+  if (!v?.enabled) return half * Math.min(1, camera.aspect);
+  const free = Math.min(v.fullWidth - 2 * Math.abs(v.offsetX), v.fullHeight - 2 * Math.abs(v.offsetY));
+  return (half * free) / v.fullHeight;
+}
 
 /** Is the page narrow (see `NARROW_LABEL`)? Never under vitest, which has no page. */
 export const narrowPage = (): boolean =>
@@ -100,13 +111,19 @@ export const narrowPage = (): boolean =>
  */
 export function holdLabel(
   a: THREE.Object3D,
-  o: { left?: boolean; full?: L; short?: L; at?: { wide: THREE.Vector3; narrow: THREE.Vector3 } },
+  o: {
+    left?: boolean;
+    full?: L;
+    short?: L;
+    at?: { wide: THREE.Vector3; narrow: THREE.Vector3; phone?: THREE.Vector3 };
+  },
 ): void {
   const css = a.children[0] as (THREE.Object3D & { element?: HTMLElement; center?: THREE.Vector2 }) | undefined;
   if (!css?.element) return;
-  const narrow = css.element.ownerDocument.documentElement.clientWidth < NARROW_LABEL;
+  const width = css.element.ownerDocument.documentElement.clientWidth;
+  const narrow = width < NARROW_LABEL;
   if (o.left && css.center) css.center.x = narrow ? 1 : 0;
-  if (o.at) a.position.copy(narrow ? o.at.narrow : o.at.wide);
+  if (o.at) a.position.copy(o.at.phone && width < PHONE_LABEL ? o.at.phone : narrow ? o.at.narrow : o.at.wide);
   if (o.short && o.full) {
     const text = css.element.querySelector<HTMLElement>('.hotspot__text');
     const want = tr(narrow ? o.short : o.full);

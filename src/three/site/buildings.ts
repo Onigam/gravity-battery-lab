@@ -196,6 +196,8 @@ export interface House {
   light: THREE.PointLight;
   lineIn: THREE.Vector3;
   anchor: THREE.Object3D;
+  /** Where its name's dot stands on the ridge, by the width of the view. */
+  labelAt: { wide: THREE.Vector3; narrow: THREE.Vector3 };
 }
 
 /** The farmhouse: rendered walls on a stone plinth, clay tiles, a chimney, shutters, a door, windows that light up in the evening. */
@@ -278,11 +280,12 @@ export function buildHouse(): House {
   // gutters
   for (const s of [-1, 1]) cylinderX(g, MAT.zinc(), h.w + 0.84, 0.05, 0, h.eaves - 0.03, s * (h.d / 2 + 0.37));
   const anchor = new THREE.Object3D();
-  // at the ridge's left end: from there the name still fits a phone's width in French (« Farmhouse » is cut by about 20 px there)
-  anchor.position.set(-h.w / 2 + 0.5, h.ridge + 1.2, 0);
+  // at the ridge's left end where the name reads to the right. Narrow, it reads to the left of a point further along, so as to clear the shed's name
+  const labelAt = { wide: V(-h.w / 2 + 0.5, h.ridge + 1.2, 0), narrow: V(-h.w / 2 + 4, h.ridge + 1.2, 0) };
+  anchor.position.copy(labelAt.wide);
   anchor.userData.keep = true;
   g.add(anchor);
-  return { group: g, panes, light, lineIn: V(h.x - h.w / 2 - 0.1, 4.2, h.z + 1), anchor };
+  return { group: g, panes, light, lineIn: V(h.x - h.w / 2 - 0.1, 4.2, h.z + 1), anchor, labelAt };
 }
 
 /** The face of a module: 6 × 10 cells in a mipmapped texture, so that from afar it goes to an even dark blue instead of sparkling. */

@@ -7,7 +7,8 @@ import type { FlowDots } from '../common';
 import { buildMachine, holdScenery, partsNow, type Machine } from '../rig/machine';
 import { HOIST_PARTS, type HoistId } from '../rig/hoist';
 import { RopeFlows } from '../rig/rope-flows';
-import { anchor, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
+import { l } from '@onigam/lab-kit/i18n';
+import { anchor, holdLabel, hotspots, viewFrom, workshopScene, type HotspotDef } from '../world';
 import { HoistCut } from './cut';
 
 // The `hoist` world: up at the top of the tower, on its own head frame. It is the very machine of the `tower` world, built by the same function at the same place (the tower
@@ -30,6 +31,9 @@ const HOTSPOTS: HotspotDef[] = [
   { id: 'overspeed-governor', fr: 'Limiteur de vitesse', en: 'Overspeed governor', minor: true },
   { id: 'hoist-base', fr: 'Châssis du treuil', en: 'Hoist base', minor: true },
 ];
+
+/** On a small view its whole name runs off the edge, from where it stands clear of the service brake's. */
+const CELL_NAME = { full: l('Limiteur de charge', 'Overload cell'), short: l('Limiteur', 'Overload') };
 
 /** Explode offsets, metres: along the motor's axis for what is on it, across for the rest. Y stays 0 (the section's plane must stay right). */
 export const EXPLODE: Record<HoistId, [number, number, number]> = {
@@ -117,14 +121,14 @@ export function createHoistScene(): HoistScene {
   // the home view looks down from the motor's side, and labels read to the right of their dots: motor and brake on their near flanks, the drum further along, so that each has its row
   at('hoist-motor', HOIST_X(0.62), A + 0.05, MOTOR_Z + 0.185);
   at('hoist-gearbox', HOIST_X(0.05), A + 0.25, DRUM_Z);
-  at('rope-drum', HOIST_X(1.62), A + 0.25, DRUM_Z + 0.03);
+  at('rope-drum', HOIST_X(1.85), A + 0.25, DRUM_Z + 0.03);
   at('service-brake', HOIST_X(1.1), A - 0.06, MOTOR_Z + 0.15);
   at('drum-brake', HOIST_X(HOIST.discAt), A + 0.34, DRUM_Z + 0.12);
   at('return-sheave', -0.2, A + 0.22, -HOOK_BLOCK.sheaveR);
   at('motor-encoder', HOIST_X(1.31), A + 0.1, MOTOR_Z - 0.06);
   at('rope-guide', HOIST_X(1.85), A + 0.02, DRUM_Z - 0.4);
   at('rope-anchor', HOOK_BLOCK.sheaveX, 0.1, 0.1);
-  at('overload-cell', HOOK_BLOCK.sheaveX, HOIST.beamTop + 0.15, 0.06);
+  at('overload-cell', HOOK_BLOCK.sheaveX - 0.07, HOIST.beamTop + 0.15, 0.06);
   at('limit-switch', HOIST_X(2.4), A - 0.05, DRUM_Z - 0.12);
   at('overspeed-governor', GOVERNOR.x, GOVERNOR.topY + 0.34, GOVERNOR.z);
   // on the frame's front rail, half way: at an end its name ran off a phone or under another
@@ -165,6 +169,7 @@ export function createHoistScene(): HoistScene {
     homePadding: 1.12,
     declutter: true,
     update(s, dt, view) {
+      holdLabel(anchors['overload-cell']!, CELL_NAME);
       machine.blurAllowed.fan = registry.get('hoist-motor')!.display !== 'hidden';
       machine.blurAllowed.gears = registry.get('hoist-gearbox')!.display !== 'hidden';
       machine.update(s, dt, view);

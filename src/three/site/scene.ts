@@ -80,6 +80,12 @@ export interface SiteScene extends SceneModule<GravityState> {
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
 /** What the ghost stands for, in words: « 128 t*, 6,4 tours*, pour 3 kWh* ». Modelled figures, so marked; the comma or the point of each language. */
+const TOWER_LABEL_AT = {
+  wide: new THREE.Vector3(-1, TOWER.height + 1.4, 1),
+  narrow: new THREE.Vector3(-1, TOWER.height * 0.8, 1),
+  phone: new THREE.Vector3(-1, TOWER.height + 1.4, 1),
+};
+
 export function ghostLabel(s: Pick<GravityState, 'ghostTonnes' | 'ghostTowers'>, nightKwh: number, farm = true): L {
   const fmt = (locale: string, v: number, digits: number) =>
     v.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -267,7 +273,7 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
   anchors.farmhouse = house.anchor;
   anchors['block-yard'] = anchor(yard, 0, 2.2, 0, 'yard-label');
   anchors['block-yard'].userData.keep = true;
-  anchors['exclusion-fence'] = anchor(fence, SITE.fenceR * 0.6, SITE.fenceH + 0.3, SITE.fenceR * 0.8, 'fence-label');
+  anchors['exclusion-fence'] = anchor(fence, SITE.fenceR * 0.58, 0.6, SITE.fenceR * 0.815, 'fence-label');
   anchors['exclusion-fence'].userData.keep = true;
   anchors['interlocked-gate'] = gate.anchor;
   anchors['cable-trench'] = anchor(trench.group, -16, 0.5, SITE.trench.z, 'trench-label');
@@ -395,9 +401,11 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
     declutter: true,
     update(s, dt, view) {
       // the house stands at the view's right edge when the view is narrow: its name reads to its left (review D12)
-      holdLabel(anchors.farmhouse!, { left: true });
+      holdLabel(anchors.farmhouse!, { left: true, at: house.labelAt });
       // the barn's: low on the roof where the view is wide, or the voice's dock lays its long name across the tower's; on the ridge where it is narrow, or the tower's comes up under it
       holdLabel(anchors['barn-solar-roof']!, { at: barn.labelAt });
+      // the tower's: at its top where the view is wide or a phone's; lower on a tablet, in a row of its own under the barn's long name (review D47)
+      holdLabel(anchors['machine-tower']!, { at: TOWER_LABEL_AT });
       const p = params();
       sky.update(s.hour, view.time);
       WIND.time.value = view.time;
