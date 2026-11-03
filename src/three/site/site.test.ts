@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { GravitySim } from '../../sim/engine';
 import { DECK_TOP, MOTOR_CABLE_M, PAD_BOTTOM, PAD_TOP, PV_WATTS, SHED, SITE, TOWER } from '../dims';
 import { boxOf, drawStats, finiteTree, stateWith, view } from '../test-utils';
-import { createSiteScene } from './scene';
+import { createSiteScene, ghostLabel } from './scene';
 import { terrainHeight, trackDistance } from './terrain';
 import { OAK_SPRAYS, POPLAR_SPRAYS, planVegetation } from './vegetation';
 import { sceneryTextures } from './materials';
@@ -238,4 +238,56 @@ it('the budgets of the site', () => {
   // eslint-disable-next-line no-console
   console.log(`site: ${st.calls} calls, ${Math.round(st.triangles)} triangles`);
   expect(finiteTree(mod.scene)).toBe(true);
+});
+
+describe('review: what a selected part leaves on the farm, the ground, the ghost’s label', () => {
+  it('D58. X-ray with a part selected: the many layers of the tower and the yard stay faint, and solid again after', () => {
+    const m = createSiteScene(() => params);
+    m.update(stateWith(), 1 / 60, view());
+    for (const id of m.registry.ids()) m.registry.setDisplay(id, id === 'cable-trench' ? 'solid' : 'ghost');
+    m.update(stateWith(), 1 / 60, view());
+    for (const id of ['machine-tower', 'block-yard']) {
+      const mat = m.registry.get(id)!.meshes[0]!.material as THREE.MeshBasicMaterial;
+      expect(mat.opacity, id).toBeLessThan(0.03);
+      expect(mat.transparent, id).toBe(true);
+      expect(mat.depthWrite, id).toBe(false);
+    }
+    m.registry.setAllDisplay('solid');
+    m.update(stateWith(), 1 / 60, view());
+    for (const id of ['machine-tower', 'block-yard']) {
+      const mesh = m.registry.get(id)!.meshes[0]!;
+      expect(mesh.material, id).toBe(mesh.userData.solidMaterial);
+    }
+  });
+
+  it('D51. No vertex of the land is left without a ground: all weights at zero is the black burn', () => {
+    const ground = (mod as unknown as { scene: THREE.Scene }).scene.getObjectByName('terrain-ground') as
+      THREE.Mesh | undefined;
+    let mesh = ground;
+    if (!mesh)
+      mod.scene.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (m.isMesh && m.geometry?.attributes?.aMix) mesh = m;
+      });
+    const mix = mesh!.geometry.attributes.aMix!;
+    let empty = 0;
+    for (let i = 0; i < mix.count; i++) if (mix.getX(i) + mix.getY(i) + mix.getZ(i) < 0.01) empty++;
+    expect(empty).toBe(0);
+  });
+
+  it('D52. The ghost counts in towers only for the farm’s machine, in its label and in what it draws', () => {
+    const lab = ghostLabel({ ghostTonnes: 612, ghostTowers: 48929.7 }, 3, false);
+    expect(lab.fr).toBe('612 t*, pour 3 kWh*');
+    expect(lab.en).toBe('612 t*, for 3 kWh*');
+    const p = { ...new GravitySim().params };
+    const m = createSiteScene(() => p);
+    const st = stateWith({ zFraction: 0.2, ghostTonnes: 128, ghostBlocks: 89, ghostTowers: 6.4 });
+    for (let i = 0; i < 10; i++) m.update(st, 0.1, view({ schematic: true }));
+    expect(m.ghost.towers.count).toBe(7);
+    expect(m.ghost.label.fr).toContain('tours');
+    p.machine = 'gravitylight';
+    for (let i = 0; i < 10; i++) m.update(st, 0.1, view({ schematic: true }));
+    expect(m.ghost.towers.count).toBe(0);
+    expect(m.ghost.label.fr).not.toContain('tours');
+  });
 });

@@ -227,7 +227,8 @@ function groundColour(x: number, z: number, out: THREE.Color, mix: { g: number; 
       g += (cg + (124 - cg) * spine * 0.6 - g) * t;
       b += (cb + (72 - cb) * spine * 0.6 - b) * t;
       wGravel = Math.max(wGravel, t * (1 - spine));
-      wGrass *= 1 - t * (1 - spine);
+      // the spine is grass, also where the track crosses a field that has none: no weight at all would leave the ground black under its detail (review D51)
+      wGrass = Math.max(wGrass * (1 - t * (1 - spine)), t * spine);
       wSoil *= 1 - t;
     }
   }

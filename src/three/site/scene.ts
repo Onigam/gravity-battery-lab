@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { l, tr, type L } from '@onigam/lab-kit/i18n';
-import { clamp, damp, emissive, group, PartRegistry } from '@onigam/lab-kit/three';
+import { clamp, damp, emissive, GHOST, group, PartRegistry } from '@onigam/lab-kit/three';
 import type { Hotspot, SceneModule } from '@onigam/lab-kit/three';
 import { BLOCK, DECK_TOP, PANEL_H, SHED, SITE, STACK, TOWER, levelY } from '../dims';
 import type { GravityParams, GravityState } from '../../sim/types';
@@ -9,7 +9,7 @@ import { mergeStatic } from '../merge';
 import { buildShedShell } from '../powerroom/room';
 import { buildMachine, partsNow, type Machine } from '../rig/machine';
 import { blockGeometry } from '../rig/weight';
-import { anchor, hotspots, type HotspotDef } from '../world';
+import { anchor, holdLabel, hotspots, type HotspotDef } from '../world';
 import { buildBarn, buildHouse } from './buildings';
 import { WIND, textureStats } from './materials';
 import {
@@ -80,10 +80,16 @@ export interface SiteScene extends SceneModule<GravityState> {
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
 /** What the ghost stands for, in words: « 128 t*, 6,4 tours*, pour 3 kWh* ». Modelled figures, so marked; the comma or the point of each language. */
-export function ghostLabel(s: Pick<GravityState, 'ghostTonnes' | 'ghostTowers'>, nightKwh: number): L {
+export function ghostLabel(s: Pick<GravityState, 'ghostTonnes' | 'ghostTowers'>, nightKwh: number, farm = true): L {
   const fmt = (locale: string, v: number, digits: number) =>
     v.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
   const kwh = Number.isInteger(nightKwh) ? 0 : 1;
+  // towers of another preset's machine are not this tower, though it is drawn on it: « 48,929 towers » for a weight lamp says nothing (review D52)
+  if (!farm)
+    return l(
+      `${fmt('fr-FR', s.ghostTonnes, 0)} t*, pour ${fmt('fr-FR', nightKwh, kwh)} kWh*`,
+      `${fmt('en-GB', s.ghostTonnes, 0)} t*, for ${fmt('en-GB', nightKwh, kwh)} kWh*`,
+    );
   return l(
     `${fmt('fr-FR', s.ghostTonnes, 0)} t*, ${fmt('fr-FR', s.ghostTowers, 1)} tours*, pour ${fmt('fr-FR', nightKwh, kwh)} kWh*`,
     `${fmt('en-GB', s.ghostTonnes, 0)} t*, ${fmt('en-GB', s.ghostTowers, 1)} towers*, for ${fmt('en-GB', nightKwh, kwh)} kWh*`,
@@ -261,7 +267,7 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
   anchors.farmhouse = house.anchor;
   anchors['block-yard'] = anchor(yard, 0, 2.2, 0, 'yard-label');
   anchors['block-yard'].userData.keep = true;
-  anchors['exclusion-fence'] = anchor(fence, SITE.fenceR * 0.72, SITE.fenceH + 0.3, SITE.fenceR * 0.694, 'fence-label');
+  anchors['exclusion-fence'] = anchor(fence, SITE.fenceR * 0.6, SITE.fenceH + 0.3, SITE.fenceR * 0.8, 'fence-label');
   anchors['exclusion-fence'].userData.keep = true;
   anchors['interlocked-gate'] = gate.anchor;
   anchors['cable-trench'] = anchor(trench.group, -16, 0.5, SITE.trench.z, 'trench-label');
@@ -327,8 +333,8 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
       ghostBlocks.setMatrixAt(i, m4);
     }
     ghostBlocks.instanceMatrix.needsUpdate = true;
-    // the towers, in a row: the last is as tall as what is left of a tower
-    const nT = Math.min(TOWERS_MAX, Math.ceil(s.ghostTowers));
+    // the towers, in a row: the last is as tall as what is left of a tower. Only the farm's machine counts in these towers
+    const nT = params().machine === 'farm' ? Math.min(TOWERS_MAX, Math.ceil(s.ghostTowers)) : 0;
     ghostTowers.count = nT;
     const t = g.tower;
     for (let i = 0; i < nT; i++) {
@@ -350,6 +356,12 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
   const fRoof = flows.addPath(roofLine, 24);
   const fHouse = flows.addPath(houseLine, 40);
   const fGrid = flows.addPath([...lineWest.slice().reverse(), ...dropLine], 40);
+
+  // ---- X-ray with a part selected: the kit ghosts every other part, and the tower's and the yard's many layers, each at the kit's 7 %, add up to a smudge on the fields (review D58). The same tone,
+  // lighter, for those two: what they are still shows, and the part selected stands out
+  const faintGhost = GHOST.clone();
+  faintGhost.opacity = 0.018;
+  const manyLayers = [registry.get('machine-tower')!, registry.get('block-yard')!];
 
   const hs = hotspots(HOTSPOTS, anchors);
   const ghostHotspot: Hotspot = hs.find((h) => h.anchor === ghostAnchor)!;
@@ -382,12 +394,17 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
     // with every label on, a name with no room folds into its dot
     declutter: true,
     update(s, dt, view) {
+      // the house stands at the view's right edge when the view is narrow: its name reads to its left (review D12)
+      holdLabel(anchors.farmhouse!, { left: true });
+      // the barn's: low on the roof where the view is wide, or the voice's dock lays its long name across the tower's; on the ridge where it is narrow, or the tower's comes up under it
+      holdLabel(anchors['barn-solar-roof']!, { at: barn.labelAt });
       const p = params();
       sky.update(s.hour, view.time);
       WIND.time.value = view.time;
       machine.blurAllowed.fan = machine.blurAllowed.gears = registry.get('machine-tower')!.display !== 'hidden';
       machine.update(s, dt, view);
       const isolating = partsNow(registry).hidden;
+      for (const e of manyLayers) if (e.display === 'ghost') for (const m of e.meshes) m.material = faintGhost;
 
       // ---- the windows: a warm light from when the sun goes, in proportion to what the house asks
       const dark = sky.night;
@@ -423,7 +440,7 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
       if (shown) {
         (ghostBlocks.material as THREE.MeshStandardMaterial).opacity = 0.42 * ghostAlpha;
         (ghostTowers.material as THREE.MeshStandardMaterial).opacity = 0.3 * ghostAlpha;
-        const key = `${Math.round(s.ghostBlocks)}|${s.ghostTowers.toFixed(2)}`;
+        const key = `${Math.round(s.ghostBlocks)}|${s.ghostTowers.toFixed(2)}|${p.machine}`;
         if (key !== ghostKey) {
           ghostKey = key;
           layoutGhost(s);
@@ -436,7 +453,7 @@ export function createSiteScene(params: () => GravityParams): SiteScene {
         ghostTonnes = s.ghostTonnes;
         ghostKwh = p.nightKwh;
       }
-      if (shown) Object.assign(ghostHotspot.label, ghostLabel(s, ghostKwh));
+      if (shown) Object.assign(ghostHotspot.label, ghostLabel(s, ghostKwh, p.machine === 'farm'));
       const css = ghostAnchor.children[0] as (THREE.Object3D & { element?: HTMLElement }) | undefined;
       if (css?.element) {
         css.element.style.visibility = want === 1 ? '' : 'hidden';

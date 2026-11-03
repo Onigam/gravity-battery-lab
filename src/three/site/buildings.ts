@@ -55,6 +55,8 @@ export interface Barn {
   /** Where the roof's cable comes down, in the site's frame. */
   cableOut: THREE.Vector3;
   anchor: THREE.Object3D;
+  /** Where its name's dot stands on the roof, by the width of the view (review D47). */
+  labelAt: { wide: THREE.Vector3; narrow: THREE.Vector3 };
 }
 
 /** The barn and its solar roof, one part: as the research counts it. */
@@ -178,10 +180,14 @@ export function buildBarn(): Barn {
   conduit.translate(cx, 0.25 + (b.eaves - 0.25) / 2, eaveZ + 0.12);
   g.add(mesh(conduit, MAT.pvcGrey()));
   const anchor = new THREE.Object3D();
-  anchor.position.set(0, b.ridge + 1.1, 2.5);
+  const labelAt = {
+    wide: V(-b.len / 2 + 3, b.eaves + 0.4, b.span / 2 - 0.6),
+    narrow: V(-3, b.ridge + 1.1, 2.5),
+  };
+  anchor.position.copy(labelAt.wide);
   anchor.userData.keep = true;
   g.add(anchor);
-  return { group: g, cableOut: V(b.x + cx, 4.8, b.z + eaveZ + 0.16), anchor };
+  return { group: g, cableOut: V(b.x + cx, 4.8, b.z + eaveZ + 0.16), anchor, labelAt };
 }
 
 export interface House {
